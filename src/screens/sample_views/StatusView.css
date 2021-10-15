@@ -1,0 +1,20 @@
+.status-container {
+  display: flex;
+  overflow-x: auto;
+  height: 100%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.status-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.status-column {
+  flex: 0 0 auto;
+  border: 1px solid black;
+  margin: 1em;
+  padding: 1em;
+  width: 200px;
+}

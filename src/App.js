@@ -9,7 +9,12 @@ import {
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div
+        className="App"
+        style={{
+          height: "100%",
+        }}
+      >
         <Switch>
           <Route path="/batch-editor" component={BatchEditorScreen} />
           <Route path="/case-editor" component={CaseEditorScreen} />

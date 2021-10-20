@@ -9,26 +9,28 @@ const ViewHolderScreen = () => {
   const history = useHistory();
 
   return (
-    <div>
-      <Container>
-        <Row lg={4}>
-          <Col className="tool-bar">Tool bar area</Col>
-          <Button as={Col} onClick={() => history.push("/batch-editor")}>
-            Add batch
-          </Button>
-          <Button as={Col} onClick={() => history.push("/case-editor")}>
-            Add case
-          </Button>
-        </Row>
-        <ViewTabs />
-        <Switch>
-          <Route path={`/case-view`} component={CaseView} />
-          <Route path={`/sample-view`} component={SampleView} />
-          <Route path={`/batch-view`} component={BatchView} />
-          <Route component={StatusView} />
-        </Switch>
-      </Container>
-    </div>
+    <Container className="screen-holder">
+      <Row lg={4}>
+        <Col className="tool-bar">Tool bar area</Col>
+        <Button as={Col} onClick={() => history.push("/batch-editor")}>
+          Add batch
+        </Button>
+        <Button as={Col} onClick={() => history.push("/case-editor")}>
+          Add case
+        </Button>
+      </Row>
+      <ViewTabs />
+      <div className="view-wrapper">
+        <Container>
+          <Switch>
+            <Route path={`/case-view`} component={CaseView} />
+            <Route path={`/sample-view`} component={SampleView} />
+            <Route path={`/batch-view`} component={BatchView} />
+            <Route component={StatusView} />
+          </Switch>
+        </Container>
+      </div>
+    </Container>
   );
 };
 
@@ -53,10 +55,7 @@ const ViewTabs = () => {
             : currentUrl
         }
       >
-        <Nav
-          variant="tabs"
-          onSelect={(selectedKey) => console.log(`selected ${selectedKey}`)}
-        >
+        <Nav variant="tabs">
           <Nav.Link href="/status-view">Status View</Nav.Link>
           <Nav.Link href="/sample-view">Sample View</Nav.Link>
           <Nav.Link href="/batch-view">Batch View</Nav.Link>

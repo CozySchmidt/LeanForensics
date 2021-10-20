@@ -55,10 +55,7 @@ const ViewTabs = () => {
             : currentUrl
         }
       >
-        <Nav
-          variant="tabs"
-          onSelect={(selectedKey) => console.log(`selected ${selectedKey}`)}
-        >
+        <Nav variant="tabs">
           <Nav.Link href="/status-view">Status View</Nav.Link>
           <Nav.Link href="/sample-view">Sample View</Nav.Link>
           <Nav.Link href="/batch-view">Batch View</Nav.Link>

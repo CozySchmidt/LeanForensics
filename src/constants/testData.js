@@ -104,3 +104,59 @@ export const statusViewData = [
   { statusName: "Amplification", statusOrder: 6, batches: [] },
   { statusName: "Report", statusOrder: 7, batches: [] },
 ];
+
+function createBatchSampleData(sampleId, screening, number, kit, hold, date) {
+  return {
+    sampleId,
+    screening,
+    number,
+    kit,
+    hold,
+    date,
+  };
+}
+
+export const batchSampleData = [
+  createBatchSampleData("BCIT-2021-1", "Snow", 1, "Jon", 35, new Date()),
+  createBatchSampleData(
+    "BCIT-2021-2",
+    "Lannister",
+    1,
+    "Cersei",
+    42,
+    new Date()
+  ),
+  createBatchSampleData("BCIT-2021-3", "Lannister", 1, "Jaime", 45, new Date()),
+  createBatchSampleData("BCIT-2021-4", "Stark", 1, "Arya", 16, new Date()),
+  createBatchSampleData(
+    "BCIT-2021-5",
+    "Targaryen",
+    1,
+    "Daenerys",
+    null,
+    new Date()
+  ),
+  createBatchSampleData("BCIT-2021-6", "Melisandre", 1, null, 150, new Date()),
+  createBatchSampleData(
+    "BCIT-2021-7",
+    "Clifford",
+    1,
+    "Ferrara",
+    44,
+    new Date()
+  ),
+  createBatchSampleData("BCIT-2021-8", "Frances", 1, "Rossini", 36, new Date()),
+  createBatchSampleData("BCIT-2021-9", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-10", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-11", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-12", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-13", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-14", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-15", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-16", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-17", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-18", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-19", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-20", "Roxie", 1, "Harvey", 65, new Date()),
+  createBatchSampleData("BCIT-2021-21", "Roxie", 1, "Harvey", 65, new Date()),
+];

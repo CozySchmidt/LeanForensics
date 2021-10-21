@@ -1,7 +1,7 @@
 import React from "react";
 
-const CaseView = () => {
+function CaseView() {
   return <div>CaseView</div>;
-};
+}
 
 export default CaseView;

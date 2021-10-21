@@ -1,7 +1,7 @@
 import React from "react";
 
-const BatchView = () => {
+function BatchView() {
   return <div>BatchView</div>;
-};
+}
 
 export default BatchView;

@@ -1,7 +1,18 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { DataGrid } from "@mui/x-data-grid";
-import { batchSampleData } from "../constants/testData";
+import {
+  batchSampleData,
+  stageData,
+  extractionTypeData,
+} from "../constants/testData";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 
 import "./BatchEditorScreen.css";
 
@@ -39,17 +50,124 @@ const columns = [
 ];
 
 function BatchEditorScreen() {
+  const history = useHistory();
+  const [editMode, setEditMode] = React.useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
+  const [initialStage, setInitialStage] = React.useState("");
+  const [extractionType, setExtractionType] = React.useState("");
+  const [comment, setComment] = React.useState("");
+
+  const editBatchText = "Edit Batch";
+  const createBatchText = "Create Batch";
 
   useEffect(() => {}, []);
 
+  const onSubmitBatch = () => {
+    let batchObj = {
+      stageId: initialStage,
+      extractionTypeId: extractionType,
+      comment: comment,
+    };
+    if (editMode) {
+      //Edit api call
+    } else {
+      //Create api call
+    }
+    alert(JSON.stringify(batchObj, null, 4));
+    alert(JSON.stringify(selectionModel, null, 4));
+  };
+
   return (
-    <Container className="screen-holder">
-      <Row lg={4}>
-        <Col className="tool-bar">Empty area</Col>
-      </Row>
+    <div className="screen-holder">
+      <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
+        <Grid container spacing={2}>
+          <Grid item xs="auto">
+            <Button variant="contained" onClick={() => history.goBack()}>
+              Cancel
+            </Button>
+          </Grid>
+
+          <Grid item xs="auto">
+            {editMode && (
+              <Button variant="contained" onClick={() => history.goBack()}>
+                Pull Out Samples
+              </Button>
+            )}
+          </Grid>
+          <Grid xs={4}></Grid>
+          <Grid item xs="auto">
+            {editMode && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => history.goBack()}
+              >
+                Delete
+              </Button>
+            )}
+          </Grid>
+          <Grid item xs="auto">
+            <Button variant="contained" onClick={onSubmitBatch}>
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
+        <h1>{editMode ? editBatchText : createBatchText}</h1>
+      </Box>
       <div className="content-wrapper">
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
+          }}
+          noValidate
+          border="1px solid lightgrey"
+          borderRadius="8px"
+          autoComplete="off"
+        >
+          <h4>Batch Information</h4>
+          <TextField
+            id="outlined-select"
+            onChange={(e) => setInitialStage(e.target.value)}
+            value={initialStage}
+            select
+            label="Initial Stage"
+          >
+            {stageData.map((stage) => (
+              <MenuItem key={stage.stageId} value={stage.stageId}>
+                {stage.stageName}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            id="outlined-select"
+            onChange={(e) => setExtractionType(e.target.value)}
+            value={extractionType}
+            select
+            label="Extraction Type"
+          >
+            {extractionTypeData.map((extractionType) => (
+              <MenuItem
+                key={extractionType.extractionTypeId}
+                value={extractionType.extractionTypeId}
+              >
+                {extractionType.extractionTypeName}
+              </MenuItem>
+            ))}
+          </TextField>
+          <FormControl fullWidth sx={{ m: 1 }}>
+            <TextField
+              id="outlined-select"
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              label="Comment"
+              multiline
+              rows={4}
+              fullWidth
+            />
+          </FormControl>
+        </Box>
         <DataGrid
           rows={batchSampleData}
           columns={columns}
@@ -61,12 +179,12 @@ function BatchEditorScreen() {
           rowsPerPageOptions={[15, 20, 50]}
           onSelectionModelChange={(newSelectionModel) => {
             setSelectionModel(newSelectionModel);
-            console.log(selectionModel);
           }}
           selectionModel={selectionModel}
+          style={{ height: "85%", marginTop: "10px" }}
         />
       </div>
-    </Container>
+    </div>
   );
 }
 

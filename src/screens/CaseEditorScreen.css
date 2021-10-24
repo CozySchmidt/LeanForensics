@@ -1,0 +1,15 @@
+.content-wrapper {
+  width: 100%;
+  height: 80%;
+}
+
+.sample-row {
+  display: flex;
+  flex-wrap: wrap;
+  vertical-align: middle;
+  align-items: center;
+}
+
+.row-item {
+  margin: 3px;
+}

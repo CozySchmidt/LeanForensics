@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   batchSampleData,

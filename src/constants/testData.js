@@ -192,6 +192,11 @@ export const extractionTypeData = [
   { extractionTypeId: 2, extractionTypeName: "Demin" },
   { extractionTypeId: 3, extractionTypeName: "Differential" },
 ];
+export const screeningData = [
+  { screeningId: 1, screeningName: "Blood" },
+  { screeningId: 2, screeningName: "Semen" },
+  { screeningId: 3, screeningName: "Saliva" },
+];
 
 export const kitTypeData = [
   { kitTypeId: 1, kitTypeName: "Global Filer" },

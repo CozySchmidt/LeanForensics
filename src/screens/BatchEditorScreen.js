@@ -5,6 +5,7 @@ import {
   batchSampleData,
   stageData,
   extractionTypeData,
+  editBatchData,
 } from "../constants/testData";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -12,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import queryString from "query-string";
 
 import "./BatchEditorScreen.css";
 
@@ -48,9 +50,11 @@ const columns = [
   },
 ];
 
-function BatchEditorScreen() {
+function BatchEditorScreen({ location }) {
   const history = useHistory();
-  const [editMode, setEditMode] = React.useState(false);
+  const query = queryString.parse(location.search);
+  const [retrievedBatch, setRetrievedBatch] = React.useState(null);
+  const [editMode, setEditMode] = React.useState(query.batchId ? true : false);
   const [selectionModel, setSelectionModel] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
   const [initialStage, setInitialStage] = React.useState("");
@@ -60,7 +64,15 @@ function BatchEditorScreen() {
   const editBatchText = "Edit Batch";
   const createBatchText = "Create Batch";
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setRetrievedBatch(editMode && editBatchData);
+    setSelectionModel(editMode && editBatchData ? editBatchData.samples : []);
+    setInitialStage(editMode && editBatchData ? editBatchData.stageId : "");
+    setExtractionType(
+      editMode && editBatchData ? editBatchData.extractionTypeId : ""
+    );
+    setComment(editMode && editBatchData ? editBatchData.comment : "");
+  }, []);
 
   const onSubmitBatch = () => {
     let batchObj = {
@@ -94,7 +106,7 @@ function BatchEditorScreen() {
               </Button>
             )}
           </Grid>
-          <Grid xs={4}></Grid>
+          <Grid item xs={4}></Grid>
           <Grid item xs="auto">
             {editMode && (
               <Button
@@ -125,7 +137,9 @@ function BatchEditorScreen() {
           borderRadius="8px"
           autoComplete="off"
         >
-          <h4>Batch Information</h4>
+          <h3>Batch Information</h3>
+
+          {retrievedBatch && <h4>Batch ID:{retrievedBatch.batchId} </h4>}
           <TextField
             id="outlined-select"
             onChange={(e) => setInitialStage(e.target.value)}

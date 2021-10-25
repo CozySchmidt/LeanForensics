@@ -33,12 +33,36 @@ const placeHolderData = [
 ];
 
 const CaseEditorScreen = () => {
+  const [editMode, setEditMode] = React.useState(false);
   const [sampleList, setSampleList] = React.useState([...placeHolderData]);
   const [caseId, setCaseId] = React.useState("");
   const [comment, setComment] = React.useState("");
 
-  const isEmpty = (object) =>
-    Object.values({}).every((x) => x === null || x === "");
+  const onSubmitCase = () => {
+    let caseObj = {
+      caseId: caseId,
+      comment: comment,
+    };
+
+    if (editMode) {
+      //Edit api call
+    } else {
+      //Create api call
+    }
+    let filteredList = filterEmptyList(sampleList);
+    console.log(caseObj);
+    console.log(filteredList);
+    // alert(JSON.stringify(caseObj, null, 4));
+    // alert(JSON.stringify(filteredList, null, 4));
+  };
+
+  const filterEmptyList = (list) => {
+    return list.filter(checkNotEmptyObject);
+  };
+
+  const checkNotEmptyObject = (obj) => {
+    return !Object.values(obj).every((x) => x === null || x === "");
+  };
 
   return (
     <div className="screen-holder">
@@ -89,12 +113,7 @@ const CaseEditorScreen = () => {
           >
             Add
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              console.log(sampleList);
-            }}
-          >
+          <Button variant="contained" onClick={onSubmitCase}>
             Submit
           </Button>
         </Box>

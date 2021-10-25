@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useScrollBoost } from "react-scrollbooster";
+import { useHistory } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -9,6 +10,7 @@ import "./StatusView.css";
 import { statusViewData } from "../../constants/testData";
 
 function StatusView() {
+  const history = useHistory();
   const [openModal, setOpenModal] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
 
@@ -55,6 +57,18 @@ function StatusView() {
             selectedBatch.samples.map((sample, i) => {
               return <div key={i}>{sample.sampleId}</div>;
             })}
+          <Button
+            size="large"
+            variant="outlined"
+            onClick={() =>
+              history.push({
+                pathname: "/batch-editor",
+                search: `?batchId=${selectedBatch.batchId}`,
+              })
+            }
+          >
+            Edit batch
+          </Button>
         </Box>
       </Modal>
     );

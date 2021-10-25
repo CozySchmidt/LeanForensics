@@ -1,0 +1,32 @@
+.samples--container {
+    margin: 2%;
+}
+
+.table--samples {
+    padding-top: 5%;
+    border-collapse: collapse;
+    border: 2px solid;
+    width: 100%;
+}
+
+.table--samples--header {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+    padding: 8px;
+}
+
+.table--samples--header th {
+    border: 1px solid;
+}
+
+.table--samples--body {
+    text-align: left;
+    padding: 8px;
+}
+
+.table--samples--body td {
+    border: 1px solid;
+}

@@ -1,0 +1,73 @@
+[{
+        "sampleNumber": "BCIT-2021-0001-01",
+        "currentStatus": "Completed",
+        "caseNumber": "BCIT-2021-0001",
+        "batchNumber": "01",
+        "submitted": "08/20/2021",
+        "created": "08/27/2021",
+        "reported": "10/20/2021"
+    },
+    {
+        "sampleNumber": "BCIT-2021-0001-02",
+        "currentStatus": "Completed",
+        "caseNumber": "BCIT-2021-0001",
+        "batchNumber": "01",
+        "submitted": "08/20/2021",
+        "created": "08/27/2021",
+        "reported": "10/20/2021"
+    },
+    {
+        "sampleNumber": "BCIT-2021-0001-03",
+        "currentStatus": "Completed",
+        "caseNumber": "BCIT-2021-0001",
+        "batchNumber": "01",
+        "submitted": "08/20/2021",
+        "created": "08/27/2021",
+        "reported": "10/20/2021"
+    },
+    {
+        "sampleNumber": "BCIT-2021-0002-01",
+        "currentStatus": "Extraction",
+        "caseNumber": "BCIT-2021-0002",
+        "batchNumber": "02",
+        "submitted": "10/21/2021",
+        "created": "10/21/2021",
+        "reported": ""
+    },
+    {
+        "sampleNumber": "BCIT-2021-0002-02",
+        "currentStatus": "Extraction",
+        "caseNumber": "BCIT-2021-0002",
+        "batchNumber": "03",
+        "submitted": "10/21/2021",
+        "created": "10/21/2021",
+        "reported": ""
+    },
+    {
+        "sampleNumber": "BCIT-2021-0002-03",
+        "currentStatus": "Extraction",
+        "caseNumber": "BCIT-2021-0002",
+        "batchNumber": "02",
+        "submitted": "10/21/2021",
+        "created": "10/21/2021",
+        "reported": ""
+    },
+    {
+        "sampleNumber": "BCIT-2021-0002-04",
+        "currentStatus": "Extraction",
+        "caseNumber": "BCIT-2021-0002",
+        "batchNumber": "03",
+        "submitted": "10/21/2021",
+        "created": "10/21/2021",
+        "reported": ""
+    },
+    {
+        "sampleNumber": "BCIT-2021-0003-01",
+        "currentStatus": "Amplification",
+        "caseNumber": "BCIT-2021-0003",
+        "batchNumber": "01",
+        "submitted": "10/7/2021",
+        "created": "10/8/2021",
+        "reported": ""
+    }
+]

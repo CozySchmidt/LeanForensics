@@ -104,3 +104,106 @@ export const statusViewData = [
   { statusName: "Amplification", statusOrder: 6, batches: [] },
   { statusName: "Report", statusOrder: 7, batches: [] },
 ];
+
+function createBatchSampleData(sampleId, screening, number, kit, hold, date) {
+  return {
+    sampleId,
+    screening,
+    number,
+    kit,
+    hold,
+    date,
+  };
+}
+
+export const batchSampleData = [
+  createBatchSampleData("BCIT-2021-1", "Blood", 1, "YFiler", 0, new Date()),
+  createBatchSampleData("BCIT-2021-2", "Blood", 1, "YFiler", 0, new Date()),
+  createBatchSampleData("BCIT-2021-3", "Blood", 1, "YFiler", 0, new Date()),
+  createBatchSampleData("BCIT-2021-4", "Semen", 1, "YFiler", 0, new Date()),
+  createBatchSampleData("BCIT-2021-5", "Semen", 1, "YFiler", 0, new Date()),
+  createBatchSampleData("BCIT-2021-6", "Saliva", 1, "YFiler", 0, new Date()),
+  createBatchSampleData("BCIT-2021-7", "Saliva", 1, "YFiler", 0, new Date()),
+  createBatchSampleData(
+    "BCIT-2021-8",
+    "Saliva",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData(
+    "BCIT-2021-9",
+    "Saliva",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData(
+    "BCIT-2021-10",
+    "Blood",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData(
+    "BCIT-2021-11",
+    "Blood",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData(
+    "BCIT-2021-12",
+    "Blood",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData(
+    "BCIT-2021-13",
+    "Blood",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData(
+    "BCIT-2021-14",
+    "Semen",
+    1,
+    "Global Filer",
+    0,
+    new Date()
+  ),
+  createBatchSampleData("BCIT-2021-15", "Semen", 1, null, 1, new Date()),
+  createBatchSampleData("BCIT-2021-16", "Semen", 1, "Filer", 1, new Date()),
+  createBatchSampleData("BCIT-2021-17", "Semen", 1, "Filer", 1, new Date()),
+  createBatchSampleData("BCIT-2021-18", "Semen", 1, "Filer", 0, new Date()),
+  createBatchSampleData("BCIT-2021-19", "Semen", 1, null, 0, new Date()),
+];
+
+export const extractionTypeData = [
+  { extractionTypeId: 1, extractionTypeName: "Direct" },
+  { extractionTypeId: 2, extractionTypeName: "Demin" },
+  { extractionTypeId: 3, extractionTypeName: "Differential" },
+];
+
+export const kitTypeData = [
+  { kitTypeId: 1, kitTypeName: "Global Filer" },
+  { kitTypeId: 2, kitTypeName: "Y Filer" },
+];
+
+export const stageData = [
+  { stageId: 1, stageName: "Search/Sampling" },
+  { stageId: 2, stageName: "Screening" },
+  { stageId: 3, stageName: "Extraction" },
+  { stageId: 4, stageName: "Clean Up" },
+  { stageId: 5, stageName: "Quantification" },
+  { stageId: 6, stageName: "Amplification" },
+  { stageId: 7, stageName: "Report" },
+];

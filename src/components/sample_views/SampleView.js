@@ -32,6 +32,7 @@ const SampleView = () => {
               {headerGroup.headers.map(column => (
                 <th {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
+              <th>Edit</th>
             </tr>
           ))}
         </thead>
@@ -43,6 +44,11 @@ const SampleView = () => {
                 {row.cells.map(cell => {
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 })}
+                <td>
+                  <button onClick={() => {
+                    alert(`Do you wish to edit ${row.values['sampleNumber']}?`)
+                  }}>Edit</button>
+                </td>
               </tr>
             )
           })}

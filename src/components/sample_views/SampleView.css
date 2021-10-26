@@ -1,9 +1,5 @@
-.samples--container {
-    margin: 2%;
-}
-
 .table--samples {
-    padding-top: 5%;
+    margin-top: 2%;
     border-collapse: collapse;
     border: 2px solid;
     width: 100%;

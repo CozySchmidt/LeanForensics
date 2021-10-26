@@ -1,68 +1,74 @@
 import React from "react";
-import { Container, Row, Nav, Col, Tab, Button } from "react-bootstrap";
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { StatusView, CaseView, SampleView, BatchView } from "./";
 
 import "./ViewHolderScreen.css";
 
-const ViewHolderScreen = () => {
+function ViewHolderScreen() {
   const history = useHistory();
 
   return (
-    <Container className="screen-holder">
-      <Row lg={4}>
-        <Col className="tool-bar">Tool bar area</Col>
-        <Button as={Col} onClick={() => history.push("/batch-editor")}>
+    <div className="screen-holder">
+      <div>
+        <Button
+          variant="contained"
+          onClick={() => history.push("/batch-editor")}
+        >
           Add batch
         </Button>
-        <Button as={Col} onClick={() => history.push("/case-editor")}>
+        <Button
+          variant="contained"
+          onClick={() => history.push("/case-editor")}
+        >
           Add case
         </Button>
-      </Row>
+      </div>
       <ViewTabs />
       <div className="view-wrapper">
-        <Container>
-          <Switch>
-            <Route path={`/case-view`} component={CaseView} />
-            <Route path={`/sample-view`} component={SampleView} />
-            <Route path={`/batch-view`} component={BatchView} />
-            <Route component={StatusView} />
-          </Switch>
-        </Container>
+        <Switch>
+          <Route path={`/case-view`} component={CaseView} />
+          <Route path={`/sample-view`} component={SampleView} />
+          <Route path={`/batch-view`} component={BatchView} />
+          <Route component={StatusView} />
+        </Switch>
       </div>
-    </Container>
+    </div>
   );
-};
-
+}
 const ViewTabs = () => {
   const location = useLocation();
   let pathname = location.pathname;
   let currentUrl = "/" + pathname.split("/")[1];
-  // let currentUrl =
-  //   pathname.slice(-1) === "/"
-  //     ? pathname.substring(0, pathname.length - 1)
-  //     : pathname;
+
+  function handleChange() {
+    switch (currentUrl) {
+      case "/status-view":
+        return 0;
+      case "/sample-view":
+        return 1;
+      case "/batch-view":
+        return 2;
+      case "/case-view":
+        return 3;
+      default:
+        return 0;
+    }
+  }
 
   return (
-    <div>
-      <Tab.Container
-        activeKey={
-          currentUrl !== "/status-view" &&
-          currentUrl !== "/sample-view" &&
-          currentUrl !== "/batch-view" &&
-          currentUrl !== "/case-view"
-            ? "/status-view"
-            : currentUrl
-        }
-      >
-        <Nav variant="tabs">
-          <Nav.Link href="/status-view">Status View</Nav.Link>
-          <Nav.Link href="/sample-view">Sample View</Nav.Link>
-          <Nav.Link href="/batch-view">Batch View</Nav.Link>
-          <Nav.Link href="/case-view">Case View</Nav.Link>
-        </Nav>
-      </Tab.Container>
-    </div>
+    <Box sx={{ width: "100%" }}>
+      <Tabs value={handleChange()}>
+        <Tab href="/status-view" label="Status View" />
+        <Tab href="/sample-view" label="Sample View" />
+        <Tab href="/batch-view" label="Batch View" />
+        <Tab href="/case-view" label="Case View" />
+      </Tabs>
+    </Box>
   );
 };
 

@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import "./StatusView.css";
 import { statusViewData } from "../../constants/testData";
 
-const StatusView = () => {
+function StatusView() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
 
@@ -90,6 +90,6 @@ const StatusView = () => {
       <ModalView />
     </div>
   );
-};
+}
 
 export default StatusView;

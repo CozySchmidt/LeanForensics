@@ -1,34 +1,42 @@
 import React from "react";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import "./CaseEditorScreen.css";
 import { kitTypeData, screeningData } from "../constants/testData";
 
 const placeHolderData = [
   {
+    key: new Date().getTime() + 1,
     sampleId: "",
     numSample: "",
     screening: "",
     kitType: "",
-    onHold: "",
+    onHold: false,
   },
   {
+    key: new Date().getTime() + 2,
     sampleId: "",
     numSample: "",
     screening: "",
     kitType: "",
-    onHold: "",
+    onHold: false,
   },
   {
+    key: new Date().getTime() + 3,
     sampleId: "",
     numSample: "",
     screening: "",
     kitType: "",
-    onHold: "",
+    onHold: false,
   },
 ];
 
@@ -39,6 +47,7 @@ const CaseEditorScreen = () => {
   const [comment, setComment] = React.useState("");
 
   const onSubmitCase = () => {
+    //TODO: validation required
     let caseObj = {
       caseId: caseId,
       comment: comment,
@@ -61,7 +70,41 @@ const CaseEditorScreen = () => {
   };
 
   const checkNotEmptyObject = (obj) => {
-    return !Object.values(obj).every((x) => x === null || x === "");
+    return !Object.values(obj).every(
+      (x) => x === null || x === "" || x === false
+    );
+  };
+
+  const addSubRow = (obj) => {
+      setSampleList([
+        ...sampleList,
+        {
+          key: new Date().getTime(),
+          sampleId: obj.sampleId+"-",
+          numSample: obj.numSample,
+          screening: obj.screening,
+          kitType: obj.kitType,
+          onHold: obj.onHold,
+        },
+      ]);
+  };
+  const addNewRow = () => {
+      setSampleList([
+        ...sampleList,
+        {
+          key: new Date().getTime(),
+          sampleId: "",
+          numSample: "",
+          screening: "",
+          kitType: "",
+          onHold: false,
+        },
+      ]);
+  };
+
+  const deleteRow = (index) => {
+    const items = sampleList.filter((item, i) => index !== i);
+    setSampleList(items);
   };
 
   return (
@@ -94,23 +137,17 @@ const CaseEditorScreen = () => {
 
         <Box border="1px solid lightgrey" borderRadius="8px">
           {sampleList.map((sample, i) => {
-            return <SampleRow key={i} order={i + 1} obj={sample} />;
+            return (
+              <SampleRow
+                key={sample.key}
+                index={i}
+                obj={sample}
+                onDelete={deleteRow}
+                onAdd={addSubRow}
+              />
+            );
           })}
-          <Button
-            variant="contained"
-            onClick={() => {
-              setSampleList([
-                ...sampleList,
-                {
-                  sampleId: "",
-                  numSample: "",
-                  screening: "",
-                  kitType: "",
-                  onHold: "",
-                },
-              ]);
-            }}
-          >
+          <Button variant="contained" onClick={addNewRow}>
             Add
           </Button>
           <Button variant="contained" onClick={onSubmitCase}>
@@ -124,21 +161,39 @@ const CaseEditorScreen = () => {
 
 const SampleRow = (props) => {
   const [sampleObj, setSampleObj] = React.useState(props.obj);
-  const [sampleId, setSampleId] = React.useState("");
-  const [numSample, setNumSample] = React.useState("");
-  const [screening, setScreening] = React.useState("");
-  const [kitType, setKitType] = React.useState("");
-  const [onHold, setOnHold] = React.useState("");
+  const [sampleId, setSampleId] = React.useState(props.obj.sampleId);
+  const [numSample, setNumSample] = React.useState(props.obj.numSample);
+  const [screening, setScreening] = React.useState(props.obj.screening);
+  const [kitType, setKitType] = React.useState(props.obj.kitType);
+  const [onHold, setOnHold] = React.useState(props.obj.onHold);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    props.onAdd(sampleObj);
+  };
+
   return (
     <div className="sample-row">
+      <IconButton
+        aria-label="delete"
+        onClick={() => props.onDelete(props.index)}
+      >
+        <DeleteRoundedIcon />
+      </IconButton>
       <div className="row-item" style={{ margin: "10px" }}>
-        {props.order}
+        {props.index + 1}
       </div>
       <div className="row-item">
         <TextField
           id="outlined"
           onChange={(e) => {
             sampleObj["sampleId"] = e.target.value;
+            setSampleObj(sampleObj);
             setSampleId(e.target.value);
           }}
           value={sampleId}
@@ -148,9 +203,10 @@ const SampleRow = (props) => {
       <div className="row-item">
         <TextField
           id="outlined"
-          type="number"
+          inputProps={{type: "number", min: 1}}
           onChange={(e) => {
             sampleObj["numSample"] = parseInt(e.target.value);
+            setSampleObj(sampleObj);
             setNumSample(e.target.value);
           }}
           value={numSample}
@@ -162,6 +218,7 @@ const SampleRow = (props) => {
           select
           onChange={(e) => {
             sampleObj["screening"] = e.target.value;
+            setSampleObj(sampleObj);
             setScreening(e.target.value);
           }}
           value={screening}
@@ -180,6 +237,7 @@ const SampleRow = (props) => {
           select
           onChange={(e) => {
             sampleObj["kitType"] = e.target.value;
+            setSampleObj(sampleObj);
             setKitType(e.target.value);
           }}
           value={kitType}
@@ -194,23 +252,43 @@ const SampleRow = (props) => {
         </TextField>
       </div>
       <div className="row-item">
-        <TextField
-          select
-          onChange={(e) => {
-            sampleObj["onHold"] = e.target.value;
-            setOnHold(e.target.value);
-          }}
-          value={onHold}
-          label="On Hold"
-          sx={{ m: 1, width: "25ch" }}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={onHold}
+              onChange={(e) => {
+                sampleObj["onHold"] = e.target.checked;
+                setSampleObj(sampleObj);
+                setOnHold(e.target.checked);
+              }}
+              color="warning"
+            />
+          }
+          label={onHold && "On Hold"}
+        />
+      </div>
+      <div className="row-item">
+        <IconButton
+          id="more-button"
+          aria-controls="more-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
         >
-          <MenuItem key={0} value={0}>
-            0
-          </MenuItem>
-          <MenuItem key={1} value={1}>
-            1
-          </MenuItem>
-        </TextField>
+          <MoreHorizIcon />
+        </IconButton>
+
+        <Menu
+          id="more-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "more-button",
+          }}
+        >
+          <MenuItem onClick={handleClose}>Create Sub-sample</MenuItem>
+        </Menu>
       </div>
     </div>
   );

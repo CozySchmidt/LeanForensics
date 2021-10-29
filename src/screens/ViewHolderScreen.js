@@ -2,7 +2,6 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { StatusView, CaseView, SampleView, BatchView } from "./";

@@ -72,7 +72,9 @@ function BatchEditorScreen({ location }) {
       editMode && editBatchData ? editBatchData.extractionTypeId : ""
     );
     setComment(editMode && editBatchData ? editBatchData.comment : "");
-  }, []);
+
+    //TODO: set editMode after checking status 200 or 404
+  }, [editMode]);
 
   const onSubmitBatch = () => {
     let batchObj = {

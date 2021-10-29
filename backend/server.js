@@ -1,45 +1,26 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require("cors")
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require("cors");
 
-const app = express()
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(cors())
+const app = express();
 
-var mysql = require('mysql')
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
-var con = mysql.createConnection({
-  host:"database-lean-management.cochwqctqqfi.us-east-2.rds.amazonaws.com",
-  user:"admin",
-  password:"BCIT_COMP4800",
-  database:"Sample_Case"
+app.get("/", (req, res) => {
+  res.json({message: "Lean Forensics App"});
 });
 
-con.connect(function(err){
-  if (err) throw err;
+/* Routes */
+require('./routes/batches')(app);
+// require('./routes/samples')(app);
+// require('./routes/cases')(app);
+// require('./routes/stages')(app);
+// require('./routes/kitTypes')(app);
+// require('./routes/screeningMethods')(app);
+// require('./routes/extractionMethods')(app);
 
-  console.log('connection successful')
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server is running on port 3000.");
 });
-
-app.get('/',(req,res)=>{
-  res.json("OK")
-})
-
-app.post("/", (req,res)=>{
-  var {sampleid, sampletype} = req.body
-  var records = [[req.body.sampleid, req.body.sampletype]]
-  if(records[0][0] != null){
-    con.query("INSERT into Samples (sample_id,sample_type) \
-    VALUES ?", [records], function(err,res,fields){
-
-      if(err) throw err
-
-      console.log(res)
-    })
-  }
-  res.json("Form recieved")
-})
-
-app.listen(3001, () =>{
-  console.log("Port 3001")
-})

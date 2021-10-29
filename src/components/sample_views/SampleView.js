@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import { useTable, useGlobalFilter } from 'react-table';
+import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import MOCK_DATA from '../../constants/mock_samples.json';
 import COLUMNS from './Columns';
 import './SampleView.css';
 import { GlobalFilter } from "./GlobalFilter";
+import {BsFillArrowDownCircleFill, BsFillArrowUpCircleFill} from "react-icons/bs";
 
 const SampleView = () => {
 
@@ -18,19 +19,24 @@ const SampleView = () => {
     prepareRow,
     state,
     setGlobalFilter,
-  } = useTable({ columns, data }, useGlobalFilter);
+  } = useTable({ columns, data }, useGlobalFilter, useSortBy);
 
   const { globalFilter } = state;
 
   return (
-    <>
+    <div className="viewHolder">
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
       <table className="table--samples" {...getTableProps()}>
         <thead className="table--samples--header">
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render('Header')}
+                  <span className="table--samples--header--sorted">
+                    {column.isSorted ? (column.isSortedDesc ? <BsFillArrowDownCircleFill/> : <BsFillArrowUpCircleFill/>) : ''}
+                  </span>
+                </th>
               ))}
               <th>Edit</th>
             </tr>
@@ -54,7 +60,7 @@ const SampleView = () => {
           })}
         </tbody>
       </table>
-    </>
+    </div>
   )
 
   

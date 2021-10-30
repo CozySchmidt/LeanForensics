@@ -9,16 +9,9 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Batch
-    const batch = new Batch({
-        batchId: req.body.batchId,
-        name: req.body.name,
-        stageId: req.body.stageId,
-        isCompleted: req.body.isCompleted,
-        date: req.body.date
-    });
+    const batch = req.body;
 
-    // Save Batch in db
+    // Create Batch in db
     Batch.create(batch, (err, data) => {
         if (err)
             res.status(500).send({
@@ -42,7 +35,7 @@ exports.findAll = (req, res) => {
     });
 };
 
-/* Find a single Batch with batchId */
+/* Find a Batch with batchId */
 exports.findOne = (req, res) => {
     Batch.findById(req.params.batchId, (err, data) => {
         if (err) {
@@ -77,6 +70,6 @@ exports.delete = (req, res) => {
                     message: "Unable to delete Batch #" + req.params.batchId
                 });
             }
-        } else res.send({ message: `Batch deleted!` });
+        } else res.send({ message: `Batch #${req.params.batchId} deleted!` });
     });
 };

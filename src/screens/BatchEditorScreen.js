@@ -14,7 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
-
+import { getBatchById } from "../api/BatchApi";
 import "./BatchEditorScreen.css";
 
 const columns = [
@@ -57,7 +57,9 @@ function BatchEditorScreen({ location }) {
   const [editMode, setEditMode] = React.useState(query.batchId ? true : false);
   const [selectionModel, setSelectionModel] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
-  const [initialStage, setInitialStage] = React.useState("");
+  const [initialStage, setInitialStage] = React.useState(
+    retrievedBatch ? retrievedBatch.StageId : ""
+  );
   const [extractionType, setExtractionType] = React.useState("");
   const [comment, setComment] = React.useState("");
 
@@ -65,16 +67,20 @@ function BatchEditorScreen({ location }) {
   const createBatchText = "Create Batch";
 
   useEffect(() => {
-    setRetrievedBatch(editMode && editBatchData);
+    editMode && retrieveBatchById();
     setSelectionModel(editMode && editBatchData ? editBatchData.samples : []);
-    setInitialStage(editMode && editBatchData ? editBatchData.stageId : "");
-    setExtractionType(
-      editMode && editBatchData ? editBatchData.extractionTypeId : ""
-    );
-    setComment(editMode && editBatchData ? editBatchData.comment : "");
 
     //TODO: set editMode after checking status 200 or 404
-  }, [editMode]);
+  }, []);
+
+  async function retrieveBatchById() {
+    let batch = await getBatchById(query.batchId);
+    console.log(batch);
+    setRetrievedBatch(batch);
+    setInitialStage(batch.StageId);
+    //TODO: set extraction type
+    //TODO: set comment
+  }
 
   const onSubmitBatch = () => {
     let batchObj = {
@@ -141,7 +147,12 @@ function BatchEditorScreen({ location }) {
         >
           <h3>Batch Information</h3>
 
-          {retrievedBatch && <h4>Batch ID:{retrievedBatch.batchId} </h4>}
+          {retrievedBatch && (
+            <div>
+              <h4>Batch ID: {retrievedBatch.BatchId} </h4>
+              <h4>Name: {retrievedBatch.Name} </h4>
+            </div>
+          )}
           <TextField
             id="outlined-select"
             onChange={(e) => setInitialStage(e.target.value)}

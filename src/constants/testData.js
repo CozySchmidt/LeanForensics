@@ -7,11 +7,9 @@ export const statusViewData = [
       {
         batchId: "batch1",
         samples: [
-          { sampleId: "sample1" },
-          { sampleId: "sample2" },
-          { sampleId: "sample3" },
-          { sampleId: "sample4" },
-          { sampleId: "sample5" },
+          { sampleId: "BCIT-2021-1" },
+          { sampleId: "BCIT-2021-2" },
+          { sampleId: "BCIT-2021-3" },
         ],
       },
       {
@@ -192,6 +190,11 @@ export const extractionTypeData = [
   { extractionTypeId: 2, extractionTypeName: "Demin" },
   { extractionTypeId: 3, extractionTypeName: "Differential" },
 ];
+export const screeningData = [
+  { screeningId: 1, screeningName: "Blood" },
+  { screeningId: 2, screeningName: "Semen" },
+  { screeningId: 3, screeningName: "Saliva" },
+];
 
 export const kitTypeData = [
   { kitTypeId: 1, kitTypeName: "Global Filer" },
@@ -207,3 +210,11 @@ export const stageData = [
   { stageId: 6, stageName: "Amplification" },
   { stageId: 7, stageName: "Report" },
 ];
+
+export const editBatchData = {
+  batchId: "123",
+  stageId: "1",
+  extractionTypeId: "1",
+  comment: "test comment",
+  samples: ["BCIT-2021-1", "BCIT-2021-2", "BCIT-2021-3", "BCIT-2021-4"],
+};

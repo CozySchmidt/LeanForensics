@@ -10,7 +10,7 @@ const batchesRouter = require('./routes/batches');
 const app = express();
 // init environment
 dotenv.config();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8888;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

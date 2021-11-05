@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   batchSampleData,
   stageData,
   extractionTypeData,
+  editBatchData,
 } from "../constants/testData";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -13,7 +13,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-
+import queryString from "query-string";
+import { getBatchById } from "../api/BatchApi";
 import "./BatchEditorScreen.css";
 
 const columns = [
@@ -49,19 +50,37 @@ const columns = [
   },
 ];
 
-function BatchEditorScreen() {
+function BatchEditorScreen({ location }) {
   const history = useHistory();
-  const [editMode, setEditMode] = React.useState(false);
+  const query = queryString.parse(location.search);
+  const [retrievedBatch, setRetrievedBatch] = React.useState(null);
+  const [editMode, setEditMode] = React.useState(query.batchId ? true : false);
   const [selectionModel, setSelectionModel] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
-  const [initialStage, setInitialStage] = React.useState("");
+  const [initialStage, setInitialStage] = React.useState(
+    retrievedBatch ? retrievedBatch.StageId : ""
+  );
   const [extractionType, setExtractionType] = React.useState("");
   const [comment, setComment] = React.useState("");
 
   const editBatchText = "Edit Batch";
   const createBatchText = "Create Batch";
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    editMode && retrieveBatchById();
+    setSelectionModel(editMode && editBatchData ? editBatchData.samples : []);
+
+    //TODO: set editMode after checking status 200 or 404
+  }, []);
+
+  async function retrieveBatchById() {
+    let batch = await getBatchById(query.batchId);
+    console.log(batch);
+    setRetrievedBatch(batch);
+    setInitialStage(batch.StageId);
+    //TODO: set extraction type
+    //TODO: set comment
+  }
 
   const onSubmitBatch = () => {
     let batchObj = {
@@ -95,7 +114,7 @@ function BatchEditorScreen() {
               </Button>
             )}
           </Grid>
-          <Grid xs={4}></Grid>
+          <Grid item xs={4}></Grid>
           <Grid item xs="auto">
             {editMode && (
               <Button
@@ -126,7 +145,14 @@ function BatchEditorScreen() {
           borderRadius="8px"
           autoComplete="off"
         >
-          <h4>Batch Information</h4>
+          <h3>Batch Information</h3>
+
+          {retrievedBatch && (
+            <div>
+              <h4>Batch ID: {retrievedBatch.BatchId} </h4>
+              <h4>Name: {retrievedBatch.Name} </h4>
+            </div>
+          )}
           <TextField
             id="outlined-select"
             onChange={(e) => setInitialStage(e.target.value)}

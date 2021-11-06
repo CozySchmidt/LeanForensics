@@ -1,7 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
-import MOCK_DATA from '../../constants/mock_samples.json';
-import COLUMNS from './Columns';
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import MOCK_DATA from '../../constants/mock_batch.json';
+import COLUMNS from './BatchColumn';
 import './BatchView.css';
 import { GlobalFilter } from "./GlobalFilter";
 import {BsFillArrowDownCircleFill, BsFillArrowUpCircleFill} from "react-icons/bs";
@@ -23,6 +26,48 @@ const BatchView = () => {
 
   const { globalFilter } = state;
 
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+
+  const handleModalOpen = (batch) => {
+    setOpenModal(true);
+    setSelectedBatch(batch.original);
+  };
+  const handleModalClose = () => setOpenModal(false);
+
+  const ModalView = () => {
+    const style = {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: 400,
+      bgcolor: "background.paper",
+      border: "2px solid #000",
+      boxShadow: 24,
+      p: 4,
+    };
+
+    return (
+      <Modal
+        open={openModal}
+        onClose={handleModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Batch Number: {selectedBatch && selectedBatch.batchNumber}
+          </Typography>
+          {selectedBatch &&
+            selectedBatch.samples.map((sample, i) => {
+              return <div key={i}>{sample.sampleNumber}, {sample.currentStatus}</div>;
+            })}
+        </Box>
+      </Modal>
+    );
+  };
+
   return (
     <div className="viewHolder">
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
@@ -38,6 +83,7 @@ const BatchView = () => {
                   </span>
                 </th>
               ))}
+              <th>View Samples</th>
               <th>Edit</th>
             </tr>
           ))}
@@ -51,8 +97,13 @@ const BatchView = () => {
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 })}
                 <td>
+                  <button onClick={() => handleModalOpen(row)}>
+                    View Samples
+                  </button>
+                </td>
+                <td>
                   <button onClick={() => {
-                    alert(`Do you wish to edit ${row.values['sampleNumber']}?`)
+                    alert(`Do you wish to edit ${row.values['batchNumber']}?`)
                   }}>Edit</button>
                 </td>
               </tr>
@@ -60,6 +111,7 @@ const BatchView = () => {
           })}
         </tbody>
       </table>
+      <ModalView />
     </div>
   )
 

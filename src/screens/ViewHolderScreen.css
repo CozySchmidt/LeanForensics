@@ -1,17 +1,17 @@
 .screen-holder {
-  width: 80%;
-  height: 90%;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin: 0 auto;
+    width: 80%;
+    height: 90%;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin: 0 auto;
 }
 
 .tool-bar {
-  padding: 30px;
+    padding: 30px;
 }
 
 .view-wrapper {
-  border: 1px solid #000000;
-  height: 90%;
-  display: flex;
+    border: 1px solid #000000;
+    height: 90%;
+    display: flex;
 }

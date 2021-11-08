@@ -1,18 +1,18 @@
 .status-container {
-  display: flex;
-  overflow-x: auto;
-  padding-top: 30px;
-  padding-bottom: 30px;
+    display: flex;
+    overflow-x: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .status-content {
-  display: flex;
+    display: flex;
 }
 
 .status-column {
-  border: 1px solid black;
-  margin: 1em;
-  padding: 1em;
-  width: 200px;
-  overflow: auto;
+    border: 1px solid black;
+    margin: 1em;
+    padding: 1em;
+    width: 200px;
+    overflow: auto;
 }

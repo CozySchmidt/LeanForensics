@@ -1,16 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv/types');
 const cors = require("cors");
-const db = require('./models/db');
 
-const batchesRouter = require('./routes/batches');
+/* Route paths */
+const batches = require('./routes/batches');
+const samples = require('./routes/samples');
+const cases = require('./routes/cases');
+const methods = require('./routes/methods');
+const stages = require('./routes/stages');
 
 // init express
 const app = express();
 // init environment
 dotenv.config();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8888;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,15 +25,13 @@ app.get("/", (req, res) => {
 });
 
 /* Routes */
-// app.use("/batches", batchesRouter);
-require('./routes/batches')(app);
-// require('./routes/samples')(app);
-// require('./routes/cases')(app);
-// require('./routes/stages')(app);
-// require('./routes/kitTypes')(app);
-// require('./routes/screeningMethods')(app);
-// require('./routes/extractionMethods')(app);
+app.use("/batches", batches);
+app.use("/samples", samples);
+app.use("/cases", cases);
+app.use("/", methods);
+app.use("/stages", stages);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

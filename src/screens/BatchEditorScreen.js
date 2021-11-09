@@ -14,7 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
-import { getBatchById } from "../api/BatchApi";
+import { getSamplesByBatchId } from "../api/SampleApi";
 import "./BatchEditorScreen.css";
 
 const columns = [
@@ -74,7 +74,7 @@ function BatchEditorScreen({ location }) {
   }, []);
 
   async function retrieveBatchById() {
-    let batch = await getBatchById(query.batchId);
+    let batch = await getSamplesByBatchId(query.batchId);
     console.log(batch);
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId);

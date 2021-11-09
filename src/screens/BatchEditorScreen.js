@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  batchSampleData,
-  stageData,
-  extractionTypeData,
-  editBatchData,
-} from "../constants/testData";
+import { stageData, extractionTypeData } from "../constants/testData";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,48 +9,30 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
-import { getSamplesByBatchId } from "../api/SampleApi";
+import { getSamplesByBatchId, getAllSamples } from "../api/SampleApi";
+import { makeStyles, createStyles } from "@mui/styles";
+import { createTheme } from '@mui/material/styles';
 import "./BatchEditorScreen.css";
 
-const columns = [
-  {
-    field: "sampleId",
-    headerName: "Sample ID",
-    width: 200,
-  },
-  {
-    field: "screening",
-    headerName: "Screening Method",
-    width: 200,
-  },
-  {
-    field: "number",
-    headerName: "# of Samples",
-    width: 130,
-  },
-  {
-    field: "kit",
-    headerName: "Kit Type",
-    width: 150,
-  },
-  {
-    field: "hold",
-    headerName: "On Hold",
-    width: 150,
-  },
-  {
-    field: "date",
-    headerName: "Created Date",
-    width: 300,
-  },
-];
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      '& .super-app-theme--selected': {
+        backgroundColor:  "rgba(69, 245, 66, 0.08)",
+      },
+    }
+  })
+);
 
 function BatchEditorScreen({ location }) {
+  const classes = useStyles();
   const history = useHistory();
   const query = queryString.parse(location.search);
   const [retrievedBatch, setRetrievedBatch] = React.useState(null);
   const [editMode, setEditMode] = React.useState(query.batchId ? true : false);
   const [selectionModel, setSelectionModel] = React.useState([]);
+  const [initialSelectionModel, setInitialSelectionModel] = React.useState([]);
+  const [sampleList, setSampleList] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
   const [initialStage, setInitialStage] = React.useState(
     retrievedBatch ? retrievedBatch.StageId : ""
@@ -67,10 +44,8 @@ function BatchEditorScreen({ location }) {
   const createBatchText = "Create Batch";
 
   useEffect(() => {
+    retrieveAvailableSamples();
     editMode && retrieveBatchById();
-    setSelectionModel(editMode && editBatchData ? editBatchData.samples : []);
-
-    //TODO: set editMode after checking status 200 or 404
   }, []);
 
   async function retrieveBatchById() {
@@ -78,8 +53,19 @@ function BatchEditorScreen({ location }) {
     console.log(batch);
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId);
+    let selected = batch.Samples.map((sample) => {
+      return sample["SampleId"];
+    });
+    setSelectionModel(selected);
+    setInitialSelectionModel(selected);
     //TODO: set extraction type
     //TODO: set comment
+  }
+
+  async function retrieveAvailableSamples() {
+    let samples = await getAllSamples();
+    console.log(samples);
+    setSampleList(samples);
   }
 
   const onSubmitBatch = () => {
@@ -195,9 +181,9 @@ function BatchEditorScreen({ location }) {
           </FormControl>
         </Box>
         <DataGrid
-          rows={batchSampleData}
+          rows={sampleList}
           columns={columns}
-          getRowId={(r) => r.sampleId}
+          getRowId={(r) => r.SampleId}
           checkboxSelection
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -206,6 +192,10 @@ function BatchEditorScreen({ location }) {
           onSelectionModelChange={(newSelectionModel) => {
             setSelectionModel(newSelectionModel);
           }}
+          getRowClassName={(params) =>
+            initialSelectionModel.includes(params.id) && `super-app-theme--selected`
+          }
+          className={classes.root}
           selectionModel={selectionModel}
           style={{ height: "85%", marginTop: "10px" }}
         />
@@ -213,5 +203,47 @@ function BatchEditorScreen({ location }) {
     </div>
   );
 }
+
+const columns = [
+  {
+    field: "SampleId",
+    headerName: "Sample ID",
+    width: 150,
+  },
+  {
+    field: "MethodName",
+    headerName: "Screening Method",
+    width: 200,
+  },
+  {
+    field: "KitName",
+    headerName: "Kit Type",
+    width: 130,
+  },
+  {
+    field: "ExtractionName",
+    headerName: "Extraction Type",
+    width: 150,
+  },
+  {
+    field: "OnHold",
+    headerName: "On Hold",
+    width: 150,
+    renderCell: (cellValues) => {
+      return (
+        cellValues === 1 && (
+          <Button variant="contained" color="warning">
+            On Hold
+          </Button>
+        )
+      );
+    },
+  },
+  {
+    field: "CreatedDate",
+    headerName: "Created Date",
+    width: 300,
+  },
+];
 
 export default BatchEditorScreen;

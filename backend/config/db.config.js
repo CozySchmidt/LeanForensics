@@ -1,4 +1,4 @@
-/* For testing purposes */
+/* Configure DB */
 require("dotenv").config();
 
 module.exports = {

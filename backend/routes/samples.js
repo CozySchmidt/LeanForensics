@@ -8,13 +8,13 @@ router.get("/", (req, res) => {
     pool.getConnection(function (err, connection) {
         if (err) throw err; // not connected!
         let sql = `
-        SELECT s.SampleId, s.MethodId, m.MethodName, s.ExtractionId, 
+        SELECT s.SampleId, s.ScreeningId, m.ScreeningName, s.ExtractionId, 
             e.ExtractionName, s.KitId, k.KitName, s.CaseId, s.OnHold, c.CreatedDate
         FROM Sample s
         left join KitType k
           on k.KitId = s.KitId
         left join ScreeningMethod m
-          on s.MethodId = m.MethodId
+          on s.ScreeningId = m.ScreeningId
         left join ExtractionMethod e
           on e.ExtractionId = s.ExtractionId
         left join CaseTable c

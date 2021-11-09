@@ -134,7 +134,7 @@ router.get("/:batchId/samples", (req, res) => {
                 } else if (batchResult.length) {
                     connection.query(
                         `SELECT b.SampleId, b.BatchId, s.OnHold, s.KitId, 
-                                     s.MethodId, s.CaseId, s.ExtractionId
+                                     s.ScreeningId, s.CaseId, s.ExtractionId
                               FROM BatchSample b
                               INNER JOIN Sample s
                               ON b.SampleId = s.SampleId

@@ -211,7 +211,7 @@ const columns = [
     width: 150,
   },
   {
-    field: "MethodName",
+    field: "ScreeningName",
     headerName: "Screening Method",
     width: 200,
   },

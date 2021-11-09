@@ -17,3 +17,18 @@ export async function getAllSamples() {
       return null;
   }
 }
+
+export async function getSamplesByBatchId(BatchId) {
+  try {
+      let url = `http://${backend}:${PORT}/samples`;
+      let response = await fetch(url);
+      let json = await response.json();
+      if (json.success) {
+          return json.body;
+      } else {
+          return null;
+      }
+  } catch (error) {
+      return null;
+  }
+}

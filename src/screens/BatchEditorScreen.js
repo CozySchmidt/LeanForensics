@@ -9,7 +9,8 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
-import { getSamplesByBatchId, getAllSamples } from "../api/SampleApi";
+import {  getAllSamples } from "../api/SampleApi";
+import {  getSamplesByBatchId } from "../api/BatchApi";
 import { makeStyles, createStyles } from "@mui/styles";
 import { createTheme } from '@mui/material/styles';
 import "./BatchEditorScreen.css";
@@ -56,22 +57,9 @@ function BatchEditorScreen({ location }) {
     let selected = batch.Samples.map((sample) => {
       return sample["SampleId"];
     });
-<<<<<<< HEAD
     console.log(selected)
     setSelectionModel(selected);
     setInitialSelectionModel(selected);
-  }
-
-  async function retrieveAvailableSamples() {
-    let samples = await getAllSamples();
-    console.log(samples);
-    setSampleList(samples);
-=======
-    setSelectionModel(selected);
-    setInitialSelectionModel(selected);
-    //TODO: set extraction type
-    //TODO: set comment
->>>>>>> retrieving batch with original edit sample coloring
   }
 
   async function retrieveAvailableSamples() {
@@ -220,7 +208,6 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
-<<<<<<< HEAD
     width: 100,
   },
   {
@@ -230,14 +217,8 @@ const columns = [
   },
   {
     field: "ScreeningName",
-=======
+    field: "Screening Method",
     width: 150,
-  },
-  {
-    field: "MethodName",
->>>>>>> retrieving batch with original edit sample coloring
-    headerName: "Screening Method",
-    width: 200,
   },
   {
     field: "KitName",

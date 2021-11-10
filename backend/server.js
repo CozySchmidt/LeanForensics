@@ -1,45 +1,37 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require("cors")
+const express = require('express');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv/types');
+const cors = require("cors");
 
-const app = express()
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(cors())
+/* Route paths */
+const batches = require('./routes/batches');
+const samples = require('./routes/samples');
+const cases = require('./routes/cases');
+const methods = require('./routes/methods');
+const stages = require('./routes/stages');
 
-var mysql = require('mysql')
+// init express
+const app = express();
+// init environment
+dotenv.config();
+const PORT = process.env.PORT || 8888;
 
-var con = mysql.createConnection({
-  host:"database-lean-management.cochwqctqqfi.us-east-2.rds.amazonaws.com",
-  user:"admin",
-  password:"BCIT_COMP4800",
-  database:"Sample_Case"
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.json({message: "OK"});
 });
 
-con.connect(function(err){
-  if (err) throw err;
+/* Routes */
+app.use("/batches", batches);
+app.use("/samples", samples);
+app.use("/cases", cases);
+app.use("/", methods);
+app.use("/stages", stages);
 
-  console.log('connection successful')
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-app.get('/',(req,res)=>{
-  res.json("OK")
-})
-
-app.post("/", (req,res)=>{
-  var {sampleid, sampletype} = req.body
-  var records = [[req.body.sampleid, req.body.sampletype]]
-  if(records[0][0] != null){
-    con.query("INSERT into Samples (sample_id,sample_type) \
-    VALUES ?", [records], function(err,res,fields){
-
-      if(err) throw err
-
-      console.log(res)
-    })
-  }
-  res.json("Form recieved")
-})
-
-app.listen(3001, () =>{
-  console.log("Port 3001")
-})

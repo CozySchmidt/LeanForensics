@@ -8,7 +8,7 @@ export async function getAllBatches() {
         let response = await fetch(url);
         let json = await response.json();
         if (json.success) {
-            return json.body.results[0];
+            return json.body;
         } else {
             return null;
         }
@@ -16,6 +16,7 @@ export async function getAllBatches() {
         return null;
     }
 }
+
 
 export async function getBatchById(BatchId) {
     try {
@@ -32,7 +33,12 @@ export async function getBatchById(BatchId) {
     }
 }
 
-
+/**
+ * 
+ * @param {*} Batch 
+ * @param {*} Samples 
+ * @returns 
+ */
 export async function createBatch(Batch, Samples) {
   try {
       let response = await fetch(`http://${backend}:${PORT}/batches`, {
@@ -52,4 +58,20 @@ export async function createBatch(Batch, Samples) {
   } catch (error) {
       return false;
   }
+}
+
+
+export async function getAllBatchesByStages() {
+    try {
+        let url = `http://${backend}:${PORT}/stages/batches`;
+        let response = await fetch(url);
+        let json = await response.json();
+        if (json.success) {
+            return json.body;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
 }

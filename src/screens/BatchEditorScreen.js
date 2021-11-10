@@ -56,10 +56,9 @@ function BatchEditorScreen({ location }) {
     let selected = batch.Samples.map((sample) => {
       return sample["SampleId"];
     });
+    console.log(selected)
     setSelectionModel(selected);
     setInitialSelectionModel(selected);
-    //TODO: set extraction type
-    //TODO: set comment
   }
 
   async function retrieveAvailableSamples() {

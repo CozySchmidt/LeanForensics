@@ -17,6 +17,7 @@ export async function getAllBatches() {
   }
 }
 
+
 export async function getBatchById(BatchId) {
   try {
     let url = `http://${backend}:${PORT}/batches/${BatchId}`;

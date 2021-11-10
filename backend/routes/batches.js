@@ -111,10 +111,15 @@ router.get("/:batchId/samples", (req, res) => {
     if (err) throw err; // not connected!
     let batchId = req.params.batchId;
     connection.query(
-      `SELECT * FROM Batch WHERE BatchId = ${batchId}`,
+      `
+      SELECT * 
+      FROM Batch b
+      left join ExtractionMethod e
+        on b.ExtractionId = e.ExtractionId
+      WHERE BatchId = ${batchId}`,
       (err, batchResult) => {
         connection.release();
-        // console.log(batchResult);
+        console.log(batchResult);
         if (err) {
           console.log("error: ", err);
           res.status(500).send({
@@ -123,13 +128,22 @@ router.get("/:batchId/samples", (req, res) => {
           });
         } else if (batchResult.length > 0) {
           connection.query(
-            `SELECT b.SampleId, b.BatchId, s.OnHold, s.KitId, 
-                                     s.ScreeningId, s.CaseId
-                              FROM BatchSample b
-                              INNER JOIN Sample s
-                                ON b.SampleId = s.SampleId
-                                AND b.CaseId = s.CaseId
-                              WHERE BatchId = ${batchId}`,
+            `
+            SELECT b.SampleId, s.SampleName, b.BatchId, s.OnHold, s.ScreeningId, m.ScreeningName, 
+              s.KitId, k.KitName, s.CaseId
+            FROM BatchSample b
+            INNER JOIN Sample s
+              ON b.SampleId = s.SampleId
+              AND b.CaseId = s.CaseId
+            left join KitType k
+              on k.KitId = s.KitId
+            left join ScreeningMethod m
+              on s.ScreeningId = m.ScreeningId
+            left join CaseTable c
+              on s.CaseId = c.CaseId
+            WHERE BatchId = ${batchId}
+            ORDER BY s.SampleId ASC
+            `,
             (err, result) => {
               if (err) {
                 console.log("error: ", err);

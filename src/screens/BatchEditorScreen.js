@@ -207,7 +207,12 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
-    width: 150,
+    width: 100,
+  },
+  {
+    field: "CaseId",
+    headerName: "Case ID",
+    width: 100,
   },
   {
     field: "ScreeningName",

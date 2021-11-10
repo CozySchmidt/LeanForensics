@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { useHistory } from "react-router-dom";
+import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -16,12 +17,13 @@ function StatusView() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [dragging, setDragging] = useState(false);
+  const [pageSize, setPageSize] = React.useState(15);
   const [stageList, setStageList] = useState(null);
 
   useEffect(() => {
     retrieveBatches();
   }, []);
-  
+
   async function retrieveBatches() {
     let stageList = await getAllBatchesByStages();
     console.log(stageList);
@@ -42,13 +44,13 @@ function StatusView() {
       top: "50%",
       left: "50%",
       transform: "translate(-50%, -50%)",
-      width: 400,
+      width: "70%",
+      height: "70%",
       bgcolor: "background.paper",
       border: "2px solid #000",
       boxShadow: 24,
       p: 4,
     };
-
     return (
       <Modal
         open={openModal}
@@ -57,13 +59,29 @@ function StatusView() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          {selectedBatch &&
-            selectedBatch.Samples.map((sample, i) => {
-              return <div key={i}>{sample.SampleId}</div>;
-            })}
+          {selectedBatch && (
+            <div>
+              <div>Batch ID: {selectedBatch.BatchId}</div>
+              <div>Batch Name: {selectedBatch.Name}</div>
+              <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
+              <div>Created Date: {selectedBatch.CreatedDate}</div>
+              <div>Completed: {selectedBatch.IsCompleted ? "Yes" : "No"}</div>
+            </div>
+          )}
+          {selectedBatch && (
+            <DataGrid
+              rows={selectedBatch.Samples}
+              columns={columns}
+              getRowId={(r) => r.SampleId}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              pagination
+              rowsPerPageOptions={[15, 20, 50]}
+              style={{ height: "70%", marginTop: "10px" }}
+            />
+          )}
+
           <Button
             size="large"
             variant="outlined"
@@ -82,12 +100,12 @@ function StatusView() {
   };
 
   const onStartScroll = (event) => {
-    console.log("onStartScroll", event);
+    // console.log("onStartScroll", event);
     setDragging(true);
   };
 
   const onEndScroll = (event) => {
-    console.log("onEndScroll", event);
+    // console.log("onEndScroll", event);
     setDragging(false);
   };
 
@@ -96,10 +114,10 @@ function StatusView() {
       className="status-container"
       onStartScroll={onStartScroll}
       onScroll={(event) => {
-        console.log("onScroll", event);
+        // console.log("onScroll", event);
       }}
       onClick={(event) => {
-        console.log("onClick", event);
+        // console.log("onClick", event);
       }}
       onEndScroll={onEndScroll}
     >
@@ -134,5 +152,47 @@ function StatusView() {
     </ScrollContainer>
   );
 }
+
+const columns = [
+  {
+    field: "SampleId",
+    headerName: "Sample ID",
+    width: 100,
+  },
+  {
+    field: "SampleName",
+    headerName: "Sample Name",
+    width: 200,
+  },
+  {
+    field: "CaseId",
+    headerName: "Case ID",
+    width: 90,
+  },
+  {
+    field: "KitName",
+    headerName: "Kit Type",
+    width: 150,
+  },
+  {
+    field: "ScreeningName",
+    headerName: "Screening",
+    width: 110,
+  },
+  {
+    field: "OnHold",
+    headerName: "On Hold",
+    width: 150,
+    renderCell: (cellValues) => {
+      return (
+        cellValues === 1 && (
+          <Button variant="contained" color="warning">
+            On Hold
+          </Button>
+        )
+      );
+    },
+  },
+];
 
 export default StatusView;

@@ -9,8 +9,8 @@ import Typography from "@mui/material/Typography";
 
 import "./StatusView.css";
 import { statusViewData } from "../../constants/testData";
-import { getAllBatchesByStages } from "../../api/BatchApi";
-import { getSamplesByBatchId } from "../../api/SampleApi";
+import { getAllBatchesByStages } from "../../api/OthersApi";
+import { getSamplesByBatchId } from "../../api/BatchApi";
 
 function StatusView() {
   const history = useHistory();

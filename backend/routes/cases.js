@@ -2,6 +2,36 @@ const pool = require("../config/db");
 const express = require("express");
 const router = express.Router();
 
+/* Get all cases */
+router.get("/", (req, res) => {
+  pool.getConnection(function (err, connection) {
+    if (err) throw err; // not connected!
+    connection.query(
+      `SELECT * FROM CaseTable`,
+      (err, caseResult) => {
+        connection.release();
+        console.log(caseResult);
+        if (err) {
+          console.log("error: ", err);
+          res.status(500).send({
+            success: false,
+            message: err.message || "Error: Cannot get case",
+          });
+        } else if (caseResult.length > 0) {
+          res.status(200).send({
+            success: true,
+            body: caseResult,
+          });
+        } else {
+          res.status(404).send({
+            success: false,
+            message: `Cases not found!`,
+          });
+        }
+      }
+    );
+  });
+});
 /* Get a case with caseId */
 router.get("/:caseId/samples", (req, res) => {
   pool.getConnection(function (err, connection) {

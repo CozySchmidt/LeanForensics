@@ -7,8 +7,21 @@ const router = express.Router();
 router.get("/", (req, res) => {
     pool.getConnection(function (err, connection) {
         if (err) throw err; // not connected!
+        let sql = `
+        SELECT s.SampleId, s.ScreeningId, m.ScreeningName, 
+            s.KitId, k.KitName, s.CaseId, s.OnHold, c.CreatedDate
+        FROM Sample s
+        left join KitType k
+          on k.KitId = s.KitId
+        left join ScreeningMethod m
+          on s.ScreeningId = m.ScreeningId
+        left join CaseTable c
+          on s.CaseId = c.CaseId
+        ORDER BY s.SampleId ASC
+        ;
+        `
         connection.query(
-            "SELECT * FROM Sample",
+            sql,
             (err, result) => {
             connection.release();
             if (err) {

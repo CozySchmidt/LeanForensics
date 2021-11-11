@@ -299,4 +299,42 @@ router.delete("/:batchId", (req, res) => {
   });
 });
 
+/* Update a Batch's status */
+router.patch("/:batchId/stages/:stageId", (req, res) => {
+  pool.getConnection(function (err, connection) {
+    if (err) throw err; // not connected
+    let batchId = req.params.batchId;
+    let stageId = req.params.stageId;
+    let sql = `
+      UPDATE Batch
+      SET StageId = ${stageId}
+      WHERE BatchId = ${batchId};
+    `
+    connection.query(sql,
+      (err, result) => {
+        connection.release();
+        if (err) {
+          console.log("error: ", err);
+          res.status(500).send({
+            success: false,
+            message: err.message,
+          });
+        } else if (result.affectedRows > 0) {
+          console.log(`Batch ${batchId} updated!`);
+          res.status(200).send({
+            success: true,
+            message: `Batch ${batchId} updated!`,
+            body: result,
+          });
+        } else {
+          res.status(404).send({
+            success: false,
+            message: `Batch ${batchId} not found!`,
+          });
+        }
+      }
+    );
+  });
+});
+
 module.exports = router;

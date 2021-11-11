@@ -73,3 +73,23 @@ export async function getSamplesByBatchId(BatchId) {
     return null;
   }
 }
+
+export async function updateBatchStage(batchId, stageId) {
+  try {
+    let response = await fetch(`http://${backend}:${PORT}/batches/${batchId}/stages/${stageId}`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }
+    });
+    let json = await response.json();
+    if (json.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}

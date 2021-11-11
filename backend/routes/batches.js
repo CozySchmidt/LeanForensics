@@ -207,7 +207,6 @@ router.get("/:batchId/samples", (req, res) => {
   pool.getConnection(function (err, connection) {
     if (err) throw err; // not connected!
     let batchId = req.params.batchId;
-<<<<<<< HEAD
     let sql = `SELECT * 
                FROM Batch b
                LEFT JOIN ExtractionMethod e
@@ -226,28 +225,6 @@ router.get("/:batchId/samples", (req, res) => {
         let sampleSql =
             `SELECT b.SampleId, s.SampleName, b.BatchId, 
               s.OnHold, s.ScreeningId, m.ScreeningName, 
-=======
-    connection.query(
-      `
-      SELECT * 
-      FROM Batch b
-      left join ExtractionMethod e
-        on b.ExtractionId = e.ExtractionId
-      WHERE BatchId = ${batchId}`,
-      (err, batchResult) => {
-        connection.release();
-        console.log(batchResult);
-        if (err) {
-          console.log("error: ", err);
-          res.status(500).send({
-            success: false,
-            message: err.message,
-          });
-        } else if (batchResult.length > 0) {
-          connection.query(
-            `
-            SELECT b.SampleId, s.SampleName, b.BatchId, s.OnHold, s.ScreeningId, m.ScreeningName, 
->>>>>>> displays samples in the batch in status view
               s.KitId, k.KitName, s.CaseId
             FROM BatchSample b
             INNER JOIN Sample s
@@ -261,7 +238,6 @@ router.get("/:batchId/samples", (req, res) => {
               on s.CaseId = c.CaseId
             WHERE BatchId = ${batchId}
             ORDER BY s.SampleId ASC
-<<<<<<< HEAD
             `;
         connection.query(sampleSql, (err, result) => {
           if (err) {
@@ -288,65 +264,6 @@ router.get("/:batchId/samples", (req, res) => {
           success: false,
           message: `Batch ${batchId} not found!`,
         });
-=======
-            `,
-            (err, result) => {
-              if (err) {
-                console.log("error: ", err);
-                res.status(500).send({
-                  success: false,
-                  message: err.message,
-                });
-              } else if (result.length > 0) {
-                let formatResult = { ...batchResult[0], Samples: result };
-                res.status(200).send({
-                  success: true,
-                  body: formatResult,
-                });
-                console.log(formatResult);
-              } else {
-                res.status(404).send({
-                  success: false,
-                  message: `Samples not found!`,
-                });
-              }
-            }
-          );
-        } else {
-          res.status(404).send({
-            success: false,
-            message: `Batch ${batchId} not found!`,
-          });
-        }
-      }
-    );
-  });
-});
-
-/* Update a Batch */
-router.put("/:batchId/samples", (req, res) => {
-  pool.getConnection(function (err, connection) {
-    if (err) throw err;
-    let batchId = req.params.batchId;
-    let batch = req.body;
-    connection.query(
-      `UPDATE Batch SET ? WHERE BatchId = ${batchId}`,
-      batch,
-      (err, result) => {
-        connection.release();
-        if (err) {
-          res.status(500).send({
-            success: false,
-            message: err.message,
-          });
-        } else {
-          console.log("Batch updated: ", { id: result.insertId, ...batch });
-          res.status(200).send({
-            success: true,
-            body: { id: result.insertId, ...batch },
-          });
-        }
->>>>>>> displays samples in the batch in status view
       }
     });
   });

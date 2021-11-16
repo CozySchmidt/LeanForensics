@@ -1,4 +1,4 @@
-const mysql = require("mysql-await");
+const mysql = require("mysql2");
 const dbConfig = require("./db.config");
 
 

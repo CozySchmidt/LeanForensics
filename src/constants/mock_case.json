@@ -1,21 +1,6 @@
 [{
-  "batch" : {
-    "Name" : "Update Test 4",
-    "StageId": "2",
-    "IsCompleted": 0,
-    "ExtractionId": 1
-  },
-  "sampleList" : [
-    {"SampleId" : "1", "CaseId": 16},
-    {"SampleId" : "10", "CaseId": 6},
-    {"SampleId" : "13", "CaseId": 6},
-    {"SampleId" : "3", "CaseId": 17},
-    {"SampleId" : "2", "CaseId": 18}
-  ]
-},{
-    "batchNumber": "01",
-    "currentStatus": "Completed",
     "caseNumber": "BCIT-2021-0001",
+    "currentStatus": "Completed",
     "samples": [{
             "sampleNumber": "BCIT-2021-0001-01",
             "currentStatus": "Completed",
@@ -48,14 +33,13 @@
     "created": "08/27/2021",
     "reported": "10/20/2021"
 }, {
-    "batchNumber": "02",
-    "currentStatus": "Extraction",
     "caseNumber": "BCIT-2021-0002",
+    "currentStatus": "Extraction",
     "samples": [{
             "sampleNumber": "BCIT-2021-0002-01",
             "currentStatus": "Extraction",
             "caseNumber": "BCIT-2021-0002",
-            "batchNumber": "01",
+            "batchNumber": "02",
             "submitted": "08/20/2021",
             "created": "08/27/2021",
             "reported": ""
@@ -64,7 +48,7 @@
             "sampleNumber": "BCIT-2021-0002-02",
             "currentStatus": "Extraction",
             "caseNumber": "BCIT-2021-0002",
-            "batchNumber": "01",
+            "batchNumber": "03",
             "submitted": "08/20/2021",
             "created": "08/27/2021",
             "reported": ""
@@ -73,7 +57,7 @@
             "sampleNumber": "BCIT-2021-0002-03",
             "currentStatus": "Extraction",
             "caseNumber": "BCIT-2021-0002",
-            "batchNumber": "01",
+            "batchNumber": "02",
             "submitted": "08/20/2021",
             "created": "08/27/2021",
             "reported": ""
@@ -83,5 +67,3 @@
     "created": "08/27/2021",
     "reported": ""
 }]
-
-

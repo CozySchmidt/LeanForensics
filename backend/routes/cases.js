@@ -109,7 +109,7 @@ router.post("/", (req, res) => {
           message: "Fields cannot be blank!",
         });
       }
-
+      
       connection.query(sql, caseObj, (err, caseResult) => {
         connection.release();
         console.log(caseResult);

@@ -18,7 +18,6 @@ router.get("/", (req, res) => {
         left join CaseTable c
           on s.CaseId = c.CaseId
         ORDER BY s.SampleId ASC
-        ;
         `;
         connection.query(sql, (err, result) => {
             connection.release();
@@ -37,7 +36,7 @@ router.get("/", (req, res) => {
                 res.status(404).send({
                     success: false,
                     message: "No samples found!",
-                })
+                });
             }
         });
 

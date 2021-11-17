@@ -10,7 +10,12 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
 import { getAllSamples } from "../api/SampleApi";
-import { getSamplesByBatchId, pullOutSamplesFromBatch } from "../api/BatchApi";
+import {
+  getSamplesByBatchId,
+  pullOutSamplesFromBatch,
+  updateBatchInfo,
+  createBatch,
+} from "../api/BatchApi";
 import { makeStyles, createStyles } from "@mui/styles";
 import { createTheme } from "@mui/material/styles";
 import "./BatchEditorScreen.css";
@@ -35,11 +40,10 @@ function BatchEditorScreen({ location }) {
   const [initialSelectionModel, setInitialSelectionModel] = React.useState([]);
   const [sampleList, setSampleList] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
-  const [initialStage, setInitialStage] = React.useState(
-    retrievedBatch ? retrievedBatch.StageId : ""
-  );
+  const [initialStage, setInitialStage] = React.useState(1);
   const [extractionType, setExtractionType] = React.useState("");
   const [comment, setComment] = React.useState("");
+  const [batchName, setBatchName] = React.useState("");
 
   const editBatchText = "Edit Batch";
   const createBatchText = "Create Batch";
@@ -54,6 +58,10 @@ function BatchEditorScreen({ location }) {
     console.log(batch);
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId);
+    setExtractionType(batch.ExtractionTypeId);
+    setComment(batch.Comment);
+    setBatchName(batch.BatchName);
+
     let selected = batch.Samples.map((sample) => {
       return sample["CaseId"] + "-" + sample["SampleId"];
     });
@@ -70,11 +78,69 @@ function BatchEditorScreen({ location }) {
 
   const onSubmitBatch = async () => {
     if (editMode) {
-      
+      //Edit api call
+      let newSampleList = selectionModel.filter((id) => {
+        return !initialSelectionModel.includes(id);
+      });
+      let deleteSampleList = initialSelectionModel.filter((id) => {
+        return !selectionModel.includes(id);
+      });
+      let batchObj = {
+        BatchId: retrievedBatch.BatchId,
+        batch: {
+          BatchName: batchName,
+          StageId: initialStage,
+          ExtractionTypeId: extractionType,
+          Comment: comment,
+        },
+        newSampleList: newSampleList.map((id) => {
+          let index = id.indexOf("-");
+          return {
+            CaseId: parseInt(id.substring(0, index)),
+            SampleId: id.substring(index + 1),
+          };
+        }),
+        deleteSampleList: deleteSampleList.map((id) => {
+          let index = id.indexOf("-");
+          return {
+            CaseId: parseInt(id.substring(0, index)),
+            SampleId: id.substring(index + 1),
+          };
+        }),
+      };
+      // alert(JSON.stringify(batchObj, null, 4));
+      let batchResult = await updateBatchInfo(batchObj);
+      if (batchResult) {
+        alert("Successfully Updated.");
+        history.push("/");
+      } else {
+        alert("Failed. Something went wrong.");
+      }
     } else {
       //Create api call
+      let batchObj = {
+        samples: selectionModel.map((id) => {
+          let index = id.indexOf("-");
+          return {
+            CaseId: parseInt(id.substring(0, index)),
+            SampleId: id.substring(index + 1),
+          };
+        }),
+        batch: {
+          BatchName: batchName,
+          StageId: initialStage,
+          ExtractionId: extractionType,
+          Comment: comment,
+        },
+      };
+      let batchResult = await createBatch(batchObj);
+      if (batchResult) {
+        alert("Successfully Created.");
+        history.push("/");
+      } else {
+        alert("Failed. Something went wrong.");
+      }
     }
-    // alert(JSON.stringify(batchObj, null, 4));
   };
 
   const onPullOutSamples = async () => {
@@ -86,7 +152,7 @@ function BatchEditorScreen({ location }) {
     });
     let batchObj = {
       BatchId: retrievedBatch.BatchId,
-      BatchName: retrievedBatch.BatchName+"-copy",
+      BatchName: retrievedBatch.BatchName + "-copy",
       StageId: initialStage,
       ExtractionTypeId: extractionType,
       Comment: comment,
@@ -107,12 +173,13 @@ function BatchEditorScreen({ location }) {
     };
     // alert(JSON.stringify(batchObj, null, 4));
     let pullOutResult = await pullOutSamplesFromBatch(batchObj);
-    if(pullOutResult) {
+    if (pullOutResult) {
+      alert("Successfully Updated.");
       history.push("/");
-    }else {
+    } else {
       alert("Failed. Something went wrong.");
     }
-  }
+  };
 
   return (
     <div className="screen-holder">
@@ -145,7 +212,7 @@ function BatchEditorScreen({ location }) {
           </Grid>
           <Grid item xs="auto">
             <Button variant="contained" onClick={onSubmitBatch}>
-              Submit
+              {editMode ? "Edit Batch" : "Submit"}
             </Button>
           </Grid>
         </Grid>
@@ -167,9 +234,14 @@ function BatchEditorScreen({ location }) {
           {retrievedBatch && (
             <div>
               <h4>Batch ID: {retrievedBatch.BatchId} </h4>
-              <h4>Name: {retrievedBatch.BatchName} </h4>
             </div>
           )}
+          <TextField
+            onChange={(e) => setBatchName(e.target.value)}
+            value={batchName}
+            label="Batch Name"
+            fullWidth
+          />
           <TextField
             id="outlined-select"
             onChange={(e) => setInitialStage(e.target.value)}

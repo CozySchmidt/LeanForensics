@@ -132,6 +132,7 @@ function StatusView() {
               <div>Batch Name: {selectedBatch.BatchName}</div>
               <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
               <div>Created Date: {selectedBatch.CreatedDate}</div>
+              <div>Comments: {selectedBatch.Comment}</div>
               <div>Completed: {selectedBatch.IsCompleted ? "Yes" : "No"}</div>
             </div>
           )}

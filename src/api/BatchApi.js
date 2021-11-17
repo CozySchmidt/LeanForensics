@@ -38,7 +38,7 @@ export async function getBatchById(BatchId) {
  * @param {*} Samples
  * @returns
  */
-export async function createBatch(Batch, Samples) {
+export async function createBatch(batchObj) {
   try {
     let response = await fetch(`http://${backend}:${PORT}/batches`, {
       method: "POST",
@@ -46,7 +46,7 @@ export async function createBatch(Batch, Samples) {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ batch: Batch, samples: Samples }),
+      body: JSON.stringify(batchObj),
     });
     let json = await response.json();
     if (json.success) {
@@ -99,6 +99,28 @@ export async function pullOutSamplesFromBatch(batchObj) {
     let batchId = batchObj.BatchId;
     let response = await fetch(`http://${backend}:${PORT}/batches/${batchId}/samples`, {
       method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(batchObj),
+    });
+    let json = await response.json();
+    if (json.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function updateBatchInfo(batchObj) {
+  try {
+    let batchId = batchObj.BatchId;
+    let response = await fetch(`http://${backend}:${PORT}/batches/${batchId}/samples`, {
+      method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

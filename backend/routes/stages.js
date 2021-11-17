@@ -81,7 +81,7 @@ router.get("/batches", (req, res) => {
   pool.getConnection(function (err, connection) {
     if (err) throw err; // not connected!
     let sql = `SELECT s.StageId, s.StageName, s.StageOrder, b.BatchId, 
-                b.Name, b.IsCompleted, b.CreatedDate, b.ExtractionId
+                b.BatchName, b.IsCompleted, b.CreatedDate, b.ExtractionId, b.Comment
               FROM ForensicsTest.Stage s
               LEFT JOIN Batch b
                   ON s.StageId = b.StageId

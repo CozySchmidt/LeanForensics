@@ -13,61 +13,93 @@ router.put("/:batchId/samples", (req, res) => {
         });
       }
 
+      let deleteSampleList = req.body.deleteSampleList;
+      let newSampleList = req.body.newSampleList;
       let batchObj = req.body.batch;
       let batchId = req.params.batchId;
-      let sql = `UPDATE Batch
-                  SET ? 
-                  WHERE BatchId = ${batchId}
-                  `;
+      let sql = `
+      UPDATE Batch
+      SET ? 
+      WHERE BatchId = ${batchId}
+      `;
       connection.query(sql, batchObj, (err, batchResult) => {
         connection.release();
-        console.log(batchResult);
+        // console.log(batchResult);
         if (err) {
           return connection.rollback(function () {
             throw err;
           });
         } else if (batchResult.affectedRows > 0) {
-          let sampleList = req.body.samples;
-          let results = [];
-
-          Promise.all(sampleList.map((sample) => {
-            let promise = new Promise((resolve, reject) => {
-              let sampleId = sample.SampleId;
-              let sampleSql = `UPDATE s 
-                               SET ?
-                               FROM Sample s
-                               INNER JOIN BatchSample b
-                                ON s.SampleId = b.SampleId
-                               WHERE s.SampleId = "${sampleId}"
-                                AND b.BatchId = ${batchId}
-                              `;
-              connection.query(sampleSql, sample, (err, sampleResult) => {
+          let response = [];
+          Promise.all(
+            newSampleList.map(async (sample) => {
+              let promise = new Promise(function (resolve, reject) {
+                sample["BatchId"] = batchId;
+                let sampleSql = `
+                INSERT INTO BatchSample 
+                SET ?
+              `;
+                connection.query(sampleSql, sample, (err, result) => {
+                  if (err) {
+                    return connection.rollback(function () {
+                      reject();
+                      throw err;
+                    });
+                  } else if (result.affectedRows > 0) {
+                    resolve(result);
+                  }
+                });
+              });
+              const result_1 = await promise;
+              // console.log(result_1);
+              response.push(result_1);
+            })
+          ).then(function () {
+            let response = [];
+            // Removing sample in batchsample table
+            Promise.all(
+              deleteSampleList.map(async (sample) => {
+                let promise = new Promise(function (resolve, reject) {
+                  let caseId = sample.CaseId;
+                  let sampleId = sample.SampleId;
+                  let sampleSql = `
+                  DELETE FROM BatchSample
+                  WHERE CaseId = ${caseId} 
+                    AND BatchId = ${batchId} 
+                    AND SampleId = ${sampleId} 
+                  ;
+                `;
+                  connection.query(sampleSql, (err, result) => {
+                    if (err) {
+                      return connection.rollback(function () {
+                        reject();
+                        throw err;
+                      });
+                    } else if (result.affectedRows > 0) {
+                      resolve(result);
+                    }
+                  });
+                });
+                const result_3 = await promise;
+                // console.log(result_3);
+                response.push(result_3);
+              })
+            ).then(function () {
+              connection.commit(function (err) {
                 if (err) {
                   return connection.rollback(function () {
-                    reject();
                     throw err;
                   });
-                } else if (sampleResult.affectedRows > 0) {
-                  resolve(sampleResult);
                 }
-              });
-            });
-            return promise.then((result) => {
-              console.log(result);
-              results.push(result);
-            });
-          })).then(function () {
-            connection.commit(function (err) {
-              if (err) {
-                return connection.rollback(function () {
-                  throw err;
+                res.status(200).send({
+                  success: true,
                 });
-              }
-              res.status(200).send({
-                success: true,
-                message: "Batch updated successfully",
               });
             });
+          });
+        } else {
+          return connection.rollback(function () {
+            throw err;
           });
         }
       });
@@ -98,7 +130,7 @@ router.post("/", (req, res) => {
 
       connection.query(sql, batch,(err, batchResult) => {
         connection.release();
-        console.log(batchResult);
+        // console.log(batchResult);
         if (err) {
           return connection.rollback(() => {
             throw err;
@@ -108,7 +140,7 @@ router.post("/", (req, res) => {
           let results = [];
           Promise.all(sampleList.map((sample) => {
             let promise = new Promise((resolve, reject) => {
-              sample.batchId = batchResult.insertId;
+              sample["BatchId"] = batchResult.insertId;
 
               let sampleSql = `INSERT INTO BatchSample SET ?`;
               connection.query(sampleSql, sample, (err, result) => {
@@ -123,7 +155,7 @@ router.post("/", (req, res) => {
               });
             });
             return promise.then((result) => {
-              console.log(result);
+              // console.log(result);
               results.push(result);
             });
           })).then(() => {
@@ -215,7 +247,7 @@ router.get("/:batchId/samples", (req, res) => {
                `;
     connection.query(sql, (err, batchResult) => {
       connection.release();
-      console.log(batchResult);
+      // console.log(batchResult);
       if (err) {
         res.status(500).send({
           success: false,
@@ -376,7 +408,6 @@ router.delete("/:batchId/samples", (req, res) => {
                   });
                 });
                 const result_3 = await promise;
-                console.log(result_3);
                 response.push(result_3);
               })
             ).then(function () {

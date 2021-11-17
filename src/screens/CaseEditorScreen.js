@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -10,11 +10,16 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
+import queryString from "query-string";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import "./CaseEditorScreen.css";
 import { kitTypeData, screeningData } from "../constants/testData";
-import { createCase } from "../api/CaseApi";
+import {
+  createCase,
+  getSamplesByCaseId,
+  updateCaseWithSamples,
+} from "../api/CaseApi";
 
 let placeHolderData = [];
 for (let i = 0; i < 3; i++) {
@@ -27,11 +32,34 @@ for (let i = 0; i < 3; i++) {
   });
 }
 
-const CaseEditorScreen = () => {
+const CaseEditorScreen = ({ location }) => {
   const history = useHistory();
-  const [editMode, setEditMode] = React.useState(false);
-  const [sampleList, setSampleList] = React.useState([...placeHolderData]);
+  const query = queryString.parse(location.search);
+  const [retrievedCase, setRetrievedCase] = React.useState(null);
+  const [editMode, setEditMode] = React.useState(query.caseId ? true : false);
+  const [sampleList, setSampleList] = React.useState(
+    editMode ? [] : [...placeHolderData]
+  );
+  const [initialSampleList, setInitialSampleList] = React.useState([]);
   const [comment, setComment] = React.useState("");
+
+  useEffect(() => {
+    editMode && retrieveCaseById();
+  }, []);
+
+  async function retrieveCaseById() {
+    let caseResult = await getSamplesByCaseId(query.caseId);
+    console.log(caseResult);
+    setRetrievedCase(caseResult);
+    setComment(caseResult.Comment);
+    let keyList = caseResult.Samples.map((sample, i) => {
+      sample["key"] = new Date().getTime() + i + 1;
+      return sample;
+    });
+    console.log(keyList);
+    setSampleList(keyList);
+    setInitialSampleList(JSON.parse(JSON.stringify(keyList)));
+  }
 
   const onSubmitCase = async () => {
     //TODO: validation required
@@ -41,10 +69,16 @@ const CaseEditorScreen = () => {
 
     let temp = sampleList.map(function (sample) {
       // Change empty string to null
-      if (sample["ScreeningId"].trim().length === 0) {
+      if (
+        sample["ScreeningId"] !== null &&
+        sample["ScreeningId"].toString().trim().length === 0
+      ) {
         sample["ScreeningId"] = null;
       }
-      if (sample["KitId"].trim().length === 0) {
+      if (
+        sample["KitId"] !== null &&
+        sample["KitId"].toString().trim().length === 0
+      ) {
         sample["KitId"] = null;
       }
       //exclude key to check emptiness
@@ -52,11 +86,39 @@ const CaseEditorScreen = () => {
       return sample;
     });
     let filteredList = filterEmptyList(temp);
-    console.log(caseObj);
+    // console.log(caseObj);
     console.log(filteredList);
 
     if (editMode) {
       //Edit api call
+      let initList = initialSampleList.map(function (sample) {
+        delete sample.key;
+        return sample;
+      });
+      let deleteSampleList = initList.filter((sample) => {
+        return !containsObject(sample, filteredList);
+      });
+      let newSampleList = filteredList.filter((sample) => {
+        return !containsObject(sample, initList);
+      });
+
+      console.log("delete ", deleteSampleList);
+      console.log("new ", newSampleList);
+      let caseObj = {
+        CaseId: retrievedCase.CaseId,
+        Comment: comment,
+        deleteSampleList: deleteSampleList,
+        newSampleList: newSampleList,
+      };
+      if (deleteSampleList.length > 0 && newSampleList > 0) {
+        let caseResult = await updateCaseWithSamples(caseObj);
+        if (caseResult) {
+          alert("Successfully Updated.");
+          history.push("/");
+        }
+      } else {
+        alert("No changes detected.");
+      }
     } else {
       //Create api call
       let result = await createCase(caseObj, filteredList);
@@ -67,9 +129,16 @@ const CaseEditorScreen = () => {
         alert("Something went wrong. Please try again later");
       }
     }
-    // alert(JSON.stringify(caseObj, null, 4));
-    // alert(JSON.stringify(filteredList, null, 4));
   };
+
+  function containsObject(obj, list) {
+    let i;
+    for (i = 0; i < list.length; i++) {
+      if (JSON.stringify(list[i]) === JSON.stringify(obj)) return true;
+    }
+
+    return false;
+  }
 
   const filterEmptyList = (list) => {
     return list.filter(checkNotEmptyObject);
@@ -88,8 +157,8 @@ const CaseEditorScreen = () => {
         key: new Date().getTime(),
         SampleId: obj.SampleId + "-",
         ScreeningId: obj.ScreeningId,
-        KidId: obj.KidId,
-        onHold: obj.onHold,
+        KitId: obj.KitId,
+        onHold: obj.OnHold,
       },
     ]);
   };
@@ -100,7 +169,7 @@ const CaseEditorScreen = () => {
         key: new Date().getTime(),
         SampleId: `${sampleList.length + 1}`,
         ScreeningId: "",
-        KidId: "",
+        KitId: "",
         onHold: false,
       },
     ]);
@@ -121,13 +190,6 @@ const CaseEditorScreen = () => {
             </Button>
           </Grid>
 
-          <Grid item xs="auto">
-            {editMode && (
-              <Button variant="contained" onClick={() => history.push("/")}>
-                Pull Out Samples
-              </Button>
-            )}
-          </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs="auto">
             {editMode && (
@@ -154,6 +216,11 @@ const CaseEditorScreen = () => {
           autoComplete="off"
         >
           <h4>Case Information</h4>
+          {retrievedCase && (
+            <div>
+              <h4>Case ID: {retrievedCase.CaseId} </h4>
+            </div>
+          )}
           <TextField
             id="outlined"
             onChange={(e) => setComment(e.target.value)}
@@ -163,17 +230,18 @@ const CaseEditorScreen = () => {
         </Box>
 
         <Box border="1px solid lightgrey" borderRadius="8px">
-          {sampleList.map((sample, i) => {
-            return (
-              <SampleRow
-                key={sample.key}
-                index={i}
-                obj={sample}
-                onDelete={deleteRow}
-                onAdd={addSubRow}
-              />
-            );
-          })}
+          {sampleList &&
+            sampleList.map((sample, i) => {
+              return (
+                <SampleRow
+                  key={sample.key}
+                  index={i}
+                  obj={sample}
+                  onDelete={deleteRow}
+                  onAdd={addSubRow}
+                />
+              );
+            })}
           <Button variant="contained" onClick={addNewRow}>
             Add
           </Button>
@@ -191,7 +259,7 @@ const SampleRow = (props) => {
   const [sampleId, setSampleId] = React.useState(props.obj.SampleId);
   const [screening, setScreening] = React.useState(props.obj.ScreeningId);
   const [kitId, setKitId] = React.useState(props.obj.KitId);
-  const [onHold, setOnHold] = React.useState(props.obj.onHold);
+  const [onHold, setOnHold] = React.useState(props.obj.OnHold == 1);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -270,14 +338,14 @@ const SampleRow = (props) => {
             <Switch
               checked={onHold}
               onChange={(e) => {
-                sampleObj["onHold"] = e.target.checked;
+                sampleObj["OnHold"] = e.target.checked;
                 setSampleObj(sampleObj);
                 setOnHold(e.target.checked);
               }}
               color="warning"
             />
           }
-          label={onHold && "On Hold"}
+          label={onHold ? "On Hold" : ""}
         />
       </div>
       <div className="row-item">

@@ -16,3 +16,18 @@ export async function getAllBatchesByStages() {
     return null;
   }
 }
+
+export async function getAllStages() {
+  try {
+    let url = `http://${backend}:${PORT}/stages`;
+    let response = await fetch(url);
+    let json = await response.json();
+    if (json.success) {
+      return json.body;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+}

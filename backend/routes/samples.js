@@ -17,9 +17,12 @@ router.get("/", (req, res) => {
           on s.ScreeningId = m.ScreeningId
         left join CaseTable c
           on s.CaseId = c.CaseId
-        ORDER BY s.SampleId ASC
-        `;
-        connection.query(sql, (err, result) => {
+        ORDER BY s.CaseId ASC
+        ;
+        `
+        connection.query(
+            sql,
+            (err, result) => {
             connection.release();
             if (err) {
                 res.status(500).send({

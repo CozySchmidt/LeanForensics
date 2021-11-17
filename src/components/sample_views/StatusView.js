@@ -41,7 +41,7 @@ function StatusView() {
 
   const handleModalOpen = async (batch) => {
     let batchSample = await getSamplesByBatchId(batch.BatchId);
-    // console.log(batchSample);
+    console.log(batch);
     setSelectedBatch(batchSample);
     setOpenModal(true);
   };
@@ -90,7 +90,7 @@ function StatusView() {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {`Move ${selectedBatch.Name} to ${
+            {`Move ${selectedBatch.BatchName} to ${
               stageList[selectedBatch.StageId].StageName
             } Stage?`}
           </DialogTitle>
@@ -129,7 +129,7 @@ function StatusView() {
           {selectedBatch && (
             <div>
               <div>Batch ID: {selectedBatch.BatchId}</div>
-              <div>Batch Name: {selectedBatch.Name}</div>
+              <div>Batch Name: {selectedBatch.BatchName}</div>
               <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
               <div>Created Date: {selectedBatch.CreatedDate}</div>
               <div>Completed: {selectedBatch.IsCompleted ? "Yes" : "No"}</div>
@@ -139,7 +139,7 @@ function StatusView() {
             <DataGrid
               rows={selectedBatch.Samples}
               columns={columns}
-              getRowId={(r) => r.SampleId}
+              getRowId={(r) => r.CaseId + "-" + r.SampleId}
               pageSize={pageSize}
               disableSelectionOnClick
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -153,10 +153,7 @@ function StatusView() {
             size="large"
             variant="outlined"
             onClick={() =>
-              history.push({
-                pathname: "/batch-editor",
-                search: `?batchId=${selectedBatch.BatchId}`,
-              })
+              (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
             }
           >
             Edit batch
@@ -241,7 +238,7 @@ function StatusView() {
                           variant="outlined"
                           onClick={() => handleModalOpen(batch)}
                         >
-                          {batch.BatchId}. {batch.Name}
+                          {batch.BatchId}. {batch.BatchName}
                         </Button>
                       </div>
                     ))

@@ -39,18 +39,18 @@ const CaseEditorScreen = () => {
       comment: comment,
     };
 
-    let temp = sampleList.map(function(sample) {
+    let temp = sampleList.map(function (sample) {
       // Change empty string to null
-      if(sample['ScreeningId'].trim().length === 0) {
-        sample['ScreeningId'] = null
+      if (sample["ScreeningId"].trim().length === 0) {
+        sample["ScreeningId"] = null;
       }
-      if(sample['KitId'].trim().length === 0){
-        sample['KitId'] = null
+      if (sample["KitId"].trim().length === 0) {
+        sample["KitId"] = null;
       }
       //exclude key to check emptiness
       delete sample.key;
       return sample;
-    });;
+    });
     let filteredList = filterEmptyList(temp);
     console.log(caseObj);
     console.log(filteredList);
@@ -116,14 +116,14 @@ const CaseEditorScreen = () => {
       <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <Button variant="contained" onClick={() => history.goBack()}>
+            <Button variant="contained" onClick={() => history.push("/")}>
               Cancel
             </Button>
           </Grid>
 
           <Grid item xs="auto">
             {editMode && (
-              <Button variant="contained" onClick={() => history.goBack()}>
+              <Button variant="contained" onClick={() => history.push("/")}>
                 Pull Out Samples
               </Button>
             )}

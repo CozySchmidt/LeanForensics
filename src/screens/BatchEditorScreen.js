@@ -9,19 +9,19 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
-import {  getAllSamples } from "../api/SampleApi";
-import {  getSamplesByBatchId } from "../api/BatchApi";
+import { getAllSamples } from "../api/SampleApi";
+import { getSamplesByBatchId, pullOutSamplesFromBatch } from "../api/BatchApi";
 import { makeStyles, createStyles } from "@mui/styles";
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 import "./BatchEditorScreen.css";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      '& .super-app-theme--selected': {
-        backgroundColor:  "rgba(69, 245, 66, 0.08)",
+      "& .super-app-theme--selected": {
+        backgroundColor: "rgba(69, 245, 66, 0.08)",
       },
-    }
+    },
   })
 );
 
@@ -55,9 +55,9 @@ function BatchEditorScreen({ location }) {
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId);
     let selected = batch.Samples.map((sample) => {
-      return sample["SampleId"];
+      return sample["CaseId"] + "-" + sample["SampleId"];
     });
-    console.log(selected)
+    // console.log(selected);
     setSelectionModel(selected);
     setInitialSelectionModel(selected);
   }
@@ -68,34 +68,65 @@ function BatchEditorScreen({ location }) {
     setSampleList(samples);
   }
 
-  const onSubmitBatch = () => {
-    let batchObj = {
-      stageId: initialStage,
-      extractionTypeId: extractionType,
-      comment: comment,
-    };
+  const onSubmitBatch = async () => {
     if (editMode) {
-      //Edit api call
+      
     } else {
       //Create api call
     }
-    alert(JSON.stringify(batchObj, null, 4));
-    alert(JSON.stringify(selectionModel, null, 4));
+    // alert(JSON.stringify(batchObj, null, 4));
   };
+
+  const onPullOutSamples = async () => {
+    let newSampleList = selectionModel.filter((id) => {
+      return !initialSelectionModel.includes(id);
+    });
+    let deleteSampleList = initialSelectionModel.filter((id) => {
+      return selectionModel.includes(id);
+    });
+    let batchObj = {
+      BatchId: retrievedBatch.BatchId,
+      BatchName: retrievedBatch.BatchName+"-copy",
+      StageId: initialStage,
+      ExtractionTypeId: extractionType,
+      Comment: comment,
+      newSampleList: newSampleList.map((id) => {
+        let index = id.indexOf("-");
+        return {
+          CaseId: parseInt(id.substring(0, index)),
+          SampleId: id.substring(index + 1),
+        };
+      }),
+      deleteSampleList: deleteSampleList.map((id) => {
+        let index = id.indexOf("-");
+        return {
+          CaseId: parseInt(id.substring(0, index)),
+          SampleId: id.substring(index + 1),
+        };
+      }),
+    };
+    // alert(JSON.stringify(batchObj, null, 4));
+    let pullOutResult = await pullOutSamplesFromBatch(batchObj);
+    if(pullOutResult) {
+      history.push("/");
+    }else {
+      alert("Failed. Something went wrong.");
+    }
+  }
 
   return (
     <div className="screen-holder">
       <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <Button variant="contained" onClick={() => history.goBack()}>
+            <Button variant="contained" onClick={() => history.push("/")}>
               Cancel
             </Button>
           </Grid>
 
           <Grid item xs="auto">
             {editMode && (
-              <Button variant="contained" onClick={() => history.goBack()}>
+              <Button variant="contained" onClick={onPullOutSamples}>
                 Pull Out Samples
               </Button>
             )}
@@ -136,7 +167,7 @@ function BatchEditorScreen({ location }) {
           {retrievedBatch && (
             <div>
               <h4>Batch ID: {retrievedBatch.BatchId} </h4>
-              <h4>Name: {retrievedBatch.Name} </h4>
+              <h4>Name: {retrievedBatch.BatchName} </h4>
             </div>
           )}
           <TextField
@@ -183,7 +214,7 @@ function BatchEditorScreen({ location }) {
         <DataGrid
           rows={sampleList}
           columns={columns}
-          getRowId={(r) => r.SampleId}
+          getRowId={(r) => r.CaseId + "-" + r.SampleId}
           checkboxSelection
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -193,7 +224,8 @@ function BatchEditorScreen({ location }) {
             setSelectionModel(newSelectionModel);
           }}
           getRowClassName={(params) =>
-            initialSelectionModel.includes(params.id) && `super-app-theme--selected`
+            initialSelectionModel.includes(params.id) &&
+            `super-app-theme--selected`
           }
           className={classes.root}
           selectionModel={selectionModel}

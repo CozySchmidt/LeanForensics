@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import {
   ViewHolderScreen,
   BatchEditorScreen,
@@ -16,7 +16,10 @@ class App extends Component {
         }}
       >
         <Switch>
-          <Route path="/batch-editor" component={BatchEditorScreen} />
+          <Route path="/batch-editor"
+            component={BatchEditorScreen}
+            render={() => <Redirect to="/batch-editor" />}
+          />
           <Route path="/case-editor" component={CaseEditorScreen} />
           <Route path="/" component={ViewHolderScreen} />
         </Switch>

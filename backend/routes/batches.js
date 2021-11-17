@@ -299,6 +299,109 @@ router.delete("/:batchId", (req, res) => {
   });
 });
 
+/* Delete a BatchSample Data */
+router.delete("/:batchId/samples", (req, res) => {
+  pool.getConnection(function (err, connection) {
+    connection.beginTransaction(function (err) {
+      if (err) {
+        return connection.rollback(function () {
+          throw err;
+        });
+      } // not connected
+      let batchId = req.params.batchId;
+      let deleteSampleList = req.body.deleteSampleList;
+      let newSampleList = req.body.newSampleList;
+      // Create Batch part
+      let batchObj = {
+        BatchName: req.body.BatchName,
+      };
+      let createBatchSql = `
+      INSERT INTO Batch SET ?
+      `;
+      connection.query(createBatchSql, batchObj, (err, postResult) => {
+        if (err) {
+          return connection.rollback(function () {
+            throw err;
+          });
+        } else if (postResult.affectedRows > 0) {
+          let response = [];
+          Promise.all(
+            newSampleList.map(async (sample) => {
+              let promise = new Promise(function (resolve, reject) {
+                sample["BatchId"] = postResult.insertId;
+                let sampleSql = `
+                INSERT INTO BatchSample 
+                SET ?
+              `;
+                connection.query(sampleSql, sample, (err, result) => {
+                  if (err) {
+                    return connection.rollback(function () {
+                      reject();
+                      throw err;
+                    });
+                  } else if (result.affectedRows > 0) {
+                    resolve(result);
+                  }
+                });
+              });
+              const result_1 = await promise;
+              console.log(result_1);
+              response.push(result_1);
+            })
+          ).then(function () {
+            let response = [];
+            // Removing sample in batchsample table
+            Promise.all(
+              deleteSampleList.map(async (sample) => {
+                let promise = new Promise(function (resolve, reject) {
+                  console.log(sample);
+                  let caseId = sample.CaseId;
+                  let sampleId = sample.SampleId;
+                  let sampleSql = `
+                  UPDATE BatchSample
+                  SET BatchId = ${postResult.insertId} 
+                  WHERE CaseId = ${caseId} 
+                    AND SampleId = ${sampleId} 
+                  ;
+                `;
+                  connection.query(sampleSql, (err, result) => {
+                    if (err) {
+                      return connection.rollback(function () {
+                        reject();
+                        throw err;
+                      });
+                    } else if (result.affectedRows > 0) {
+                      resolve(result);
+                    }
+                  });
+                });
+                const result_3 = await promise;
+                console.log(result_3);
+                response.push(result_3);
+              })
+            ).then(function () {
+              connection.commit(function (err) {
+                if (err) {
+                  return connection.rollback(function () {
+                    throw err;
+                  });
+                }
+                res.status(200).send({
+                  success: true,
+                });
+              });
+            });
+          });
+        } else {
+          return connection.rollback(function () {
+            throw err;
+          });
+        }
+      });
+    });
+  });
+});
+
 /* Update a Batch's status */
 router.patch("/:batchId/stages/:stageId", (req, res) => {
   pool.getConnection(function (err, connection) {
@@ -309,31 +412,29 @@ router.patch("/:batchId/stages/:stageId", (req, res) => {
       UPDATE Batch
       SET StageId = ${stageId}
       WHERE BatchId = ${batchId};
-    `
-    connection.query(sql,
-      (err, result) => {
-        connection.release();
-        if (err) {
-          console.log("error: ", err);
-          res.status(500).send({
-            success: false,
-            message: err.message,
-          });
-        } else if (result.affectedRows > 0) {
-          console.log(`Batch ${batchId} updated!`);
-          res.status(200).send({
-            success: true,
-            message: `Batch ${batchId} updated!`,
-            body: result,
-          });
-        } else {
-          res.status(404).send({
-            success: false,
-            message: `Batch ${batchId} not found!`,
-          });
-        }
+    `;
+    connection.query(sql, (err, result) => {
+      connection.release();
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).send({
+          success: false,
+          message: err.message,
+        });
+      } else if (result.affectedRows > 0) {
+        console.log(`Batch ${batchId} updated!`);
+        res.status(200).send({
+          success: true,
+          message: `Batch ${batchId} updated!`,
+          body: result,
+        });
+      } else {
+        res.status(404).send({
+          success: false,
+          message: `Batch ${batchId} not found!`,
+        });
       }
-    );
+    });
   });
 });
 

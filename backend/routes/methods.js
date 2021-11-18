@@ -11,10 +11,9 @@ router.get("/kitTypes", (req, res) => {
             (err, result) => {
             connection.release();
             if (err) {
-                console.log("error: ", err);
                 res.status(500).send({
                     success: false,
-                    message: err.message,
+                    message: "Invalid request!",
                 });
             } else {
                 console.log("Kit Types: ", result);
@@ -36,10 +35,9 @@ router.get("/screeningMethods", (req, res) => {
             (err, result) => {
             connection.release();
             if (err) {
-                console.log("error: ", err);
                 res.status(500).send({
                     success: false,
-                    message: err.message,
+                    message: "Invalid request!",
                 });
             } else {
                 console.log("Screening Methods: ", result);
@@ -61,10 +59,9 @@ router.get("/extractionMethods", (req, res) => {
             (err, result) => {
             connection.release();
             if (err) {
-                console.log("error: ", err);
                 res.status(500).send({
                     success: false,
-                    message: err.message,
+                    message: "Invalid request!",
                 });
             } else {
                 console.log("Extraction Methods: ", result);

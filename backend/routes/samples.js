@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
           on s.ScreeningId = m.ScreeningId
         left join CaseTable c
           on s.CaseId = c.CaseId
-        ORDER BY s.SampleId ASC
+        ORDER BY s.CaseId ASC
         ;
         `
         connection.query(
@@ -25,10 +25,9 @@ router.get("/", (req, res) => {
             (err, result) => {
             connection.release();
             if (err) {
-                console.log("error: ", err);
                 res.status(500).send({
                     success: false,
-                    message: err.message || "Error: Unable to get samples",
+                    message: "Invalid request!",
                 });
             } else if (result.length) {
                 console.log("All Samples: ", result);
@@ -39,8 +38,8 @@ router.get("/", (req, res) => {
             } else {
                 res.status(404).send({
                     success: false,
-                    message: err.message || "No samples found!",
-                })
+                    message: "No samples found!",
+                });
             }
         });
 

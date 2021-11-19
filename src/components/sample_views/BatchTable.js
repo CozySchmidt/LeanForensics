@@ -8,9 +8,9 @@ import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 
-import { getSamplesByCaseId } from "../../api/CaseApi";
+import { getSamplesByBatchId } from "../../api/BatchApi";
 
-export default function CaseTable({ columns, data }) {
+export default function BatchTable({ columns, data }) {
     const [pageSize, setPageSize] = React.useState(15);
 
     const {
@@ -29,12 +29,13 @@ export default function CaseTable({ columns, data }) {
     const {globalFilter} = state;
 
     const [openModal, setOpenModal] = useState(false);
-    const [selectedCase, setSelectedCase] = useState(null);
+    const [selectedBatch, setSelectedBatch] = useState(null);
 
-    const handleModalOpen = async (selected_case) => {
-        let caseSamples = await getSamplesByCaseId(selected_case.original.CaseId);
-        console.log(caseSamples);
-        setSelectedCase(caseSamples);
+    const handleModalOpen = async (selectedBatch) => {
+        let batch = await getSamplesByBatchId(selectedBatch.original.BatchId);
+        console.log("selectedBatch:");
+        console.log(batch);
+        setSelectedBatch(batch);
         setOpenModal(true);
     };
 
@@ -63,13 +64,16 @@ export default function CaseTable({ columns, data }) {
         >
             <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-                Case Number: {selectedCase && selectedCase.CaseId}
+                Batch ID: {selectedBatch && selectedBatch.BatchId}
             </Typography>
-            {selectedCase && (
+
+            {console.log(selectedBatch.Samples)}
+
+            {selectedBatch && (
                 <DataGrid
-                rows={selectedCase.Samples}
+                rows={selectedBatch.Samples}
                 columns={sampleColumns}
-                getRowId={(r) => r.CaseId + "-" + r.SampleId}
+                getRowId={(r) => r.BatchId + "-" + r.SampleId}
                 pageSize={pageSize}
                 disableSelectionOnClick
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -119,7 +123,7 @@ export default function CaseTable({ columns, data }) {
                     </td>
                     <td>
                     <button onClick={() => {
-                        window.location.href = `/case-editor?caseId=${row.values['CaseId']}`
+                        window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
                     }}>Edit</button>
                     </td>
                 </tr>
@@ -134,37 +138,57 @@ export default function CaseTable({ columns, data }) {
 
 const sampleColumns = [
     {
-      field: "SampleId",
-      headerName: "Sample ID",
-      width: 100,
+      accessor: "SampleId",
+      Header: "Sample ID",
+      width: 50,
     },
     {
-      field: "SampleName",
-      headerName: "Sample Name",
-      width: 200,
+      accessor: "SampleName",
+      Header: "Sample Name",
+      width: 50,
     },
     {
-      field: "CaseId",
-      headerName: "Case ID",
+      accessor: "BatchId",
+      Header: "Batch ID",
+      width: 50,
+    },
+    {
+        accessor: "OnHold",
+        Header: "On Hold",
+        width: 150,
+        renderCell: (cellValues) => {
+          return (
+            cellValues === 1 && (
+              <Button variant="contained" color="warning">
+                On Hold
+              </Button>
+            )
+          );
+        },
+      },
+    {
+      accessor: "ScreeningId",
+      Header: "Screening ID",
+      width: 50,
+    },
+    {
+      accessor: "ScreeningName",
+      Header: "Screening Name",
       width: 90,
     },
     {
-      field: "Comment",
-      headerName: "Comment",
-      width: 150,
+      accessor: "KitId",
+      Header: "Kit Id",
+      width: 50,
     },
     {
-      field: "OnHold",
-      headerName: "On Hold",
-      width: 150,
-      renderCell: (cellValues) => {
-        return (
-          cellValues === 1 && (
-            <Button variant="contained" color="warning">
-              On Hold
-            </Button>
-          )
-        );
-      },
+      accessor: "KitName",
+      Header: "Kit Name",
+      width: 50,
     },
+    {
+      accessor: "CaseId",
+      Header: "Case ID",
+      width: 50,
+    }
 ];

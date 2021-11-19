@@ -103,6 +103,7 @@ router.get("/batches", (req, res) => {
             statusArrKeyHolder[item.StageOrder] || {};
           let obj = statusArrKeyHolder[item.StageOrder];
           if (Object.keys(obj).length === 0) statusArr.push(obj);
+          obj.StageId = item.StageId;
           obj.StageName = item.StageName;
           obj.StageOrder = item.StageOrder;
           obj.Batches = obj.Batches || [];

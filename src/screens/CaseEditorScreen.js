@@ -8,6 +8,8 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import IconButton from "@mui/material/IconButton";
+import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
@@ -20,6 +22,7 @@ import {
   getSamplesByCaseId,
   updateCaseWithSamples,
 } from "../api/CaseApi";
+// import ClearIcon from "@mui/material/SvgIcon/SvgIcon";
 
 let placeHolderData = [];
 for (let i = 0; i < 3; i++) {
@@ -28,7 +31,7 @@ for (let i = 0; i < 3; i++) {
     SampleId: `${i + 1}`,
     ScreeningId: "",
     KitId: "",
-    onHold: false,
+    OnHold: false,
   });
 }
 
@@ -158,7 +161,7 @@ const CaseEditorScreen = ({ location }) => {
         SampleId: obj.SampleId + "-",
         ScreeningId: obj.ScreeningId,
         KitId: obj.KitId,
-        onHold: obj.OnHold,
+        OnHold: obj.OnHold,
       },
     ]);
   };
@@ -170,7 +173,7 @@ const CaseEditorScreen = ({ location }) => {
         SampleId: `${sampleList.length + 1}`,
         ScreeningId: "",
         KitId: "",
-        onHold: false,
+        OnHold: false,
       },
     ]);
   };
@@ -185,16 +188,30 @@ const CaseEditorScreen = ({ location }) => {
       <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <Button variant="contained" onClick={() => history.push("/")}>
-              Cancel
-            </Button>
+            <div className="cancel-button">
+              <Button loading variant="outlined" onClick={() => history.push("/")}
+                      startIcon={<ClearIcon />}
+                      sx={{
+                        color: "whitesmoke",
+                        backgroundColor: "#003C71",
+                        fontWeight: "bold",
+                        textTransform: "capitalize",
+                        '&:hover': {
+                          backgroundColor: "#D3D9DE",
+                          color: "#003C71",
+                          fontWeight: "bold"
+                        }
+                      }}>
+                Cancel
+              </Button>
+            </div>
           </Grid>
 
           <Grid item xs={4}></Grid>
           <Grid item xs="auto">
             {editMode && (
               <Button
-                variant="contained"
+                  loading variant="outlined"
                 color="error"
                 onClick={() => history.goBack()}
               >
@@ -208,14 +225,55 @@ const CaseEditorScreen = ({ location }) => {
         <Box
           component="form"
           sx={{
-            "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
+            "& > :not(style)": {
+              m: 1,
+              width: "25ch",
+              maxWidth: "100%",
+            },
           }}
           noValidate
-          border="1px solid lightgrey"
+          border="1px solid #FFF200"
           borderRadius="8px"
           autoComplete="off"
+          backgroundColor="whitesmoke"
+          padding="25px"
+          color="#003C71"
         >
-          <h4>Case Information</h4>
+        <div className="form-buttons">
+          <Button loading variant="outlined" onClick={addNewRow}
+                  startIcon={<AddIcon />}
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    '&:hover': {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold"
+                    }
+                  }}
+          >
+            Add
+          </Button>
+          <div className="divider"/>
+          <Button loading variant="outlined" onClick={onSubmitCase}
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    '&:hover': {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold"
+                    }
+                  }}
+          >
+            Submit
+          </Button>
+        </div>
+          <h2>Case Information</h2>
           {retrievedCase && (
             <div>
               <h4>Case ID: {retrievedCase.CaseId} </h4>
@@ -228,8 +286,13 @@ const CaseEditorScreen = ({ location }) => {
             label="Comment"
           />
         </Box>
-
-        <Box border="1px solid lightgrey" borderRadius="8px">
+        <div className="box-divider"/>
+        <Box style={{ paddingBottom: "1em" }}
+             border="1px solid #FFF200"
+             borderRadius="8px"
+             backgroundColor="whitesmoke"
+             paddingTop="1em"
+        >
           {sampleList &&
             sampleList.map((sample, i) => {
               return (
@@ -242,12 +305,6 @@ const CaseEditorScreen = ({ location }) => {
                 />
               );
             })}
-          <Button variant="contained" onClick={addNewRow}>
-            Add
-          </Button>
-          <Button variant="contained" onClick={onSubmitCase}>
-            Submit
-          </Button>
         </Box>
       </div>
     </div>
@@ -268,18 +325,16 @@ const SampleRow = (props) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleCreateNew = () => {
     props.onAdd(sampleObj);
+    setAnchorEl(null);
   };
 
   return (
     <div className="sample-row">
-      <IconButton
-        aria-label="delete"
-        onClick={() => props.onDelete(props.index)}
-      >
-        <DeleteRoundedIcon />
-      </IconButton>
-      <div className="row-item" style={{ margin: "10px" }}>
+      <div className="row-item"
+           style={{ margin: "32px" }}>
         {props.index + 1}
       </div>
       <div className="row-item">
@@ -304,7 +359,7 @@ const SampleRow = (props) => {
           }}
           value={screening}
           label="Screening Method"
-          sx={{ m: 1, width: "25ch" }}
+          sx={{ m: 2, width: "25ch"}}
         >
           {screeningData.map((screening) => (
             <MenuItem key={screening.screeningId} value={screening.screeningId}>
@@ -358,7 +413,6 @@ const SampleRow = (props) => {
         >
           <MoreHorizIcon />
         </IconButton>
-
         <Menu
           id="more-menu"
           anchorEl={anchorEl}
@@ -368,8 +422,16 @@ const SampleRow = (props) => {
             "aria-labelledby": "more-button",
           }}
         >
-          <MenuItem onClick={handleClose}>Create Sub-sample</MenuItem>
+          <MenuItem onClick={handleCreateNew}>Create Sub-sample</MenuItem>
         </Menu>
+      </div>
+      <div className="row-item-icon">
+        <IconButton
+            aria-label="delete"
+            onClick={() => props.onDelete(props.index)}
+        >
+          <DeleteRoundedIcon />
+        </IconButton>
       </div>
     </div>
   );

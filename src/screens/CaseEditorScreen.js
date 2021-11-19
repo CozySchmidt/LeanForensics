@@ -264,7 +264,7 @@ const CaseEditorScreen = ({ location }) => {
                     fontWeight: "bold",
                     textTransform: "capitalize",
                     '&:hover': {
-                      backgroundColor: "#FFF200",
+                      backgroundColor: "#90CAF9",
                       color: "#003C71",
                       fontWeight: "bold"
                     }

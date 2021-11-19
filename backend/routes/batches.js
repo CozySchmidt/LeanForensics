@@ -66,7 +66,7 @@ router.put("/:batchId/samples", (req, res) => {
                   DELETE FROM BatchSample
                   WHERE CaseId = ${caseId} 
                     AND BatchId = ${batchId} 
-                    AND SampleId = ${sampleId} 
+                    AND SampleId = "${sampleId}" 
                   ;
                 `;
                   connection.query(sampleSql, (err, result) => {
@@ -393,7 +393,8 @@ router.delete("/:batchId/samples", (req, res) => {
                   UPDATE BatchSample
                   SET BatchId = ${postResult.insertId} 
                   WHERE CaseId = ${caseId} 
-                    AND SampleId = ${sampleId} 
+                    AND BatchId = ${batchId}
+                    AND SampleId = "${sampleId}"
                   ;
                 `;
                   connection.query(sampleSql, (err, result) => {

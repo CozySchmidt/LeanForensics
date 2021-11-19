@@ -3,16 +3,45 @@
     overflow-x: auto;
     padding-top: 30px;
     padding-bottom: 30px;
+    background-color: #d3d9de;
+    color: #003C71;
+    text-align: center;
+    font-weight: bold;
 }
 
 .status-content {
     display: flex;
+
 }
 
 .status-column {
-    border: 1px solid black;
+    text-transform: uppercase;
+    border: 2px solid  #7c8e9c;
     margin: 1em;
-    padding: 1em;
-    width: 200px;
+    padding: 2em;
+    width: 170px;
     overflow: auto;
+    background-color: whitesmoke;
+}
+
+.modal-buttons {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+}
+
+.selector {
+    position: absolute;
+    right: 130px;
+    top: 140px;
+}
+
+.arrow-button {
+    position: absolute;
+    right: 60px;
+    top: 160px;
+}
+
+.batch-buttons {
+    margin-top: 10px;
 }

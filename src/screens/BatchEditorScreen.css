@@ -1,4 +1,36 @@
 .content-wrapper {
   width: 100%;
   height: 80%;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #003C71;
+  color: #D3D9DE;
+}
+
+.batch-editor-buttons {
+  margin-top: 30px;
+  margin-left: 900px;
+  margin-bottom: 3px;
+  position: absolute;
+}
+
+.box-buttons {
+  position: absolute;
+  top: 126px;
+  left: 900px;
+}
+
+.pull-button {
+  position: absolute;
+  left: 400px;
+}
+
+
+.divider {
+  width:10px;
+  height:auto;
+  display:inline-block;
 }

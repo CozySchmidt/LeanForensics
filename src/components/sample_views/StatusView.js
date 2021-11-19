@@ -113,10 +113,13 @@ function StatusView() {
       transform: "translate(-50%, -50%)",
       width: "70%",
       height: "70%",
-      bgcolor: "background.paper",
-      border: "2px solid #000",
+      fontFamily: `"Roboto", sans-serif`,
+      fontWeight: "bold",
+      backgroundColor: "whitesmoke",
+      color: "#003C71",
+      border: "2px solid darkgrey",
       boxShadow: 24,
-      p: 4,
+      p: 7,
     };
     return (
       <Modal
@@ -126,6 +129,92 @@ function StatusView() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <div className="selector">
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedStage}
+                label="To Stage"
+                onChange={handleStageChange}
+            >
+              {stageList &&
+              stageList.map((stage, i) => {
+                return (
+                    <MenuItem key={i} value={stage.StageId}>
+                      {stage.StageName}
+                    </MenuItem>
+                );
+              })}
+            </Select>
+          </div>
+          <div className="divider"/>
+          <div className="arrow-button">
+            <Button
+                sx={{
+                  color: "whitesmoke",
+                  backgroundColor: "#4682B4",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  '&:hover': {
+                    backgroundColor: "#90CAF9",
+                    color: "#003C71",
+                    fontWeight: "bold"
+                  }
+                }}
+                loading variant="outlined"
+                onClick={() => {
+                  if (selectedStage.length !== 0) {
+                    handleStageSubmit();
+                  } else {
+                    alert("Stage has to be selected");
+                  }
+                }}
+            >
+              <ArrowForwardIcon />
+            </Button>
+          </div>
+          <div className="modal-buttons">
+            <Button
+                sx={{
+                  color: "whitesmoke",
+                  backgroundColor: "#4682B4",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  '&:hover': {
+                    backgroundColor: "#90CAF9",
+                    color: "#003C71",
+                    fontWeight: "bold"
+                  }
+                }}
+                size="medium"
+                variant="outlined"
+                onClick={() =>
+                    (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
+                }
+            >
+              Edit batch
+            </Button>
+            <div className="divider"/>
+            <Button
+                sx={{
+                  color: "whitesmoke",
+                  backgroundColor: "#4682B4",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  '&:hover': {
+                    backgroundColor: "#90CAF9",
+                    color: "#003C71",
+                    fontWeight: "bold"
+                  }
+                }}
+                size="medium"
+                variant="outlined"
+                onClick={handleClickDialogOpen}
+            >
+              Next Stage
+            </Button>
+            <div className="divider"/>
+          </div>
           {selectedBatch && (
             <div>
               <div>Batch ID: {selectedBatch.BatchId}</div>
@@ -146,54 +235,9 @@ function StatusView() {
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
               pagination
               rowsPerPageOptions={[15, 20, 50]}
-              style={{ height: "70%", marginTop: "10px" }}
+              style={{ height: "70%", marginTop: "10px", color: "#003C71" }}
             />
           )}
-
-          <Button
-            size="large"
-            variant="outlined"
-            onClick={() =>
-              (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
-            }
-          >
-            Edit batch
-          </Button>
-          <Button
-            size="large"
-            variant="outlined"
-            onClick={handleClickDialogOpen}
-          >
-            Next Stage
-          </Button>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedStage}
-            label="To Stage"
-            onChange={handleStageChange}
-          >
-            {stageList &&
-              stageList.map((stage, i) => {
-                return (
-                  <MenuItem key={i} value={stage.StageId}>
-                    {stage.StageName}
-                  </MenuItem>
-                );
-              })}
-          </Select>
-          <Button
-            variant="contained"
-            onClick={() => {
-              if (selectedStage.length !== 0) {
-                handleStageSubmit();
-              } else {
-                alert("Stage has to be selected");
-              }
-            }}
-          >
-            <ArrowForwardIcon />
-          </Button>
         </Box>
       </Modal>
     );
@@ -233,10 +277,21 @@ function StatusView() {
                   //render batches objects
                   stage.Batches.length > 0 &&
                     stage.Batches.map((batch, i) => (
-                      <div key={i}>
+                      <div className="batch-buttons" key={i}>
                         <Button
-                          size="large"
+                          size="medium"
                           variant="outlined"
+                          sx={{
+                            color: "whitesmoke",
+                            backgroundColor: "darksalmon",
+                            // fontWeight: "bold",
+                            textTransform: "capitalize",
+                            '&:hover': {
+                              backgroundColor: "grey",
+                              color: "#003C71",
+                              // fontWeight: "bold"
+                            }
+                          }}
                           onClick={() => handleModalOpen(batch)}
                         >
                           {batch.BatchId}. {batch.BatchName}

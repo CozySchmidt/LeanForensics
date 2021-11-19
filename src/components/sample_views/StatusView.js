@@ -43,11 +43,13 @@ function StatusView() {
     let batchSample = await getSamplesByBatchId(batch.BatchId);
     console.log(batch);
     setSelectedBatch(batchSample);
+    setSelectedStage(batch.StageId);
     setOpenModal(true);
   };
   const handleModalClose = () => setOpenModal(false);
 
   const handleStageChange = (event) => {
+    console.log(event.target);
     setSelectedStage(event.target.value);
   };
 

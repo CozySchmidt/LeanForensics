@@ -152,7 +152,10 @@ router.get("/:caseId/samples", (req, res) => {
           message: "Invalid request!",
         });
       } else if (caseResult.length > 0) {
-        let sampleSql = `SELECT s.SampleId, s.SampleName, s.OnHold, c.CaseId, c.Comment, s.KitId, k.KitName, s.ScreeningId, m.ScreeningName
+        let sampleSql = `
+        SELECT s.SampleId, s.SampleName, s.OnHold, 
+        c.CaseId, c.Comment, s.KitId, k.KitName, 
+        s.ScreeningId, m.ScreeningName
             FROM Sample s
             INNER JOIN CaseTable c
               ON s.CaseId = c.CaseId
@@ -214,7 +217,7 @@ router.post("/", (req, res) => {
             throw err;
           });
         } else if (caseResult.affectedRows > 0) {
-          let sampleList = req.body.samples;
+          let sampleList = req.body.sampleList;
           let responses = [];
           Promise.all(
             sampleList.map((sample) => {

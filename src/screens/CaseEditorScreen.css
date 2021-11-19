@@ -13,3 +13,25 @@
 .row-item {
   margin: 3px;
 }
+
+
+.cancel-button {
+  margin-top: 3px;
+  margin-left: 900px;
+}
+
+.form-buttons {
+  top: 90px;
+  left: 930px;
+  position: absolute;
+}
+
+.divider {
+  width:10px;
+  height:auto;
+  display:inline-block;
+}
+
+.box-divider {
+  height:10px;
+}

@@ -1,0 +1,9 @@
+.viewHolder {
+    display: flex;
+    overflow-x: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: #D3D9DE;
+    color: #003C71;
+    font-weight: bold;
+}

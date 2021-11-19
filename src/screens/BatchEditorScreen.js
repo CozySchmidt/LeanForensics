@@ -7,6 +7,10 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
+import DeleteIcon from '@mui/icons-material/Delete';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
+import SouthWestIcon from '@mui/icons-material/SouthWest';
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
 import { getAllSamples } from "../api/SampleApi";
@@ -46,7 +50,7 @@ function BatchEditorScreen({ location }) {
   const [batchName, setBatchName] = React.useState("");
 
   const editBatchText = "Edit Batch";
-  const createBatchText = "Create Batch";
+  const createBatchText = "New Batch";
 
   useEffect(() => {
     retrieveAvailableSamples();
@@ -183,38 +187,28 @@ function BatchEditorScreen({ location }) {
 
   return (
     <div className="screen-holder">
-      <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
+      <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em"}}>
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <Button variant="contained" onClick={() => history.push("/")}>
-              Cancel
-            </Button>
-          </Grid>
-
-          <Grid item xs="auto">
-            {editMode && (
-              <Button variant="contained" onClick={onPullOutSamples}>
-                Pull Out Samples
+            <div className="batch-editor-buttons">
+              <Button
+                  startIcon={<ClearIcon />}
+                  sx={{
+                color: "whitesmoke",
+                backgroundColor: "#003C71",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    '&:hover': {
+                      backgroundColor: "#D3D9DE",
+                      color: "#003C71",
+                      fontWeight: "bold"
+                    }
+              }} loading variant="outlined" onClick={() => history.push("/")}>
+                Cancel
               </Button>
-            )}
+            </div>
           </Grid>
           <Grid item xs={4}></Grid>
-          <Grid item xs="auto">
-            {editMode && (
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => history.goBack()}
-              >
-                Delete
-              </Button>
-            )}
-          </Grid>
-          <Grid item xs="auto">
-            <Button variant="contained" onClick={onSubmitBatch}>
-              {editMode ? "Edit Batch" : "Submit"}
-            </Button>
-          </Grid>
         </Grid>
         <h1>{editMode ? editBatchText : createBatchText}</h1>
       </Box>
@@ -225,22 +219,92 @@ function BatchEditorScreen({ location }) {
             "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
           }}
           noValidate
-          border="1px solid lightgrey"
+          border="1px solid #FFF200"
           borderRadius="8px"
+          padding="20px"
           autoComplete="off"
+          backgroundColor="whitesmoke"
+          color="#003C71"
         >
-          <h3>Batch Information</h3>
+          <Grid item xs="auto">
+            <div className="pull-button">
+              {editMode && (
+                  <Button loading variant="outlined" onClick={onPullOutSamples}
+                          startIcon={<SouthWestIcon />}
+                          sx={{
+                            color: "whitesmoke",
+                            backgroundColor: "#4682B4",
+                            fontWeight: "bold",
+                            textTransform: "capitalize",
+                            '&:hover': {
+                              backgroundColor: "#90CAF9",
+                              color: "#003C71",
+                              fontWeight: "bold"
+                            }
+                          }}
+                  >
+                    Pull Samples
+                  </Button>
+              )}
+            </div>
+          </Grid>
+          <Grid item xs="auto">
+            <div className="box-buttons">
+              {editMode && (
+                  <Button
+                      loading variant="outlined"
+                      startIcon={<DeleteIcon />}
+                      sx={{
+                        backgroundColor: "red",
+                        color: "whitesmoke",
+                        fontWeight: "bold",
+                        textTransform: "capitalize",
+                        '&:hover': {
+                          backgroundColor: "red",
+                          color: "#003C71",
+                          fontWeight: "bold"
+                        }
+                      }}
+                      color="error"
+                      onClick={() => history.goBack()}
+                  >
+                    Delete
+                  </Button>
+              )}
+              <div className="divider"/>
+              <Button loading variant="outlined"
+                  // startIcon={<EditIcon />}
+                      sx={{
+                        color: "whitesmoke",
+                        backgroundColor: "#4682B4",
+                        fontWeight: "bold",
+                        textTransform: "capitalize",
+                        '&:hover': {
+                          backgroundColor: "#90CAF9",
+                          color: "#003C71",
+                          fontWeight: "bold"
+                        }
+                      }}
+                      onClick={onSubmitBatch}>
+                {editMode ? "Edit Batch" : "Submit"}
+              </Button>
+            </div>
+          </Grid>
+          <h2>Batch Information</h2>
 
           {retrievedBatch && (
             <div>
-              <h4>Batch ID: {retrievedBatch.BatchId} </h4>
+              <h3>Batch ID: {retrievedBatch.BatchId} </h3>
             </div>
           )}
-          <TextField
-            onChange={(e) => setBatchName(e.target.value)}
-            value={batchName}
-            label="Batch Name"
-            fullWidth
+          <TextField variant="standard"
+                     error
+                     id="outlined-error-helper-text"
+                     helperText="Required"
+                     value={batchName}
+                     label="Batch Name"
+                     fullWidth
+                     onChange={(e) => setBatchName(e.target.value)}
           />
           <TextField
             id="outlined-select"
@@ -280,6 +344,7 @@ function BatchEditorScreen({ location }) {
               multiline
               rows={4}
               fullWidth
+              noValidate
             />
           </FormControl>
         </Box>
@@ -301,7 +366,14 @@ function BatchEditorScreen({ location }) {
           }
           className={classes.root}
           selectionModel={selectionModel}
-          style={{ height: "85%", marginTop: "10px" }}
+          style={{
+            height: "85%",
+            marginTop: "10px",
+            marginBottom: "20px",
+            backgroundColor: "whitesmoke",
+            color: "#003C71",
+            border: "1px solid #FFF200"
+          }}
         />
       </div>
     </div>
@@ -321,7 +393,7 @@ const columns = [
   },
   {
     field: "ScreeningName",
-    field: "Screening Method",
+    headerName: "Screening Method",
     width: 150,
   },
   {
@@ -341,7 +413,7 @@ const columns = [
     renderCell: (cellValues) => {
       return (
         cellValues === 1 && (
-          <Button variant="contained" color="warning">
+          <Button loading variant="outlined" color="warning">
             On Hold
           </Button>
         )

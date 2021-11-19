@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import { getSamplesByBatchId } from "../../api/BatchApi";
 
 export default function BatchTable({ columns, data }) {
-    const [pageSize, setPageSize] = React.useState(15);
+    const [pageSize, setPageSize] = useState(15);
 
     const {
         getTableProps,
@@ -33,8 +33,8 @@ export default function BatchTable({ columns, data }) {
 
     const handleModalOpen = async (selectedBatch) => {
         let batch = await getSamplesByBatchId(selectedBatch.original.BatchId);
-        console.log("selectedBatch:");
-        console.log(batch);
+        console.log("selectedBatch contains these samples:");
+        console.log(batch.Samples);
         setSelectedBatch(batch);
         setOpenModal(true);
     };
@@ -55,35 +55,33 @@ export default function BatchTable({ columns, data }) {
             p: 4,
         };
 
-    return (
-        <Modal
-            open={openModal}
-            onClose={handleModalClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Batch ID: {selectedBatch && selectedBatch.BatchId}
-            </Typography>
+        return (
+            <Modal
+                open={openModal}
+                onClose={handleModalClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Batch ID: {selectedBatch && selectedBatch.BatchId}
+                </Typography>
 
-            {console.log(selectedBatch.Samples)}
-
-            {selectedBatch && (
-                <DataGrid
-                rows={selectedBatch.Samples}
-                columns={sampleColumns}
-                getRowId={(r) => r.BatchId + "-" + r.SampleId}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                pagination
-                rowsPerPageOptions={[15, 20, 50]}
-                style={{ height: "70%", marginTop: "10px" }}
-                />
-            )}
-            </Box>
-        </Modal>
+                {selectedBatch && (
+                    <DataGrid
+                    rows={selectedBatch.Samples}
+                    columns={sampleColumns}
+                    getRowId={(r) => r.BatchId + "-" + r.SampleId}
+                    pageSize={pageSize}
+                    disableSelectionOnClick
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    pagination
+                    rowsPerPageOptions={[15, 20, 50]}
+                    style={{ height: "70%", marginTop: "10px" }}
+                    />
+                )}
+                </Box>
+            </Modal>
         );
     };
 

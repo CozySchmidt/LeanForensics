@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import './SampleView.css';
 import Table from "./SampleTable";
-
 import {getAllSamples} from "../../api/SampleApi";
 
 const SampleView = () => {

@@ -1,14 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
-import MOCK_DATA from "../../constants/mock_samples.json";
 import Button from "@mui/material/Button";
 import './SampleView.css';
-import Table from "./Table";
-import { GlobalFilter } from "./GlobalFilter";
-import {BsFillArrowDownCircleFill, BsFillArrowUpCircleFill} from "react-icons/bs";
-
+import Table from "./SampleTable";
 import {getAllSamples} from "../../api/SampleApi";
-import axios from "axios";
 
 const SampleView = () => {
 

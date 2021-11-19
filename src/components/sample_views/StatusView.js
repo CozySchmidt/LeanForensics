@@ -5,20 +5,29 @@ import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import "./StatusView.css";
-import { statusViewData } from "../../constants/testData";
-import { getAllBatchesByStages } from "../../api/OthersApi";
-import { getSamplesByBatchId } from "../../api/BatchApi";
+import { getAllBatchesByStages, getAllStages } from "../../api/OthersApi";
+import { getSamplesByBatchId, updateBatchStage } from "../../api/BatchApi";
 
 function StatusView() {
   const history = useHistory();
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [nextStage, setNextStage] = React.useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [dragging, setDragging] = useState(false);
   const [pageSize, setPageSize] = React.useState(15);
   const [stageList, setStageList] = useState(null);
+  const [selectedStage, setSelectedStage] = useState("");
 
   useEffect(() => {
     retrieveBatches();
@@ -26,17 +35,75 @@ function StatusView() {
 
   async function retrieveBatches() {
     let stageList = await getAllBatchesByStages();
-    console.log(stageList);
+    // console.log(stageList);
     setStageList(stageList);
   }
 
   const handleModalOpen = async (batch) => {
     let batchSample = await getSamplesByBatchId(batch.BatchId);
-    console.log(batchSample);
+    console.log(batch);
     setSelectedBatch(batchSample);
     setOpenModal(true);
   };
   const handleModalClose = () => setOpenModal(false);
+
+  const handleStageChange = (event) => {
+    setSelectedStage(event.target.value);
+  };
+
+  const handleClickDialogOpen = () => {
+    setNextStage(true);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setNextStage(false);
+    setOpenDialog(false);
+  };
+
+  const handleStageSubmit = async () => {
+    let stageId = selectedStage;
+    if (nextStage) {
+      stageId = selectedBatch.StageId + 1;
+    }
+    if (stageId <= stageList.length) {
+      let updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
+      if (updateResult) {
+        console.log(updateResult);
+        window.location.reload(false);
+      } else {
+        alert("Something went wrong. Please try again later.");
+      }
+    } else {
+      //TODO: change completed to true when next stage is unavailable
+    }
+  };
+
+  //TODO: handle when it goes to the last stage
+  const DialogView = () => {
+    return (
+      selectedBatch && (
+        <Dialog
+          open={openDialog}
+          onClose={handleDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Move ${selectedBatch.BatchName} to ${
+              stageList[selectedBatch.StageId].StageName
+            } Stage?`}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>No</Button>
+            <Button onClick={handleStageSubmit} autoFocus>
+              YES
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )
+    );
+  };
 
   const ModalView = () => {
     const style = {
@@ -62,9 +129,10 @@ function StatusView() {
           {selectedBatch && (
             <div>
               <div>Batch ID: {selectedBatch.BatchId}</div>
-              <div>Batch Name: {selectedBatch.Name}</div>
+              <div>Batch Name: {selectedBatch.BatchName}</div>
               <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
               <div>Created Date: {selectedBatch.CreatedDate}</div>
+              <div>Comments: {selectedBatch.Comment}</div>
               <div>Completed: {selectedBatch.IsCompleted ? "Yes" : "No"}</div>
             </div>
           )}
@@ -72,7 +140,7 @@ function StatusView() {
             <DataGrid
               rows={selectedBatch.Samples}
               columns={columns}
-              getRowId={(r) => r.SampleId}
+              getRowId={(r) => r.CaseId + "-" + r.SampleId}
               pageSize={pageSize}
               disableSelectionOnClick
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -86,13 +154,45 @@ function StatusView() {
             size="large"
             variant="outlined"
             onClick={() =>
-              history.push({
-                pathname: "/batch-editor",
-                search: `?batchId=${selectedBatch.BatchId}`,
-              })
+              (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
             }
           >
             Edit batch
+          </Button>
+          <Button
+            size="large"
+            variant="outlined"
+            onClick={handleClickDialogOpen}
+          >
+            Next Stage
+          </Button>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedStage}
+            label="To Stage"
+            onChange={handleStageChange}
+          >
+            {stageList &&
+              stageList.map((stage, i) => {
+                return (
+                  <MenuItem key={i} value={stage.StageId}>
+                    {stage.StageName}
+                  </MenuItem>
+                );
+              })}
+          </Select>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (selectedStage.length !== 0) {
+                handleStageSubmit();
+              } else {
+                alert("Stage has to be selected");
+              }
+            }}
+          >
+            <ArrowForwardIcon />
           </Button>
         </Box>
       </Modal>
@@ -139,7 +239,7 @@ function StatusView() {
                           variant="outlined"
                           onClick={() => handleModalOpen(batch)}
                         >
-                          {batch.BatchId}. {batch.Name}
+                          {batch.BatchId}. {batch.BatchName}
                         </Button>
                       </div>
                     ))
@@ -149,6 +249,7 @@ function StatusView() {
         }
       </div>
       <ModalView />
+      <DialogView />
     </ScrollContainer>
   );
 }

@@ -137,3 +137,25 @@ export async function updateBatchInfo(batchObj) {
     return false;
   }
 }
+
+export async function updateBatchReady(batchObj) {
+  try {
+    let batchId = batchObj.BatchId;
+    let response = await fetch(`http://${backend}:${PORT}/batches/${batchId}/ready`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(batchObj),
+    });
+    let json = await response.json();
+    if (json.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}

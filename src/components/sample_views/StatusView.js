@@ -16,7 +16,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import "./StatusView.css";
 import { getAllBatchesByStages, getAllStages } from "../../api/OthersApi";
-import { getSamplesByBatchId, updateBatchStage } from "../../api/BatchApi";
+import { getSamplesByBatchId, updateBatchReady, updateBatchStage } from "../../api/BatchApi";
 
 function StatusView() {
   const history = useHistory();
@@ -37,6 +37,14 @@ function StatusView() {
     let stageList = await getAllBatchesByStages();
     // console.log(stageList);
     setStageList(stageList);
+  }
+  async function updateReadyBatch() {
+    let result = await updateBatchReady(selectedBatch);
+    if(result) {
+      window.location.reload(false);
+    } else {
+      alert("Something went wrong")
+    }
   }
 
   const handleModalOpen = async (batch) => {
@@ -179,6 +187,24 @@ function StatusView() {
             <Button
                 sx={{
                   color: "whitesmoke",
+                  backgroundColor: "#F682B4",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  '&:hover': {
+                    backgroundColor: "#F0CAF9",
+                    color: "#003C71",
+                    fontWeight: "bold"
+                  }
+                }}
+                size="medium"
+                variant="outlined"
+                onClick={updateReadyBatch}
+            >
+            READY!
+          </Button>
+            <Button
+                sx={{
+                  color: "whitesmoke",
                   backgroundColor: "#4682B4",
                   fontWeight: "bold",
                   textTransform: "capitalize",
@@ -224,7 +250,7 @@ function StatusView() {
               <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
               <div>Created Date: {selectedBatch.CreatedDate}</div>
               <div>Comments: {selectedBatch.Comment}</div>
-              <div>Completed: {selectedBatch.IsCompleted ? "Yes" : "No"}</div>
+              <div>Is {selectedBatch.StageName} Completed: {selectedBatch.IsReady ? "Yes" : "No"}</div>
             </div>
           )}
           {selectedBatch && (

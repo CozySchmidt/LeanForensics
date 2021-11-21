@@ -66,7 +66,7 @@ function BatchEditorScreen({ location }) {
     setComment(batch.Comment);
     setBatchName(batch.BatchName);
 
-    let selected = batch.Samples.map((sample) => {
+    let selected = await batch.Samples.map((sample) => {
       return sample["CaseId"] + "-" + sample["SampleId"];
     });
     // console.log(selected);
@@ -298,9 +298,9 @@ function BatchEditorScreen({ location }) {
             </div>
           )}
           <TextField variant="standard"
-                     error
-                     id="outlined-error-helper-text"
-                     helperText="Required"
+                    //  error
+                    //  id="outlined-error-helper-text"
+                    //  helperText="Required"
                      value={batchName}
                      label="Batch Name"
                      fullWidth

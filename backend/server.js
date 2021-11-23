@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 8888;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.options('*', cors());
 
 app.get("/", (req, res) => {
   res.json({message: "OK"});

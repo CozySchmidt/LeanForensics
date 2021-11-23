@@ -1,28 +1,32 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import { stageData, extractionTypeData } from "../constants/testData";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
-import DeleteIcon from '@mui/icons-material/Delete';
-import ClearIcon from '@mui/icons-material/Clear';
-import EditIcon from '@mui/icons-material/Edit';
-import SouthWestIcon from '@mui/icons-material/SouthWest';
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
+import SouthWestIcon from "@mui/icons-material/SouthWest";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 import { getAllSamples } from "../api/SampleApi";
 import {
   getSamplesByBatchId,
   pullOutSamplesFromBatch,
   updateBatchInfo,
   createBatch,
+  deleteBatch,
 } from "../api/BatchApi";
 import { makeStyles, createStyles } from "@mui/styles";
 import { createTheme } from "@mui/material/styles";
 import "./BatchEditorScreen.css";
+import { getAllExtractionMethods, getAllStages } from "../api/OthersApi";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -53,21 +57,46 @@ function BatchEditorScreen({ location }) {
   const [extractionType, setExtractionType] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [batchName, setBatchName] = React.useState("");
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [extractionTypeData, setExtractionTypeData] = React.useState([]);
+  const [stageData, setStageData] = React.useState([]);
 
   const editBatchText = "Edit Batch";
   const createBatchText = "New Batch";
 
   useEffect(() => {
     retrieveAvailableSamples();
+    retrieveExtrationMethods();
+    retrieveStages();
     editMode && retrieveBatchById();
   }, []);
+
+  const handleClickDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
+  const retrieveExtrationMethods = async () => {
+    let methods = await getAllExtractionMethods();
+    console.log(methods)
+    setExtractionTypeData(methods)
+  }
+
+  const retrieveStages = async () => {
+    let stages = await getAllStages();
+    console.log(stages)
+    setStageData(stages)
+  }
 
   async function retrieveBatchById() {
     let batch = await getSamplesByBatchId(query.batchId);
     console.log(batch);
     setRetrievedBatch(batch);
-    setInitialStage(batch.StageId);
-    setExtractionType(batch.ExtractionTypeId);
+    setInitialStage(batch.StageId ?? "");
+    setExtractionType(batch.ExtractionId ?? "");
     setComment(batch.Comment);
     setBatchName(batch.BatchName);
 
@@ -84,6 +113,17 @@ function BatchEditorScreen({ location }) {
     console.log(samples);
     setSampleList(samples);
   }
+  
+  const onDeleteBatch = async () => {
+    setOpenDialog(false);
+    let result = await deleteBatch(retrievedBatch.BatchId);
+    if (result) {
+      alert("Successfully Deleted.");
+      history.push("/");
+    } else {
+      alert("Failed. Something went wrong.");
+    }
+  };
 
   const onSubmitBatch = async () => {
     if (editMode) {
@@ -188,6 +228,29 @@ function BatchEditorScreen({ location }) {
     } else {
       alert("Failed. Something went wrong.");
     }
+  };
+
+  const DialogView = () => {
+    return (
+      retrievedBatch && (
+        <Dialog
+          open={openDialog}
+          onClose={handleDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Delete Batch ${retrievedBatch.BatchId} . ${retrievedBatch.BatchName}`}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>No</Button>
+            <Button onClick={onDeleteBatch} autoFocus>
+              YES
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )
+    );
   };
 
   return (
@@ -385,10 +448,12 @@ function BatchEditorScreen({ location }) {
             marginBottom: "20px",
             backgroundColor: "whitesmoke",
             color: "#003C71",
-            border: "1px solid #FFF200"
+            border: "1px solid #FFF200",
           }}
         />
       </div>
+
+      <DialogView />
     </div>
   );
 }

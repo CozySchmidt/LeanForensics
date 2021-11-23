@@ -31,3 +31,45 @@ export async function getAllStages() {
     return null;
   }
 }
+export async function getAllExtractionMethods() {
+  try {
+    let url = `http://${backend}:${PORT}/extractionMethods`;
+    let response = await fetch(url);
+    let json = await response.json();
+    if (json.success) {
+      return json.body;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+export async function getAllScreeningMethods() {
+  try {
+    let url = `http://${backend}:${PORT}/screeningMethods`;
+    let response = await fetch(url);
+    let json = await response.json();
+    if (json.success) {
+      return json.body;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+export async function getAllKitType() {
+  try {
+    let url = `http://${backend}:${PORT}/kitTypes`;
+    let response = await fetch(url);
+    let json = await response.json();
+    if (json.success) {
+      return json.body;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+}

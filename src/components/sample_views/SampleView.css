@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    align-items: center;
     overflow: auto;
 }
 
@@ -10,13 +10,14 @@
     margin-top: 2%;
     border-collapse: collapse;
     border: 2px solid;
-    width: 100%;
+    background-color: white;
+    width: 90%;
 }
 
 .table--samples--header {
-    text-align: left;
-    background-color: #04AA6D;
-    color: white;
+    text-align: center;
+    background-color: lightyellow;
+    color: black;
 }
 
 .table--samples--header th {

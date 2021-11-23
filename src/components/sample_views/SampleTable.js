@@ -2,6 +2,7 @@ import React from "react";
 import { useTable, useSortBy, useGlobalFilter } from "react-table";
 import {BsFillArrowDownCircleFill, BsFillArrowUpCircleFill} from "react-icons/bs";
 import { GlobalFilter } from "./GlobalFilter";
+import Button from "@mui/material/Button";
 
 export default function Table({ columns, data }) {
 
@@ -35,7 +36,7 @@ export default function Table({ columns, data }) {
                     </span>
                   </th>
                 ))}
-                <th>Edit</th>
+                <th>Edit?</th>
               </tr>
             ))}
           </thead>
@@ -47,10 +48,10 @@ export default function Table({ columns, data }) {
                   {row.cells.map(cell => {
                     return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   })}
-                  <td>
-                    <button onClick={() => {
-                      alert(`Do you wish to edit Sample ID: ${row.values['SampleId']}?`)
-                    }}>Edit</button>
+                  <td align="center">
+                    <Button onClick={() => {
+                      window.location.href = `/case-editor?caseId=${row.values['CaseId']}`
+                    }}>Edit</Button>
                   </td>
                 </tr>
               )

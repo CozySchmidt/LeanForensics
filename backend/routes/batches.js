@@ -243,6 +243,8 @@ router.get("/:batchId/samples", (req, res) => {
                FROM Batch b
                LEFT JOIN ExtractionMethod e
                ON b.ExtractionId = e.ExtractionId
+               LEFT JOIN Stage s
+               ON s.StageId = b.StageId
                WHERE BatchId = ${batchId}
                `;
     connection.query(sql, (err, batchResult) => {
@@ -443,6 +445,42 @@ router.patch("/:batchId/stages/:stageId", (req, res) => {
     let sql = `
       UPDATE Batch
       SET StageId = ${stageId}
+      WHERE BatchId = ${batchId};
+    `;
+    connection.query(sql, (err, result) => {
+      connection.release();
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).send({
+          success: false,
+          message: err.message,
+        });
+      } else if (result.affectedRows > 0) {
+        console.log(`Batch ${batchId} updated!`);
+        res.status(200).send({
+          success: true,
+          message: `Batch ${batchId} updated!`,
+          body: result,
+        });
+      } else {
+        res.status(404).send({
+          success: false,
+          message: `Batch ${batchId} not found!`,
+        });
+      }
+    });
+  });
+});
+
+/* Update a Batch's ready status */
+router.patch("/:batchId/ready", (req, res) => {
+  pool.getConnection(function (err, connection) {
+    if (err) throw err; // not connected
+    let batchId = req.params.batchId;
+    let isReady = req.body.IsReady;
+    let sql = `
+      UPDATE Batch
+      SET IsReady = ${!isReady}
       WHERE BatchId = ${batchId};
     `;
     connection.query(sql, (err, result) => {

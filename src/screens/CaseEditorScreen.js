@@ -8,20 +8,23 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import IconButton from "@mui/material/IconButton";
-import ClearIcon from '@mui/icons-material/Clear';
-import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from "@mui/icons-material/Clear";
+import AddIcon from "@mui/icons-material/Add";
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import "./CaseEditorScreen.css";
-import { kitTypeData, screeningData } from "../constants/testData";
 import {
   createCase,
   getSamplesByCaseId,
   updateCaseWithSamples,
+  deleteCase,
 } from "../api/CaseApi";
 // import DeleteIcon from "@mui/material/SvgIcon/SvgIcon";
 // import ClearIcon from "@mui/material/SvgIcon/SvgIcon";
@@ -47,10 +50,35 @@ const CaseEditorScreen = ({ location }) => {
   );
   const [initialSampleList, setInitialSampleList] = React.useState([]);
   const [comment, setComment] = React.useState("");
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [kitTypeData, setKitTypeData] = React.useState([]);
+  const [screeningData, setScreeningData] = React.useState([]);
 
   useEffect(() => {
+    retrieveKitTypes();
+    retrieveScreening();
     editMode && retrieveCaseById();
   }, []);
+
+  const handleClickDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
+  const retrieveKitTypes = async () => {
+    let kit = await getAllKitType();
+    console.log(kit);
+    setKitTypeData(kit);
+  };
+
+  const retrieveScreening = async () => {
+    let methods = await getAllScreeningMethods();
+    console.log(methods);
+    setScreeningData(methods);
+  };
 
   async function retrieveCaseById() {
     let caseResult = await getSamplesByCaseId(query.caseId);
@@ -65,6 +93,17 @@ const CaseEditorScreen = ({ location }) => {
     setSampleList(keyList);
     setInitialSampleList(JSON.parse(JSON.stringify(keyList)));
   }
+
+  const onDeleteCase = async () => {
+    setOpenDialog(false);
+    let result = await deleteCase(retrievedCase.CaseId);
+    if (result) {
+      alert("Successfully Deleted.");
+      history.push("/");
+    } else {
+      alert("Failed. Something went wrong.");
+    }
+  };
 
   const onSubmitCase = async () => {
     //TODO: validation required
@@ -183,6 +222,29 @@ const CaseEditorScreen = ({ location }) => {
   const deleteRow = (index) => {
     const items = sampleList.filter((item, i) => index !== i);
     setSampleList(items);
+  };
+
+  const DialogView = () => {
+    return (
+      retrievedCase && (
+        <Dialog
+          open={openDialog}
+          onClose={handleDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Delete Case with ID: ${retrievedCase.CaseId}`}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>No</Button>
+            <Button onClick={onDeleteCase} autoFocus>
+              YES
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )
+    );
   };
 
   return (
@@ -307,12 +369,13 @@ const CaseEditorScreen = ({ location }) => {
             label="Comment"
           />
         </Box>
-        <div className="box-divider"/>
-        <Box style={{ paddingBottom: "1em" }}
-             border="1px solid #FFF200"
-             borderRadius="8px"
-             backgroundColor="whitesmoke"
-             paddingTop="1em"
+        <div className="box-divider" />
+        <Box
+          style={{ paddingBottom: "1em" }}
+          border="1px solid #FFF200"
+          borderRadius="8px"
+          backgroundColor="whitesmoke"
+          paddingTop="1em"
         >
           {sampleList &&
             sampleList.map((sample, i) => {
@@ -323,11 +386,14 @@ const CaseEditorScreen = ({ location }) => {
                   obj={sample}
                   onDelete={deleteRow}
                   onAdd={addSubRow}
+                  screeningData={screeningData}
+                  kitTypeData={kitTypeData}
                 />
               );
             })}
         </Box>
       </div>
+      <DialogView />
     </div>
   );
 };
@@ -354,8 +420,7 @@ const SampleRow = (props) => {
 
   return (
     <div className="sample-row">
-      <div className="row-item"
-           style={{ margin: "32px" }}>
+      <div className="row-item" style={{ margin: "32px" }}>
         {props.index + 1}
       </div>
       <div className="row-item">
@@ -380,11 +445,11 @@ const SampleRow = (props) => {
           }}
           value={screening}
           label="Screening Method"
-          sx={{ m: 2, width: "25ch"}}
+          sx={{ m: 2, width: "25ch" }}
         >
-          {screeningData.map((screening) => (
-            <MenuItem key={screening.screeningId} value={screening.screeningId}>
-              {screening.screeningName}
+          {props.screeningData.map((screening) => (
+            <MenuItem key={screening.ScreeningId} value={screening.ScreeningId}>
+              {screening.ScreeningName}
             </MenuItem>
           ))}
         </TextField>
@@ -401,9 +466,9 @@ const SampleRow = (props) => {
           label="Kit Type"
           sx={{ m: 1, width: "25ch" }}
         >
-          {kitTypeData.map((kitType) => (
-            <MenuItem key={kitType.kitTypeId} value={kitType.kitTypeId}>
-              {kitType.kitTypeName}
+          {props.kitTypeData.map((kitType) => (
+            <MenuItem key={kitType.KitId} value={kitType.KitId}>
+              {kitType.KitName}
             </MenuItem>
           ))}
         </TextField>
@@ -448,8 +513,8 @@ const SampleRow = (props) => {
       </div>
       <div className="row-item-icon">
         <IconButton
-            aria-label="delete"
-            onClick={() => props.onDelete(props.index)}
+          aria-label="delete"
+          onClick={() => props.onDelete(props.index)}
         >
           <DeleteRoundedIcon />
         </IconButton>

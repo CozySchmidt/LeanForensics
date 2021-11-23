@@ -26,6 +26,7 @@ import {
   updateCaseWithSamples,
   deleteCase,
 } from "../api/CaseApi";
+import { getAllKitType, getAllScreeningMethods } from "../api/OthersApi";
 // import DeleteIcon from "@mui/material/SvgIcon/SvgIcon";
 // import ClearIcon from "@mui/material/SvgIcon/SvgIcon";
 

@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: "rgba(69, 245, 66, 0.08)",
       },
     },
+
+    spreadBox: {
+      justifyContent: "flex-end",
+      alignItems: "flex-end",
+    }
   })
 );
 
@@ -187,51 +192,61 @@ function BatchEditorScreen({ location }) {
 
   return (
     <div className="screen-holder">
-      <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em"}}>
+      <Box sx={{ flexGrow: 1 }}
+           style={{ paddingTop: "1em"}}
+           m={1}
+           className={`${classes.spreadBox}`}
+      >
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <div className="batch-editor-buttons">
-              <Button
-                  startIcon={<ClearIcon />}
-                  sx={{
-                color: "whitesmoke",
-                backgroundColor: "#003C71",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    '&:hover': {
-                      backgroundColor: "#D3D9DE",
-                      color: "#003C71",
-                      fontWeight: "bold"
-                    }
-              }} loading variant="outlined" onClick={() => history.push("/")}>
-                Cancel
-              </Button>
-            </div>
+            <Button
+                startIcon={<ClearIcon />}
+                sx={{
+                  position: "absolute",
+                  marginLeft: 110,
+                  marginTop: 3,
+              color: "whitesmoke",
+              backgroundColor: "#003C71",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  '&:hover': {
+                    backgroundColor: "#D3D9DE",
+                    color: "#003C71",
+                    fontWeight: "bold"
+                  }
+            }} variant="outlined" onClick={() => history.push("/")}>
+              Cancel
+            </Button>
           </Grid>
-          <Grid item xs={4}></Grid>
         </Grid>
+        <Grid item xs={4}></Grid>
         <h1>{editMode ? editBatchText : createBatchText}</h1>
       </Box>
       <div className="content-wrapper">
-        <Box
-          component="form"
-          sx={{
-            "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
-          }}
-          noValidate
-          border="1px solid #FFF200"
-          borderRadius="8px"
-          padding="20px"
-          autoComplete="off"
-          backgroundColor="whitesmoke"
-          color="#003C71"
+        <Grid
+            justify="flex-end"
         >
-          <Grid item xs="auto">
-            <div className="pull-button">
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
+            }}
+            className={`${classes.spreadBox}`}
+            noValidate
+            border="1px solid #FFF200"
+            borderRadius="8px"
+            padding="20px"
+            autoComplete="off"
+            backgroundColor="whitesmoke"
+            color="#003C71"
+          >
+            <Grid item xs="auto">
               {editMode && (
-                  <Button loading variant="outlined" onClick={onPullOutSamples}
+                  <Button variant="outlined" onClick={onPullOutSamples}
                           startIcon={<SouthWestIcon />}
                           sx={{
+                            position: "absolute",
+                            marginLeft: 33,
                             color: "whitesmoke",
                             backgroundColor: "#4682B4",
                             fontWeight: "bold",
@@ -246,15 +261,13 @@ function BatchEditorScreen({ location }) {
                     Pull Samples
                   </Button>
               )}
-            </div>
-          </Grid>
-          <Grid item xs="auto">
-            <div className="box-buttons">
               {editMode && (
                   <Button
                       loading variant="outlined"
                       startIcon={<DeleteIcon />}
                       sx={{
+                        position: "absolute",
+                        marginLeft: 94,
                         backgroundColor: "red",
                         color: "whitesmoke",
                         fontWeight: "bold",
@@ -265,16 +278,16 @@ function BatchEditorScreen({ location }) {
                           fontWeight: "bold"
                         }
                       }}
-                      color="error"
                       onClick={() => history.goBack()}
                   >
                     Delete
                   </Button>
               )}
-              <div className="divider"/>
-              <Button loading variant="outlined"
+              <Button variant="outlined"
                   // startIcon={<EditIcon />}
                       sx={{
+                        position: "absolute",
+                        marginLeft: 108,
                         color: "whitesmoke",
                         backgroundColor: "#4682B4",
                         fontWeight: "bold",
@@ -288,66 +301,66 @@ function BatchEditorScreen({ location }) {
                       onClick={onSubmitBatch}>
                 {editMode ? "Edit Batch" : "Submit"}
               </Button>
-            </div>
-          </Grid>
-          <h2>Batch Information</h2>
+            </Grid>
+            <h2>Batch Information</h2>
 
-          {retrievedBatch && (
-            <div>
-              <h3>Batch ID: {retrievedBatch.BatchId} </h3>
-            </div>
-          )}
-          <TextField variant="standard"
-                    //  error
-                    //  id="outlined-error-helper-text"
-                    //  helperText="Required"
-                     value={batchName}
-                     label="Batch Name"
-                     fullWidth
-                     onChange={(e) => setBatchName(e.target.value)}
-          />
-          <TextField
-            id="outlined-select"
-            onChange={(e) => setInitialStage(e.target.value)}
-            value={initialStage}
-            select
-            label="Initial Stage"
-          >
-            {stageData.map((stage) => (
-              <MenuItem key={stage.stageId} value={stage.stageId}>
-                {stage.stageName}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            id="outlined-select"
-            onChange={(e) => setExtractionType(e.target.value)}
-            value={extractionType}
-            select
-            label="Extraction Type"
-          >
-            {extractionTypeData.map((extractionType) => (
-              <MenuItem
-                key={extractionType.extractionTypeId}
-                value={extractionType.extractionTypeId}
-              >
-                {extractionType.extractionTypeName}
-              </MenuItem>
-            ))}
-          </TextField>
-          <FormControl fullWidth sx={{ m: 1 }}>
+            {retrievedBatch && (
+              <div>
+                <h3>Batch ID: {retrievedBatch.BatchId} </h3>
+              </div>
+            )}
+            <TextField variant="standard"
+                      //  error
+                      //  id="outlined-error-helper-text"
+                      //  helperText="Required"
+                       value={batchName}
+                       label="Batch Name"
+                       fullWidth
+                       onChange={(e) => setBatchName(e.target.value)}
+            />
             <TextField
               id="outlined-select"
-              onChange={(e) => setComment(e.target.value)}
-              value={comment}
-              label="Comment"
-              multiline
-              rows={4}
-              fullWidth
-              noValidate
-            />
-          </FormControl>
-        </Box>
+              onChange={(e) => setInitialStage(e.target.value)}
+              value={initialStage}
+              select
+              label="Initial Stage"
+            >
+              {stageData.map((stage) => (
+                <MenuItem key={stage.stageId} value={stage.stageId}>
+                  {stage.stageName}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              id="outlined-select"
+              onChange={(e) => setExtractionType(e.target.value)}
+              value={extractionType}
+              select
+              label="Extraction Type"
+            >
+              {extractionTypeData.map((extractionType) => (
+                <MenuItem
+                  key={extractionType.extractionTypeId}
+                  value={extractionType.extractionTypeId}
+                >
+                  {extractionType.extractionTypeName}
+                </MenuItem>
+              ))}
+            </TextField>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <TextField
+                id="outlined-select"
+                onChange={(e) => setComment(e.target.value)}
+                value={comment}
+                label="Comment"
+                multiline
+                rows={4}
+                fullWidth
+                noValidate
+              />
+            </FormControl>
+          </Box>
+        </Grid>
         <DataGrid
           rows={sampleList}
           columns={columns}

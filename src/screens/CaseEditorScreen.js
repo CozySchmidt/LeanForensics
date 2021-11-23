@@ -13,6 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
+import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import "./CaseEditorScreen.css";
@@ -22,6 +23,7 @@ import {
   getSamplesByCaseId,
   updateCaseWithSamples,
 } from "../api/CaseApi";
+// import DeleteIcon from "@mui/material/SvgIcon/SvgIcon";
 // import ClearIcon from "@mui/material/SvgIcon/SvgIcon";
 
 let placeHolderData = [];
@@ -188,31 +190,45 @@ const CaseEditorScreen = ({ location }) => {
       <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <div className="cancel-button">
-              <Button loading variant="outlined" onClick={() => history.push("/")}
-                      startIcon={<ClearIcon />}
-                      sx={{
-                        color: "whitesmoke",
-                        backgroundColor: "#003C71",
-                        fontWeight: "bold",
-                        textTransform: "capitalize",
-                        '&:hover': {
-                          backgroundColor: "#D3D9DE",
-                          color: "#003C71",
-                          fontWeight: "bold"
-                        }
-                      }}>
-                Cancel
-              </Button>
-            </div>
+            <Button loading variant="outlined" onClick={() => history.push("/")}
+                    startIcon={<ClearIcon />}
+                    sx={{
+                      marginLeft: 112,
+                      marginTop: 1,
+                      color: "whitesmoke",
+                      backgroundColor: "#003C71",
+                      fontWeight: "bold",
+                      textTransform: "capitalize",
+                      '&:hover': {
+                        backgroundColor: "#D3D9DE",
+                        color: "#003C71",
+                        fontWeight: "bold"
+                      }
+                    }}>
+              Cancel
+            </Button>
           </Grid>
 
           <Grid item xs={4}></Grid>
           <Grid item xs="auto">
             {editMode && (
               <Button
-                  loading variant="outlined"
-                color="error"
+                  variant="outlined"
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    position: "absolute",
+                    marginTop: 4.2,
+                    marginLeft: 40,
+                    backgroundColor: "red",
+                    color: "whitesmoke",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    '&:hover': {
+                      backgroundColor: "red",
+                      color: "#003C71",
+                      fontWeight: "bold"
+                    }
+                  }}
                 onClick={() => history.goBack()}
               >
                 Delete
@@ -239,40 +255,45 @@ const CaseEditorScreen = ({ location }) => {
           padding="25px"
           color="#003C71"
         >
-        <div className="form-buttons">
-          <Button loading variant="outlined" onClick={addNewRow}
-                  startIcon={<AddIcon />}
-                  sx={{
-                    color: "whitesmoke",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    '&:hover': {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold"
-                    }
-                  }}
+          <Grid item xs="auto">
+            <Button variant="outlined"
+                    onClick={addNewRow}
+
+                    startIcon={<AddIcon />}
+                                         sx={{
+                                           position: "absolute",
+                                           marginLeft: 96,
+                                           color: "whitesmoke",
+                                           backgroundColor: "#4682B4",
+                                           fontWeight: "bold",
+                                           textTransform: "capitalize",
+                                           '&:hover': {
+                                             backgroundColor: "#90CAF9",
+                                             color: "#003C71",
+                                             fontWeight: "bold"
+                                           }
+                                         }}
           >
             Add
           </Button>
-          <div className="divider"/>
-          <Button loading variant="outlined" onClick={onSubmitCase}
-                  sx={{
-                    color: "whitesmoke",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    '&:hover': {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold"
-                    }
-                  }}
-          >
-            Submit
-          </Button>
-        </div>
+            <Button loading variant="outlined" onClick={onSubmitCase}
+                    sx={{
+                      position: "absolute",
+                      marginLeft: 108,
+                      color: "whitesmoke",
+                      backgroundColor: "#4682B4",
+                      fontWeight: "bold",
+                      textTransform: "capitalize",
+                      '&:hover': {
+                        backgroundColor: "#90CAF9",
+                        color: "#003C71",
+                        fontWeight: "bold"
+                      }
+                    }}
+            >
+              Submit
+            </Button>
+          </Grid>
           <h2>Case Information</h2>
           {retrievedCase && (
             <div>

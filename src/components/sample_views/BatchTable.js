@@ -71,7 +71,7 @@ export default function BatchTable({ columns, data }) {
                     <DataGrid
                     rows={selectedBatch.Samples}
                     columns={sampleColumns}
-                    getRowId={(r) => r.BatchId + "-" + r.SampleId}
+                    getRowId={(r) => r.CaseId + "-" + r.SampleId}
                     pageSize={pageSize}
                     disableSelectionOnClick
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -136,23 +136,38 @@ export default function BatchTable({ columns, data }) {
 
 const sampleColumns = [
     {
-      accessor: "SampleId",
-      Header: "Sample ID",
-      width: 50,
+        field: "SampleId",
+        headerName: "Sample ID",
+        width: 100,
     },
     {
-      accessor: "SampleName",
-      Header: "Sample Name",
-      width: 50,
+        field: "SampleName",
+        headerName: "Sample Name",
+        width: 150,
     },
     {
-      accessor: "BatchId",
-      Header: "Batch ID",
-      width: 50,
+        field: "BatchId",
+        headerName: "Batch ID",
+        width: 150,
     },
     {
-        accessor: "OnHold",
-        Header: "On Hold",
+        field: "ScreeningName",
+        headerName: "Screening Name",
+        width: 190,
+    },
+    {
+        field: "KitName",
+      headerName: "Kit Name",
+      width: 150,
+    },
+    {
+        field: "CaseId",
+        headerName: "Case ID",
+        width: 150,
+    },
+    {
+        field: "OnHold",
+        headerName: "On Hold",
         width: 150,
         renderCell: (cellValues) => {
           return (
@@ -163,30 +178,5 @@ const sampleColumns = [
             )
           );
         },
-      },
-    {
-      accessor: "ScreeningId",
-      Header: "Screening ID",
-      width: 50,
     },
-    {
-      accessor: "ScreeningName",
-      Header: "Screening Name",
-      width: 90,
-    },
-    {
-      accessor: "KitId",
-      Header: "Kit Id",
-      width: 50,
-    },
-    {
-      accessor: "KitName",
-      Header: "Kit Name",
-      width: 50,
-    },
-    {
-      accessor: "CaseId",
-      Header: "Case ID",
-      width: 50,
-    }
 ];

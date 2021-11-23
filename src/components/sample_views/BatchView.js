@@ -50,7 +50,7 @@ const BatchView = () => {
       },
       {
         accessor: "ExtractionId",
-        Header: "Extraction",
+        Header: "Extraction ID",
         width: 50,
       },
       {

@@ -113,14 +113,14 @@ export default function CaseTable({ columns, data }) {
                     return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     })}
                     <td>
-                    <button onClick={() => handleModalOpen(row)}>
+                    <Button onClick={() => handleModalOpen(row)}>
                         View Samples
-                    </button>
+                    </Button>
                     </td>
                     <td>
-                    <button onClick={() => {
+                    <Button onClick={() => {
                         window.location.href = `/case-editor?caseId=${row.values['CaseId']}`
-                    }}>Edit</button>
+                    }}>Edit</Button>
                     </td>
                 </tr>
                 )

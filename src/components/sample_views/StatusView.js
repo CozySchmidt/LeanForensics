@@ -73,11 +73,22 @@ function StatusView() {
 
   const handleStageSubmit = async () => {
     let stageId = selectedStage;
-    if (nextStage) {
+    if (nextStage && selectedBatch.IsReady) {
+      stageId = selectedBatch.StageId + 1;
+      updateReadyBatch();
+    }
+    if (nextStage && !selectedBatch.IsReady) {
       stageId = selectedBatch.StageId + 1;
     }
     if (stageId <= stageList.length) {
-      let updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
+      let updateResult;
+      if (selectedBatch.IsReady) {
+        updateReadyBatch();
+        updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
+      }
+      if (!selectedBatch.IsReady) {
+        updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
+      }
       if (updateResult) {
         console.log(updateResult);
         window.location.reload(false);
@@ -187,11 +198,10 @@ function StatusView() {
             <Button
                 sx={{
                   color: "whitesmoke",
-                  backgroundColor: "#F682B4",
+                  backgroundColor: "#01b25c",
                   fontWeight: "bold",
-                  textTransform: "capitalize",
                   '&:hover': {
-                    backgroundColor: "#F0CAF9",
+                    backgroundColor: "#c1f0c1",
                     color: "#003C71",
                     fontWeight: "bold"
                   }
@@ -200,8 +210,9 @@ function StatusView() {
                 variant="outlined"
                 onClick={updateReadyBatch}
             >
-            READY!
+            READY
           </Button>
+            <div className="divider"/>
             <Button
                 sx={{
                   color: "whitesmoke",
@@ -306,24 +317,45 @@ function StatusView() {
                   stage.Batches.length > 0 &&
                     stage.Batches.map((batch, i) => (
                       <div className="batch-buttons" key={i}>
+                        {batch.IsReady ? (
                         <Button
                           size="medium"
                           variant="outlined"
                           sx={{
-                            color: "whitesmoke",
-                            backgroundColor: "darksalmon",
-                            // fontWeight: "bold",
+                            color: "#024b2c",
+                            backgroundColor: "#01b25c",
+                            fontWeight: "bold",
                             textTransform: "capitalize",
                             '&:hover': {
                               backgroundColor: "grey",
                               color: "#003C71",
-                              // fontWeight: "bold"
+                              fontWeight: "bold"
                             }
                           }}
                           onClick={() => handleModalOpen(batch)}
                         >
-                          {batch.BatchId}. {batch.BatchName}
+                          * {batch.BatchId}. {batch.BatchName} *
                         </Button>
+                            ) : (
+                            <Button
+                                size="medium"
+                                variant="outlined"
+                                sx={{
+                                  color: "#843115",
+                                  backgroundColor: "darksalmon",
+                                  fontWeight: "bold",
+                                  textTransform: "capitalize",
+                                  '&:hover': {
+                                    backgroundColor: "grey",
+                                    color: "#003C71",
+                                    fontWeight: "bold"
+                                  }
+                                }}
+                                onClick={() => handleModalOpen(batch)}
+                            >
+                              {batch.BatchId}. {batch.BatchName}
+                            </Button>
+                        )}
                       </div>
                     ))
                 }

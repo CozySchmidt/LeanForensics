@@ -25,19 +25,9 @@ const SampleView = () => {
       width: 50,
     },
     {
-      accessor: "ScreeningId",
-      Header: "Screening ID",
-      width: 200,
-    },
-    {
       accessor: "ScreeningName",
       Header: "Screening Name",
       width: 90,
-    },
-    {
-      accessor: "KitId",
-      Header: "Kit Id",
-      width: 150,
     },
     {
       accessor: "KitName",

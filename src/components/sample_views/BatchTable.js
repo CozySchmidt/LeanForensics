@@ -100,7 +100,6 @@ export default function BatchTable({ columns, data }) {
                     </span>
                     </th>
                 ))}
-                <th>View Samples</th>
                 <th>Edit</th>
                 </tr>
             ))}
@@ -108,21 +107,27 @@ export default function BatchTable({ columns, data }) {
             <tbody className="table--samples--body" {...getTableBodyProps()}>
             {rows.map(row => {
                 prepareRow(row);
-                console.log(row);
                 return (
                 <tr {...row.getRowProps()}>
                     {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        if (cell == row.cells[0]) {
+                            return (
+                                <td {...cell.getCellProps()}> 
+                                    <Button onClick={() => handleModalOpen(row)}> {cell.render('Cell')} </Button> 
+                                </td>
+                            ) 
+                        } else {
+                            return (
+                                <td {...cell.getCellProps()}>
+                                    {cell.render('Cell')}
+                                </td>
+                            )
+                        }
                     })}
                     <td>
-                    <Button onClick={() => handleModalOpen(row)}>
-                        View Samples
-                    </Button>
-                    </td>
-                    <td>
-                    <Button onClick={() => {
-                        window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
-                    }}>Edit</Button>
+                        <Button onClick={() => {
+                            window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
+                        }}>Edit</Button>
                     </td>
                 </tr>
                 )

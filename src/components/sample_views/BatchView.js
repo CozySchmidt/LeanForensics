@@ -44,33 +44,33 @@ const BatchView = () => {
         width: 200,
       },
       {
-        accessor: "CreatedDate",
+        accessor: row => {
+          let date = row.CreatedDate.split("T");
+          return(
+            date[0]
+          )
+        },
         Header: "Created Date",
         width: 110,
       },
       {
-        accessor: "ExtractionId",
-        Header: "Extraction ID",
-        width: 50,
-      },
-      {
-        accessor: "IsCompleted",
-        Header: "Completed",
-        width: 150,
-        renderCell: (cellValues) => {
-          return (
-            cellValues === 1 && (
-              <Button variant="contained" color="warning">
-                Completed
+        accessor: row => {
+          if (row.IsCompleted == 1) {
+            return (
+              <Button variant="contained">
+                Yes
               </Button>
             )
-          );
+          } else if (row.IsCompleted == 0) {
+            return (
+              <Button variant="contained" color="warning">
+                No
+              </Button>
+            )
+          }
         },
-      },
-      {
-        accessor: "StageId",
-        Header: "Stage ID",
-        width: 50,
+        Header: "Completed",
+        width: 150,
       },
     ], []);
 

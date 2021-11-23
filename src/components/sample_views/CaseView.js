@@ -33,7 +33,12 @@ function CaseView() {
       width: 200,
     },
     {
-      accessor: "CreatedDate",
+      accessor: row => {
+        let date = row.CreatedDate.split("T");
+        return(
+          date[0]
+        )
+      },
       Header: "Created Date",
       width: 110,
     },

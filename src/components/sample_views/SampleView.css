@@ -16,8 +16,8 @@
 
 .table--samples--header {
     text-align: center;
-    background-color: lightyellow;
-    color: black;
+    background-color: #003C71;
+    color: white;
 }
 
 .table--samples--header th {
@@ -27,8 +27,7 @@
 }
 
 .table--samples--body {
-    text-align: left;
-    padding: 8px;
+    text-align: center;
 }
 
 .table--samples--body td {

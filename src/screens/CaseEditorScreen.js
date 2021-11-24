@@ -13,7 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
 import queryString from "query-string";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -112,7 +112,7 @@ const CaseEditorScreen = ({ location }) => {
       comment: comment,
     };
 
-    let temp = sampleList.map(function (sample) {
+    let temp = sampleList.map(function (sample, i) {
       // Change empty string to null
       if (
         sample["ScreeningId"] !== null &&
@@ -134,45 +134,49 @@ const CaseEditorScreen = ({ location }) => {
     // console.log(caseObj);
     console.log(filteredList);
 
-    if (editMode) {
-      //Edit api call
-      let initList = initialSampleList.map(function (sample) {
-        delete sample.key;
-        return sample;
-      });
-      let deleteSampleList = initList.filter((sample) => {
-        return !containsObject(sample, filteredList);
-      });
-      let newSampleList = filteredList.filter((sample) => {
-        return !containsObject(sample, initList);
-      });
+    if (filteredList.length > 0) {
+      if (editMode) {
+        //Edit api call
+        let initList = initialSampleList.map(function (sample) {
+          delete sample.key;
+          return sample;
+        });
+        let deleteSampleList = initList.filter((sample) => {
+          return !containsObject(sample, filteredList);
+        });
+        let newSampleList = filteredList.filter((sample) => {
+          return !containsObject(sample, initList);
+        });
 
-      console.log("delete ", deleteSampleList);
-      console.log("new ", newSampleList);
-      let caseObj = {
-        CaseId: retrievedCase.CaseId,
-        Comment: comment,
-        deleteSampleList: deleteSampleList,
-        newSampleList: newSampleList,
-      };
-      if (deleteSampleList.length > 0 && newSampleList > 0) {
-        let caseResult = await updateCaseWithSamples(caseObj);
-        if (caseResult) {
-          alert("Successfully Updated.");
-          history.push("/");
+        console.log("delete ", deleteSampleList);
+        console.log("new ", newSampleList);
+        let caseObj = {
+          CaseId: retrievedCase.CaseId,
+          Comment: comment,
+          deleteSampleList: deleteSampleList,
+          newSampleList: newSampleList,
+        };
+        if (deleteSampleList.length > 0 && newSampleList.length > 0) {
+          let caseResult = await updateCaseWithSamples(caseObj);
+          if (caseResult) {
+            alert("Successfully Updated.");
+            history.push("/");
+          }
+        } else {
+          alert("No changes detected.");
         }
       } else {
-        alert("No changes detected.");
+        //Create api call
+        let result = await createCase(caseObj, filteredList);
+        if (result) {
+          alert("Successfully added!");
+          window.location.href = "/status-view";
+        } else {
+          alert("Something went wrong. Please try again later");
+        }
       }
-    } else {
-      //Create api call
-      let result = await createCase(caseObj, filteredList);
-      if (result) {
-        alert("Successfully added!");
-        window.location.href = "/status-view";
-      } else {
-        alert("Something went wrong. Please try again later");
-      }
+    }else {
+      alert("Case cannot be empty.");
     }
   };
 
@@ -189,7 +193,7 @@ const CaseEditorScreen = ({ location }) => {
     return list.filter(checkNotEmptyObject);
   };
 
-  const checkNotEmptyObject = (obj) => {
+  const checkNotEmptyObject = (obj, i) => {
     return !Object.values(obj).every(
       (x) => x === null || x === "" || x === false
     );
@@ -253,21 +257,25 @@ const CaseEditorScreen = ({ location }) => {
       <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
         <Grid container spacing={2}>
           <Grid item xs="auto">
-            <Button loading variant="outlined" onClick={() => history.push("/")}
-                    startIcon={<ClearIcon />}
-                    sx={{
-                      marginLeft: 112,
-                      marginTop: 1,
-                      color: "whitesmoke",
-                      backgroundColor: "#003C71",
-                      fontWeight: "bold",
-                      textTransform: "capitalize",
-                      '&:hover': {
-                        backgroundColor: "#D3D9DE",
-                        color: "#003C71",
-                        fontWeight: "bold"
-                      }
-                    }}>
+            <Button
+              loading
+              variant="outlined"
+              onClick={() => history.push("/")}
+              startIcon={<ClearIcon />}
+              sx={{
+                marginLeft: 112,
+                marginTop: 1,
+                color: "whitesmoke",
+                backgroundColor: "#003C71",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                "&:hover": {
+                  backgroundColor: "#D3D9DE",
+                  color: "#003C71",
+                  fontWeight: "bold",
+                },
+              }}
+            >
               Cancel
             </Button>
           </Grid>
@@ -276,22 +284,22 @@ const CaseEditorScreen = ({ location }) => {
           <Grid item xs="auto">
             {editMode && (
               <Button
-                  variant="outlined"
-                  startIcon={<DeleteIcon />}
-                  sx={{
-                    position: "absolute",
-                    marginTop: 4.2,
-                    marginLeft: 40,
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                sx={{
+                  position: "absolute",
+                  marginTop: 4.2,
+                  marginLeft: 40,
+                  backgroundColor: "red",
+                  color: "whitesmoke",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  "&:hover": {
                     backgroundColor: "red",
-                    color: "whitesmoke",
+                    color: "#003C71",
                     fontWeight: "bold",
-                    textTransform: "capitalize",
-                    '&:hover': {
-                      backgroundColor: "red",
-                      color: "#003C71",
-                      fontWeight: "bold"
-                    }
-                  }}
+                  },
+                }}
                 onClick={() => history.goBack()}
               >
                 Delete
@@ -319,40 +327,43 @@ const CaseEditorScreen = ({ location }) => {
           color="#003C71"
         >
           <Grid item xs="auto">
-            <Button variant="outlined"
-                    onClick={addNewRow}
-
-                    startIcon={<AddIcon />}
-                                         sx={{
-                                           position: "absolute",
-                                           marginLeft: 96,
-                                           color: "whitesmoke",
-                                           backgroundColor: "#4682B4",
-                                           fontWeight: "bold",
-                                           textTransform: "capitalize",
-                                           '&:hover': {
-                                             backgroundColor: "#90CAF9",
-                                             color: "#003C71",
-                                             fontWeight: "bold"
-                                           }
-                                         }}
-          >
-            Add
-          </Button>
-            <Button loading variant="outlined" onClick={onSubmitCase}
-                    sx={{
-                      position: "absolute",
-                      marginLeft: 108,
-                      color: "whitesmoke",
-                      backgroundColor: "#4682B4",
-                      fontWeight: "bold",
-                      textTransform: "capitalize",
-                      '&:hover': {
-                        backgroundColor: "#90CAF9",
-                        color: "#003C71",
-                        fontWeight: "bold"
-                      }
-                    }}
+            <Button
+              variant="outlined"
+              onClick={addNewRow}
+              startIcon={<AddIcon />}
+              sx={{
+                position: "absolute",
+                marginLeft: 96,
+                color: "whitesmoke",
+                backgroundColor: "#4682B4",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                "&:hover": {
+                  backgroundColor: "#90CAF9",
+                  color: "#003C71",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              Add
+            </Button>
+            <Button
+              loading
+              variant="outlined"
+              onClick={onSubmitCase}
+              sx={{
+                position: "absolute",
+                marginLeft: 108,
+                color: "whitesmoke",
+                backgroundColor: "#4682B4",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                "&:hover": {
+                  backgroundColor: "#90CAF9",
+                  color: "#003C71",
+                  fontWeight: "bold",
+                },
+              }}
             >
               Submit
             </Button>

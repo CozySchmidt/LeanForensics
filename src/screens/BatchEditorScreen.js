@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) =>
     spreadBox: {
       justifyContent: "flex-end",
       alignItems: "flex-end",
-    }
+    },
   })
 );
 
@@ -81,15 +81,15 @@ function BatchEditorScreen({ location }) {
 
   const retrieveExtrationMethods = async () => {
     let methods = await getAllExtractionMethods();
-    console.log(methods)
-    setExtractionTypeData(methods)
-  }
+    console.log(methods);
+    setExtractionTypeData(methods);
+  };
 
   const retrieveStages = async () => {
     let stages = await getAllStages();
-    console.log(stages)
-    setStageData(stages)
-  }
+    console.log(stages);
+    setStageData(stages);
+  };
 
   async function retrieveBatchById() {
     let batch = await getSamplesByBatchId(query.batchId);
@@ -113,7 +113,7 @@ function BatchEditorScreen({ location }) {
     console.log(samples);
     setSampleList(samples);
   }
-  
+
   const onDeleteBatch = async () => {
     setOpenDialog(false);
     let result = await deleteBatch(retrievedBatch.BatchId);
@@ -126,69 +126,73 @@ function BatchEditorScreen({ location }) {
   };
 
   const onSubmitBatch = async () => {
-    if (editMode) {
-      //Edit api call
-      let newSampleList = selectionModel.filter((id) => {
-        return !initialSelectionModel.includes(id);
-      });
-      let deleteSampleList = initialSelectionModel.filter((id) => {
-        return !selectionModel.includes(id);
-      });
-      let batchObj = {
-        BatchId: retrievedBatch.BatchId,
-        batch: {
-          BatchName: batchName,
-          StageId: initialStage,
-          ExtractionTypeId: extractionType,
-          Comment: comment,
-        },
-        newSampleList: newSampleList.map((id) => {
-          let index = id.indexOf("-");
-          return {
-            CaseId: parseInt(id.substring(0, index)),
-            SampleId: id.substring(index + 1),
-          };
-        }),
-        deleteSampleList: deleteSampleList.map((id) => {
-          let index = id.indexOf("-");
-          return {
-            CaseId: parseInt(id.substring(0, index)),
-            SampleId: id.substring(index + 1),
-          };
-        }),
-      };
-      // alert(JSON.stringify(batchObj, null, 4));
-      let batchResult = await updateBatchInfo(batchObj);
-      if (batchResult) {
-        alert("Successfully Updated.");
-        history.push("/");
+    if (selectionModel.length > 0) {
+      if (editMode) {
+        //Edit api call
+        let newSampleList = selectionModel.filter((id) => {
+          return !initialSelectionModel.includes(id);
+        });
+        let deleteSampleList = initialSelectionModel.filter((id) => {
+          return !selectionModel.includes(id);
+        });
+        let batchObj = {
+          BatchId: retrievedBatch.BatchId,
+          batch: {
+            BatchName: batchName,
+            StageId: initialStage,
+            ExtractionTypeId: extractionType,
+            Comment: comment,
+          },
+          newSampleList: newSampleList.map((id) => {
+            let index = id.indexOf("-");
+            return {
+              CaseId: parseInt(id.substring(0, index)),
+              SampleId: id.substring(index + 1),
+            };
+          }),
+          deleteSampleList: deleteSampleList.map((id) => {
+            let index = id.indexOf("-");
+            return {
+              CaseId: parseInt(id.substring(0, index)),
+              SampleId: id.substring(index + 1),
+            };
+          }),
+        };
+        // alert(JSON.stringify(batchObj, null, 4));
+        let batchResult = await updateBatchInfo(batchObj);
+        if (batchResult) {
+          alert("Successfully Updated.");
+          history.push("/");
+        } else {
+          alert("Failed. Something went wrong.");
+        }
       } else {
-        alert("Failed. Something went wrong.");
+        //Create api call
+        let batchObj = {
+          samples: selectionModel.map((id) => {
+            let index = id.indexOf("-");
+            return {
+              CaseId: parseInt(id.substring(0, index)),
+              SampleId: id.substring(index + 1),
+            };
+          }),
+          batch: {
+            BatchName: batchName,
+            StageId: initialStage,
+            ExtractionId: extractionType,
+            Comment: comment,
+          },
+        };
+        let batchResult = await createBatch(batchObj);
+        if (batchResult) {
+          alert("Successfully Created.");
+          history.push("/");
+        } else {
+          alert("Failed. Something went wrong.");
+        }
       }
     } else {
-      //Create api call
-      let batchObj = {
-        samples: selectionModel.map((id) => {
-          let index = id.indexOf("-");
-          return {
-            CaseId: parseInt(id.substring(0, index)),
-            SampleId: id.substring(index + 1),
-          };
-        }),
-        batch: {
-          BatchName: batchName,
-          StageId: initialStage,
-          ExtractionId: extractionType,
-          Comment: comment,
-        },
-      };
-      let batchResult = await createBatch(batchObj);
-      if (batchResult) {
-        alert("Successfully Created.");
-        history.push("/");
-      } else {
-        alert("Failed. Something went wrong.");
-      }
+      alert("Batch cannot be empty.");
     }
   };
 
@@ -199,34 +203,42 @@ function BatchEditorScreen({ location }) {
     let deleteSampleList = initialSelectionModel.filter((id) => {
       return selectionModel.includes(id);
     });
-    let batchObj = {
-      BatchId: retrievedBatch.BatchId,
-      BatchName: retrievedBatch.BatchName + "-copy",
-      StageId: initialStage,
-      ExtractionTypeId: extractionType,
-      Comment: comment,
-      newSampleList: newSampleList.map((id) => {
-        let index = id.indexOf("-");
-        return {
-          CaseId: parseInt(id.substring(0, index)),
-          SampleId: id.substring(index + 1),
+    if (deleteSampleList.length !== initialSelectionModel.length) {
+      if (selectionModel.length > 0) {
+        let batchObj = {
+          BatchId: retrievedBatch.BatchId,
+          BatchName: retrievedBatch.BatchName + "-copy",
+          StageId: initialStage,
+          ExtractionTypeId: extractionType,
+          Comment: comment,
+          newSampleList: newSampleList.map((id) => {
+            let index = id.indexOf("-");
+            return {
+              CaseId: parseInt(id.substring(0, index)),
+              SampleId: id.substring(index + 1),
+            };
+          }),
+          deleteSampleList: deleteSampleList.map((id) => {
+            let index = id.indexOf("-");
+            return {
+              CaseId: parseInt(id.substring(0, index)),
+              SampleId: id.substring(index + 1),
+            };
+          }),
         };
-      }),
-      deleteSampleList: deleteSampleList.map((id) => {
-        let index = id.indexOf("-");
-        return {
-          CaseId: parseInt(id.substring(0, index)),
-          SampleId: id.substring(index + 1),
-        };
-      }),
-    };
-    // alert(JSON.stringify(batchObj, null, 4));
-    let pullOutResult = await pullOutSamplesFromBatch(batchObj);
-    if (pullOutResult) {
-      alert("Successfully Updated.");
-      history.push("/");
+        // alert(JSON.stringify(batchObj, null, 4));
+        let pullOutResult = await pullOutSamplesFromBatch(batchObj);
+        if (pullOutResult) {
+          alert("Successfully Updated.");
+          history.push("/");
+        } else {
+          alert("Failed. Something went wrong.");
+        }
+      } else {
+        alert("Cannot create empty batch.");
+      }
     } else {
-      alert("Failed. Something went wrong.");
+      alert("Cannot remove all samples in this batch. ");
     }
   };
 
@@ -255,29 +267,33 @@ function BatchEditorScreen({ location }) {
 
   return (
     <div className="screen-holder">
-      <Box sx={{ flexGrow: 1 }}
-           style={{ paddingTop: "1em"}}
-           m={1}
-           className={`${classes.spreadBox}`}
+      <Box
+        sx={{ flexGrow: 1 }}
+        style={{ paddingTop: "1em" }}
+        m={1}
+        className={`${classes.spreadBox}`}
       >
         <Grid container spacing={2}>
           <Grid item xs="auto">
             <Button
-                startIcon={<ClearIcon />}
-                sx={{
-                  position: "absolute",
-                  marginLeft: 110,
-                  marginTop: 3,
-              color: "whitesmoke",
-              backgroundColor: "#003C71",
+              startIcon={<ClearIcon />}
+              sx={{
+                position: "absolute",
+                marginLeft: 110,
+                marginTop: 3,
+                color: "whitesmoke",
+                backgroundColor: "#003C71",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                "&:hover": {
+                  backgroundColor: "#D3D9DE",
+                  color: "#003C71",
                   fontWeight: "bold",
-                  textTransform: "capitalize",
-                  '&:hover': {
-                    backgroundColor: "#D3D9DE",
-                    color: "#003C71",
-                    fontWeight: "bold"
-                  }
-            }} variant="outlined" onClick={() => history.push("/")}>
+                },
+              }}
+              variant="outlined"
+              onClick={() => history.push("/")}
+            >
               Cancel
             </Button>
           </Grid>
@@ -286,9 +302,7 @@ function BatchEditorScreen({ location }) {
         <h1>{editMode ? editBatchText : createBatchText}</h1>
       </Box>
       <div className="content-wrapper">
-        <Grid
-            justify="flex-end"
-        >
+        <Grid justify="flex-end">
           <Box
             component="form"
             sx={{
@@ -305,63 +319,68 @@ function BatchEditorScreen({ location }) {
           >
             <Grid item xs="auto">
               {editMode && (
-                  <Button variant="outlined" onClick={onPullOutSamples}
-                          startIcon={<SouthWestIcon />}
-                          sx={{
-                            position: "absolute",
-                            marginLeft: 33,
-                            color: "whitesmoke",
-                            backgroundColor: "#4682B4",
-                            fontWeight: "bold",
-                            textTransform: "capitalize",
-                            '&:hover': {
-                              backgroundColor: "#90CAF9",
-                              color: "#003C71",
-                              fontWeight: "bold"
-                            }
-                          }}
-                  >
-                    Pull Samples
-                  </Button>
+                <Button
+                  variant="outlined"
+                  onClick={onPullOutSamples}
+                  startIcon={<SouthWestIcon />}
+                  sx={{
+                    position: "absolute",
+                    marginLeft: 33,
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  Pull Samples
+                </Button>
               )}
               {editMode && (
-                  <Button
-                      loading variant="outlined"
-                      startIcon={<DeleteIcon />}
-                      sx={{
-                        position: "absolute",
-                        marginLeft: 94,
-                        backgroundColor: "red",
-                        color: "whitesmoke",
-                        fontWeight: "bold",
-                        textTransform: "capitalize",
-                        '&:hover': {
-                          backgroundColor: "red",
-                          color: "#003C71",
-                          fontWeight: "bold"
-                        }
-                      }}
-                      onClick={() => history.goBack()}
-                  >
-                    Delete
-                  </Button>
+                <Button
+                  loading
+                  variant="outlined"
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    position: "absolute",
+                    marginLeft: 94,
+                    backgroundColor: "red",
+                    color: "whitesmoke",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "red",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  onClick={handleClickDialogOpen}
+                >
+                  Delete
+                </Button>
               )}
-              <Button variant="outlined"
-                  // startIcon={<EditIcon />}
-                      sx={{
-                        position: "absolute",
-                        marginLeft: 108,
-                        color: "whitesmoke",
-                        backgroundColor: "#4682B4",
-                        fontWeight: "bold",
-                        textTransform: "capitalize",
-                        '&:hover': {
-                          backgroundColor: "#90CAF9",
-                          color: "#003C71",
-                          fontWeight: "bold"
-                        }
-                      }}
-                      onClick={onSubmitBatch}>
+              <Button
+                variant="outlined"
+                // startIcon={<EditIcon />}
+                sx={{
+                  position: "absolute",
+                  marginLeft: 108,
+                  color: "whitesmoke",
+                  backgroundColor: "#4682B4",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  "&:hover": {
+                    backgroundColor: "#90CAF9",
+                    color: "#003C71",
+                    fontWeight: "bold",
+                  },
+                }}
+                onClick={onSubmitBatch}
+              >
                 {editMode ? "Edit Batch" : "Submit"}
               </Button>
             </Grid>
@@ -372,14 +391,15 @@ function BatchEditorScreen({ location }) {
                 <h3>Batch ID: {retrievedBatch.BatchId} </h3>
               </div>
             )}
-            <TextField variant="standard"
-                      //  error
-                      //  id="outlined-error-helper-text"
-                      //  helperText="Required"
-                       value={batchName}
-                       label="Batch Name"
-                       fullWidth
-                       onChange={(e) => setBatchName(e.target.value)}
+            <TextField
+              variant="standard"
+              //  error
+              //  id="outlined-error-helper-text"
+              //  helperText="Required"
+              value={batchName}
+              label="Batch Name"
+              fullWidth
+              onChange={(e) => setBatchName(e.target.value)}
             />
             <TextField
               id="outlined-select"

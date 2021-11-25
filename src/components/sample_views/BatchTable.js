@@ -146,6 +146,11 @@ const sampleColumns = [
         width: 150,
     },
     {
+        field: "KorQ",
+        headerName: "K or Q",
+        width: 100,
+    },
+    {
         field: "BatchId",
         headerName: "Batch ID",
         width: 150,
@@ -171,7 +176,7 @@ const sampleColumns = [
         width: 150,
         renderCell: (cellValues) => {
           return (
-            cellValues === 1 && (
+            cellValues.value === 1 && (
               <Button variant="contained" color="warning">
                 On Hold
               </Button>

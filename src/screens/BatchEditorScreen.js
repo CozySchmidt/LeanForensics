@@ -27,6 +27,7 @@ import { makeStyles, createStyles } from "@mui/styles";
 import { createTheme } from "@mui/material/styles";
 import "./BatchEditorScreen.css";
 import { getAllExtractionMethods, getAllStages } from "../api/OthersApi";
+import FormHelperText from "@mui/material/FormHelperText";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -66,7 +67,7 @@ function BatchEditorScreen({ location }) {
 
   useEffect(() => {
     retrieveAvailableSamples();
-    retrieveExtrationMethods();
+    retrieveExtractionMethods();
     retrieveStages();
     editMode && retrieveBatchById();
   }, []);
@@ -79,7 +80,7 @@ function BatchEditorScreen({ location }) {
     setOpenDialog(false);
   };
 
-  const retrieveExtrationMethods = async () => {
+  const retrieveExtractionMethods = async () => {
     let methods = await getAllExtractionMethods();
     console.log(methods);
     setExtractionTypeData(methods);
@@ -348,13 +349,13 @@ function BatchEditorScreen({ location }) {
                   sx={{
                     position: "absolute",
                     marginLeft: 94,
-                    backgroundColor: "red",
+                    backgroundColor: "#d11a2a",
                     color: "whitesmoke",
                     fontWeight: "bold",
                     textTransform: "capitalize",
                     "&:hover": {
-                      backgroundColor: "red",
-                      color: "#003C71",
+                      backgroundColor: "#b30000",
+                      color: "darkgrey",
                       fontWeight: "bold",
                     },
                   }}
@@ -392,7 +393,7 @@ function BatchEditorScreen({ location }) {
               </div>
             )}
             <TextField
-              variant="standard"
+              variant="outlined"
               //  error
               //  id="outlined-error-helper-text"
               //  helperText="Required"
@@ -402,32 +403,34 @@ function BatchEditorScreen({ location }) {
               onChange={(e) => setBatchName(e.target.value)}
             />
             <TextField
-              id="outlined-select"
-              onChange={(e) => setInitialStage(e.target.value)}
-              value={initialStage}
-              select
-              label="Initial Stage"
+                id="outlined-select"
+                onChange={(e) => setInitialStage(e.target.value)}
+                value={initialStage}
+                select
+                required
+                label="Initial Stage"
             >
               {stageData.map((stage) => (
-                <MenuItem key={stage.stageId} value={stage.stageId}>
-                  {stage.stageName}
-                </MenuItem>
+                  <MenuItem key={stage.StageId} value={stage.StageId}>
+                    {stage.StageName}
+                  </MenuItem>
               ))}
             </TextField>
             <TextField
-              id="outlined-select"
-              onChange={(e) => setExtractionType(e.target.value)}
-              value={extractionType}
-              select
-              label="Extraction Type"
+                id="outlined-select"
+                onChange={(e) => setExtractionType(e.target.value)}
+                value={extractionType}
+                select
+                required
+                label="Extraction Type"
             >
               {extractionTypeData.map((extractionType) => (
-                <MenuItem
-                  key={extractionType.extractionTypeId}
-                  value={extractionType.extractionTypeId}
-                >
-                  {extractionType.extractionTypeName}
-                </MenuItem>
+                  <MenuItem
+                      key={extractionType.ExtractionId}
+                      value={extractionType.ExtractionId}
+                  >
+                    {extractionType.ExtractionName}
+                  </MenuItem>
               ))}
             </TextField>
             <FormControl fullWidth sx={{ m: 1 }}>
@@ -485,6 +488,11 @@ const columns = [
     width: 100,
   },
   {
+    field: "KorQ",
+    headerName: "K or Q",
+    width: 100,
+  },
+  {
     field: "CaseId",
     headerName: "Case ID",
     width: 100,
@@ -500,18 +508,13 @@ const columns = [
     width: 130,
   },
   {
-    field: "ExtractionName",
-    headerName: "Extraction Type",
-    width: 150,
-  },
-  {
     field: "OnHold",
     headerName: "On Hold",
     width: 150,
     renderCell: (cellValues) => {
       return (
-        cellValues === 1 && (
-          <Button loading variant="outlined" color="warning">
+        cellValues.value === 1 && (
+          <Button loading variant="contained" color="warning">
             On Hold
           </Button>
         )

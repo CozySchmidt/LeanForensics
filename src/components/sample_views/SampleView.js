@@ -40,21 +40,30 @@ const SampleView = () => {
       width: 110,
     },
     {
-      accessor: "OnHold",
-      Header: "On Hold",
+      accessor: "Comment",
+      Header: "Comment",
       width: 150,
-      renderCell: (cellValues) => {
-        return (
-          cellValues === 1 && (
-            <Button variant="contained" color="warning">
-              On Hold
-            </Button>
-          )
-        );
-      },
     },
     {
-      accessor: "CreatedDate",
+      accessor: row => {
+        if (row.OnHold == 1) {
+          return (
+            <Button variant="contained" color="warning">
+              On Hold
+            </Button>            
+          )
+        }
+      },
+      Header: "On Hold",
+      width: 150,
+    },
+    {
+      accessor: row => {
+        let date = row.CreatedDate.split("T");
+        return(
+          date[0]
+        )
+      },
       Header: "Created Date",
       width: 110,
     },

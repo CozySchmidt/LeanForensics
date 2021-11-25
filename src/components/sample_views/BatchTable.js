@@ -33,8 +33,6 @@ export default function BatchTable({ columns, data }) {
 
     const handleModalOpen = async (selectedBatch) => {
         let batch = await getSamplesByBatchId(selectedBatch.original.BatchId);
-        console.log("selectedBatch contains these samples:");
-        console.log(batch.Samples);
         setSelectedBatch(batch);
         setOpenModal(true);
     };
@@ -63,9 +61,30 @@ export default function BatchTable({ columns, data }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-modal-title" variant="h6" component="h2" color="#003C71">
                     Batch ID: {selectedBatch && selectedBatch.BatchId}
                 </Typography>
+
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  size="medium"
+                  variant="outlined"
+                  onClick={() =>
+                    (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
+                  }
+                >
+                  Edit batch
+                </Button>
 
                 {selectedBatch && (
                     <DataGrid
@@ -100,30 +119,25 @@ export default function BatchTable({ columns, data }) {
                     </span>
                     </th>
                 ))}
-                <th>View Samples</th>
-                <th>Edit</th>
                 </tr>
             ))}
             </thead>
             <tbody className="table--samples--body" {...getTableBodyProps()}>
             {rows.map(row => {
                 prepareRow(row);
-                console.log(row);
                 return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
                     {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                            return (
+                                <td {...cell.getCellProps({
+                                    style: {
+                                      width: cell.column.width
+                                    }
+                                  })}>
+                                    {cell.render('Cell')}
+                                </td>
+                            )
                     })}
-                    <td>
-                    <Button onClick={() => handleModalOpen(row)}>
-                        View Samples
-                    </Button>
-                    </td>
-                    <td>
-                    <Button onClick={() => {
-                        window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
-                    }}>Edit</Button>
-                    </td>
                 </tr>
                 )
             })}
@@ -143,6 +157,11 @@ const sampleColumns = [
     {
         field: "SampleName",
         headerName: "Sample Name",
+        width: 150,
+    },
+    {
+        field: "Comment",
+        headerName: "Comment",
         width: 150,
     },
     {

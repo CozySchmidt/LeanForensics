@@ -33,8 +33,6 @@ export default function BatchTable({ columns, data }) {
 
     const handleModalOpen = async (selectedBatch) => {
         let batch = await getSamplesByBatchId(selectedBatch.original.BatchId);
-        console.log("selectedBatch contains these samples:");
-        console.log(batch.Samples);
         setSelectedBatch(batch);
         setOpenModal(true);
     };
@@ -63,9 +61,30 @@ export default function BatchTable({ columns, data }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-modal-title" variant="h6" component="h2" color="#003C71">
                     Batch ID: {selectedBatch && selectedBatch.BatchId}
                 </Typography>
+
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  size="medium"
+                  variant="outlined"
+                  onClick={() =>
+                    (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
+                  }
+                >
+                  Edit batch
+                </Button>
 
                 {selectedBatch && (
                     <DataGrid
@@ -100,7 +119,6 @@ export default function BatchTable({ columns, data }) {
                     </span>
                     </th>
                 ))}
-                <th>Edit</th>
                 </tr>
             ))}
             </thead>
@@ -108,38 +126,18 @@ export default function BatchTable({ columns, data }) {
             {rows.map(row => {
                 prepareRow(row);
                 return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
                     {row.cells.map(cell => {
-                        if (cell == row.cells[0]) {
                             return (
-                                <td {...cell.getCellProps()}> 
-                                    <Button onClick={() => handleModalOpen(row)}> {cell.render('Cell')} </Button> 
-                                </td>
-                            ) 
-                        } else {
-                            return (
-                                <td {...cell.getCellProps()}>
+                                <td {...cell.getCellProps({
+                                    style: {
+                                      width: cell.column.width
+                                    }
+                                  })}>
                                     {cell.render('Cell')}
                                 </td>
                             )
-                        }
                     })}
-                    <td>
-<<<<<<< HEAD
-                        <Button onClick={() => {
-                            window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
-                        }}>Edit</Button>
-=======
-                    <Button onClick={() => handleModalOpen(row)}>
-                        View Samples
-                    </Button>
-                    </td>
-                    <td>
-                    <Button onClick={() => {
-                        window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
-                    }}>Edit</Button>
->>>>>>> 74687bd20b941a7015c72b672b6c0bb35250acdc
-                    </td>
                 </tr>
                 )
             })}
@@ -155,7 +153,6 @@ const sampleColumns = [
         field: "SampleId",
         headerName: "Sample ID",
         width: 100,
-<<<<<<< HEAD
     },
     {
         field: "SampleName",
@@ -163,16 +160,8 @@ const sampleColumns = [
         width: 150,
     },
     {
-        field: "BatchId",
-        headerName: "Batch ID",
-        width: 150,
-    },
-    {
-=======
-    },
-    {
-        field: "SampleName",
-        headerName: "Sample Name",
+        field: "Comment",
+        headerName: "Comment",
         width: 150,
     },
     {
@@ -186,7 +175,6 @@ const sampleColumns = [
         width: 150,
     },
     {
->>>>>>> 74687bd20b941a7015c72b672b6c0bb35250acdc
         field: "ScreeningName",
         headerName: "Screening Name",
         width: 190,

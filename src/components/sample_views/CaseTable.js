@@ -62,9 +62,31 @@ export default function CaseTable({ columns, data }) {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography id="modal-modal-title" variant="h6" component="h2" color="#003C71">
                 Case Number: {selectedCase && selectedCase.CaseId}
             </Typography>
+
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  size="medium"
+                  variant="outlined"
+                  onClick={() =>
+                    (window.location.href = `/case-editor?caseId=${selectedCase.CaseId}`)
+                  }
+                >
+                  Edit case
+                </Button>
+
             {selectedCase && (
                 <DataGrid
                 rows={selectedCase.Samples}
@@ -98,8 +120,6 @@ export default function CaseTable({ columns, data }) {
                     </span>
                     </th>
                 ))}
-                <th>View Samples</th>
-                <th>Edit</th>
                 </tr>
             ))}
             </thead>
@@ -108,20 +128,14 @@ export default function CaseTable({ columns, data }) {
                 prepareRow(row);
                 console.log(row);
                 return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
                     {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    return <td {...cell.getCellProps({
+                      style: {
+                        height: 30,
+                      }
+                    })}>{cell.render('Cell')}</td>
                     })}
-                    <td>
-                    <Button onClick={() => handleModalOpen(row)}>
-                        View Samples
-                    </Button>
-                    </td>
-                    <td>
-                    <Button onClick={() => {
-                        window.location.href = `/case-editor?caseId=${row.values['CaseId']}`
-                    }}>Edit</Button>
-                    </td>
                 </tr>
                 )
             })}
@@ -156,7 +170,7 @@ const sampleColumns = [
     {
       field: "Comment",
       headerName: "Comment",
-      width: 150,
+      width: 200,
     },
     {
       field: "OnHold",

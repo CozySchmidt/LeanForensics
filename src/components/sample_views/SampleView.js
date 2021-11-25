@@ -40,6 +40,11 @@ const SampleView = () => {
       width: 110,
     },
     {
+      accessor: "Comment",
+      Header: "Comment",
+      width: 150,
+    },
+    {
       accessor: row => {
         if (row.OnHold == 1) {
           return (
@@ -50,7 +55,7 @@ const SampleView = () => {
         }
       },
       Header: "On Hold",
-      width: 80,
+      width: 150,
     },
     {
       accessor: row => {

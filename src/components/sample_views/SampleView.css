@@ -16,13 +16,8 @@
 
 .table--samples--header {
     text-align: center;
-<<<<<<< HEAD
     background-color: #003C71;
     color: white;
-=======
-    background-color: lightyellow;
-    color: black;
->>>>>>> 74687bd20b941a7015c72b672b6c0bb35250acdc
 }
 
 .table--samples--header th {

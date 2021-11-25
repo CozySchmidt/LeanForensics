@@ -75,7 +75,7 @@ export default function CaseTable({ columns, data }) {
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pagination
                 rowsPerPageOptions={[15, 20, 50]}
-                style={{ height: "70%", marginTop: "10px" }}
+                style={{ height: "70%", marginTop: "10px", color: "#003C71" }}
                 />
             )}
             </Box>
@@ -144,6 +144,11 @@ const sampleColumns = [
       width: 200,
     },
     {
+        field: "KorQ",
+        headerName: "K or Q",
+        width: 100,
+    },
+    {
       field: "CaseId",
       headerName: "Case ID",
       width: 90,
@@ -159,7 +164,7 @@ const sampleColumns = [
       width: 150,
       renderCell: (cellValues) => {
         return (
-          cellValues === 1 && (
+          cellValues.value === 1 && (
             <Button variant="contained" color="warning">
               On Hold
             </Button>

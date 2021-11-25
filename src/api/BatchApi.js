@@ -160,6 +160,26 @@ export async function updateBatchReady(batchObj) {
   }
 }
 
+export async function markBatchCompleted(batchId) {
+  try {
+    let response = await fetch(`http://${backend}:${PORT}/batches/${batchId}/completed`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    let json = await response.json();
+    if (json.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
+
 
 export async function deleteBatch(batchId) {
   try {

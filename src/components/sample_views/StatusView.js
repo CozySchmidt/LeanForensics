@@ -13,17 +13,26 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import "./StatusView.css";
 import { getAllBatchesByStages, getAllStages } from "../../api/OthersApi";
-import { getSamplesByBatchId, updateBatchReady, updateBatchStage } from "../../api/BatchApi";
+import {
+  deleteBatch,
+  getSamplesByBatchId,
+  markBatchCompleted,
+  updateBatchReady,
+  updateBatchStage,
+} from "../../api/BatchApi";
 
 function StatusView() {
   const history = useHistory();
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [nextStage, setNextStage] = React.useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [pressedBatch, setPressedBatch] = useState(null);
   const [dragging, setDragging] = useState(false);
   const [pageSize, setPageSize] = React.useState(15);
   const [stageList, setStageList] = useState(null);
@@ -35,22 +44,23 @@ function StatusView() {
 
   async function retrieveBatches() {
     let stageList = await getAllBatchesByStages();
-    // console.log(stageList);
+    console.log(stageList);
     setStageList(stageList);
   }
   async function updateReadyBatch() {
     let result = await updateBatchReady(selectedBatch);
-    if(result) {
+    if (result) {
       window.location.reload(false);
     } else {
-      alert("Something went wrong")
+      alert("Something went wrong");
     }
   }
 
   const handleModalOpen = async (batch) => {
     let batchSample = await getSamplesByBatchId(batch.BatchId);
-    console.log(batch);
+    // console.log(batch);
     setSelectedBatch(batchSample);
+    setPressedBatch(batch);
     setSelectedStage(batch.StageId);
     setOpenModal(true);
   };
@@ -70,6 +80,14 @@ function StatusView() {
     setNextStage(false);
     setOpenDialog(false);
   };
+  
+  const handleClickDeleteDialogOpen = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
+  };
 
   const handleStageSubmit = async () => {
     let stageId = selectedStage;
@@ -80,27 +98,55 @@ function StatusView() {
     if (nextStage && !selectedBatch.IsReady) {
       stageId = selectedBatch.StageId + 1;
     }
-    if (stageId <= stageList.length) {
+    if (!isLastStage()) {
       let updateResult;
       if (selectedBatch.IsReady) {
         updateReadyBatch();
         updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
-      }
-      if (!selectedBatch.IsReady) {
-        updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
-      }
-      if (updateResult) {
-        console.log(updateResult);
-        window.location.reload(false);
+        if (updateResult) {
+          console.log(updateResult);
+          window.location.reload(false);
+        } else {
+          alert("Something went wrong.");
+        }
       } else {
-        alert("Something went wrong. Please try again later.");
+        alert("Please mark this as READY.");
       }
     } else {
       //TODO: change completed to true when next stage is unavailable
+
+      if (selectedBatch.IsReady) {
+        let result = await markBatchCompleted(selectedBatch.BatchId);
+        if (result) {
+          alert("Successfully Updated");
+          window.location.reload(false);
+        } else {
+          alert("Something went wrong.");
+        }
+      } else {
+        alert("Please mark this as READY.");
+      }
     }
   };
 
-  //TODO: handle when it goes to the last stage
+  const onDeleteBatch = async () => {
+    setOpenDialog(false);
+    let result = await deleteBatch(pressedBatch.BatchId);
+    if (result) {
+      alert("Successfully Deleted.");
+      window.location.reload(false);
+    } else {
+      alert("Failed. Something went wrong.");
+    }
+  };
+
+  const isLastStage = () => {
+    return (
+      (stageList && stageList.length) ===
+      (selectedBatch && selectedBatch.StageId)
+    );
+  };
+
   const DialogView = () => {
     return (
       selectedBatch && (
@@ -111,9 +157,11 @@ function StatusView() {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {`Move ${selectedBatch.BatchName} to ${
-              stageList[selectedBatch.StageId].StageName
-            } Stage?`}
+            {isLastStage()
+              ? `Mark ${selectedBatch.BatchName} as Completed?`
+              : `Move ${selectedBatch.BatchName} to
+              ${stageList && stageList[selectedBatch.StageId].StageName} Stage? 
+                  `}
           </DialogTitle>
           <DialogActions>
             <Button onClick={handleDialogClose}>No</Button>
@@ -123,6 +171,26 @@ function StatusView() {
           </DialogActions>
         </Dialog>
       )
+    );
+  };
+  const DeleteDialogView = () => {
+    return (
+        <Dialog
+          open={openDeleteDialog}
+          onClose={handleDeleteDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Would you like to delete ${pressedBatch.BatchId}. ${pressedBatch.BatchName}`}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={handleDeleteDialogClose}>No</Button>
+            <Button onClick={onDeleteBatch} autoFocus>
+              YES
+            </Button>
+          </DialogActions>
+        </Dialog>
     );
   };
 
@@ -150,132 +218,160 @@ function StatusView() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div className="selector">
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedStage}
-                label="To Stage"
-                onChange={handleStageChange}
-            >
-              {stageList &&
-              stageList.map((stage, i) => {
-                return (
-                    <MenuItem key={i} value={stage.StageId}>
-                      {stage.StageName}
-                    </MenuItem>
-                );
-              })}
-            </Select>
-          </div>
-          <div className="divider"/>
-          <div className="arrow-button">
-            <Button
-                sx={{
-                  color: "whitesmoke",
-                  backgroundColor: "#4682B4",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  '&:hover': {
-                    backgroundColor: "#90CAF9",
-                    color: "#003C71",
-                    fontWeight: "bold"
-                  }
-                }}
-                loading variant="outlined"
-                onClick={() => {
-                  if (selectedStage.length !== 0) {
-                    handleStageSubmit();
-                  } else {
-                    alert("Stage has to be selected");
-                  }
-                }}
-            >
-              <ArrowForwardIcon />
-            </Button>
-          </div>
-          <div className="modal-buttons">
-            <Button
-                sx={{
-                  color: "whitesmoke",
-                  backgroundColor: "#01b25c",
-                  fontWeight: "bold",
-                  '&:hover': {
-                    backgroundColor: "#c1f0c1",
-                    color: "#003C71",
-                    fontWeight: "bold"
-                  }
-                }}
-                size="medium"
-                variant="outlined"
-                onClick={updateReadyBatch}
-            >
-            READY
-          </Button>
-            <div className="divider"/>
-            <Button
-                sx={{
-                  color: "whitesmoke",
-                  backgroundColor: "#4682B4",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  '&:hover': {
-                    backgroundColor: "#90CAF9",
-                    color: "#003C71",
-                    fontWeight: "bold"
-                  }
-                }}
-                size="medium"
-                variant="outlined"
-                onClick={() =>
-                    (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
-                }
-            >
-              Edit batch
-            </Button>
-            <div className="divider"/>
-            <Button
-                sx={{
-                  color: "whitesmoke",
-                  backgroundColor: "#4682B4",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  '&:hover': {
-                    backgroundColor: "#90CAF9",
-                    color: "#003C71",
-                    fontWeight: "bold"
-                  }
-                }}
-                size="medium"
-                variant="outlined"
-                onClick={handleClickDialogOpen}
-            >
-              Next Stage
-            </Button>
-            <div className="divider"/>
-          </div>
-          {selectedBatch && (
+          {selectedBatch ? (
             <div>
-              <div>Batch ID: {selectedBatch.BatchId}</div>
-              <div>Batch Name: {selectedBatch.BatchName}</div>
-              <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
-              <div>Created Date: {selectedBatch.CreatedDate}</div>
-              <div>Comments: {selectedBatch.Comment}</div>
-              <div>Is {selectedBatch.StageName} Completed: {selectedBatch.IsReady ? "Yes" : "No"}</div>
+              <div className="selector">
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedStage}
+                  label="To Stage"
+                  onChange={handleStageChange}
+                >
+                  {stageList &&
+                    stageList.map((stage, i) => {
+                      return (
+                        <MenuItem key={i} value={stage.StageId}>
+                          {stage.StageName}
+                        </MenuItem>
+                      );
+                    })}
+                </Select>
+              </div>
+              <div className="divider" />
+              <div className="arrow-button">
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  loading
+                  variant="outlined"
+                  onClick={() => {
+                    if (selectedStage.length !== 0) {
+                      handleStageSubmit();
+                    } else {
+                      alert("Stage has to be selected");
+                    }
+                  }}
+                >
+                  <ArrowForwardIcon />
+                </Button>
+              </div>
+              <div className="modal-buttons">
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#01b25c",
+                    fontWeight: "bold",
+                    "&:hover": {
+                      backgroundColor: "#c1f0c1",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  size="medium"
+                  variant="outlined"
+                  onClick={updateReadyBatch}
+                >
+                  READY
+                </Button>
+                <div className="divider" />
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  size="medium"
+                  variant="outlined"
+                  onClick={() =>
+                    (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
+                  }
+                >
+                  Edit batch
+                </Button>
+                <div className="divider" />
+                <Button
+                  sx={{
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+                  size="medium"
+                  variant="outlined"
+                  onClick={handleClickDialogOpen}
+                >
+                  {isLastStage() ? "Mark Completed" : "Next Stage"}
+                </Button>
+                <div className="divider" />
+              </div>
+              <div>
+                <div>Batch ID: {selectedBatch.BatchId}</div>
+                <div>Batch Name: {selectedBatch.BatchName}</div>
+                <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
+                <div>Created Date: {selectedBatch.CreatedDate}</div>
+                <div>Comments: {selectedBatch.Comment}</div>
+                <div>
+                  Is {selectedBatch.StageName} Completed:{" "}
+                  {selectedBatch.IsReady ? "Yes" : "No"}
+                </div>
+              </div>
+              <DataGrid
+                rows={selectedBatch.Samples}
+                columns={columns}
+                getRowId={(r) => r.CaseId + "-" + r.SampleId}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                pagination
+                rowsPerPageOptions={[15, 20, 50]}
+                style={{ height: "70%", marginTop: "10px", color: "#003C71" }}
+              />
             </div>
-          )}
-          {selectedBatch && (
-            <DataGrid
-              rows={selectedBatch.Samples}
-              columns={columns}
-              getRowId={(r) => r.CaseId + "-" + r.SampleId}
-              pageSize={pageSize}
-              disableSelectionOnClick
-              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-              pagination
-              rowsPerPageOptions={[15, 20, 50]}
-              style={{ height: "70%", marginTop: "10px", color: "#003C71" }}
-            />
+          ) : (
+            <div>
+              No Samples found in this batch. Remove this batch?
+              <Button
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                sx={{
+                  marginLeft: 2,
+                  backgroundColor: "#d11a2a",
+                  color: "whitesmoke",
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  "&:hover": {
+                    backgroundColor: "darkgrey",
+                    color: "#003C71",
+                    fontWeight: "bold",
+                  },
+                }}
+                onClick={handleClickDeleteDialogOpen}
+              >
+                Delete
+              </Button>
+              <DeleteDialogView/>
+            </div>
           )}
         </Box>
       </Modal>
@@ -318,43 +414,43 @@ function StatusView() {
                     stage.Batches.map((batch, i) => (
                       <div className="batch-buttons" key={i}>
                         {batch.IsReady ? (
-                        <Button
-                          size="medium"
-                          variant="outlined"
-                          sx={{
-                            color: "#024b2c",
-                            backgroundColor: "#01b25c",
-                            fontWeight: "bold",
-                            textTransform: "capitalize",
-                            '&:hover': {
-                              backgroundColor: "grey",
-                              color: "#003C71",
-                              fontWeight: "bold"
-                            }
-                          }}
-                          onClick={() => handleModalOpen(batch)}
-                        >
-                          * {batch.BatchId}. {batch.BatchName} *
-                        </Button>
-                            ) : (
-                            <Button
-                                size="medium"
-                                variant="outlined"
-                                sx={{
-                                  color: "#843115",
-                                  backgroundColor: "darksalmon",
-                                  fontWeight: "bold",
-                                  textTransform: "capitalize",
-                                  '&:hover': {
-                                    backgroundColor: "grey",
-                                    color: "#003C71",
-                                    fontWeight: "bold"
-                                  }
-                                }}
-                                onClick={() => handleModalOpen(batch)}
-                            >
-                              {batch.BatchId}. {batch.BatchName}
-                            </Button>
+                          <Button
+                            size="medium"
+                            variant="outlined"
+                            sx={{
+                              color: "#024b2c",
+                              backgroundColor: "#01b25c",
+                              fontWeight: "bold",
+                              textTransform: "capitalize",
+                              "&:hover": {
+                                backgroundColor: "grey",
+                                color: "#003C71",
+                                fontWeight: "bold",
+                              },
+                            }}
+                            onClick={() => handleModalOpen(batch)}
+                          >
+                            * {batch.BatchId}. {batch.BatchName} *
+                          </Button>
+                        ) : (
+                          <Button
+                            size="medium"
+                            variant="outlined"
+                            sx={{
+                              color: "#843115",
+                              backgroundColor: "darksalmon",
+                              fontWeight: "bold",
+                              textTransform: "capitalize",
+                              "&:hover": {
+                                backgroundColor: "grey",
+                                color: "#003C71",
+                                fontWeight: "bold",
+                              },
+                            }}
+                            onClick={() => handleModalOpen(batch)}
+                          >
+                            {batch.BatchId}. {batch.BatchName}
+                          </Button>
                         )}
                       </div>
                     ))

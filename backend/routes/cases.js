@@ -65,6 +65,8 @@ router.put("/:caseId/samples", (req, res) => {
                   }-${sample["SampleId"]}`,
                   OnHold: sample.OnHold,
                   KitId: sample.KitId,
+                  KorQ : sample.KorQ,
+                  Comment : sample.Comment,
                   ScreeningId: sample.ScreeningId
                 };
                 let promise = new Promise(function (resolve, reject) {
@@ -153,7 +155,7 @@ router.get("/:caseId/samples", (req, res) => {
         });
       } else if (caseResult.length > 0) {
         let sampleSql = `
-        SELECT s.SampleId, s.SampleName, s.OnHold, 
+        SELECT s.SampleId, s.SampleName, s.OnHold, s.KorQ, s.Comment,
         c.CaseId, c.Comment, s.KitId, k.KitName, 
         s.ScreeningId, m.ScreeningName
             FROM Sample s
@@ -167,6 +169,12 @@ router.get("/:caseId/samples", (req, res) => {
             ORDER BY s.SampleId ASC
             `;
         connection.query(sampleSql, (err, result) => {
+          if (err) {
+            res.status(500).send({
+              success: false,
+              message: "Invalid request!",
+            });
+          }
           let formatResult = { ...caseResult[0], Samples: result };
           connection.release();
           res.status(200).send({

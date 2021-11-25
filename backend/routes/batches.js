@@ -257,7 +257,7 @@ router.get("/:batchId/samples", (req, res) => {
         });
       } else if (batchResult.length > 0) {
         let sampleSql =
-            `SELECT b.SampleId, s.SampleName, b.BatchId, 
+            `SELECT b.SampleId, s.SampleName, b.BatchId, s.KorQ, s.Comment,
               s.OnHold, s.ScreeningId, m.ScreeningName, 
               s.KitId, k.KitName, s.CaseId
             FROM BatchSample b
@@ -481,6 +481,41 @@ router.patch("/:batchId/ready", (req, res) => {
     let sql = `
       UPDATE Batch
       SET IsReady = ${!isReady}
+      WHERE BatchId = ${batchId};
+    `;
+    connection.query(sql, (err, result) => {
+      connection.release();
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).send({
+          success: false,
+          message: err.message,
+        });
+      } else if (result.affectedRows > 0) {
+        console.log(`Batch ${batchId} updated!`);
+        res.status(200).send({
+          success: true,
+          message: `Batch ${batchId} updated!`,
+          body: result,
+        });
+      } else {
+        res.status(404).send({
+          success: false,
+          message: `Batch ${batchId} not found!`,
+        });
+      }
+    });
+  });
+});
+
+/* Update a Batch to completed */
+router.patch("/:batchId/completed", (req, res) => {
+  pool.getConnection(function (err, connection) {
+    if (err) throw err; // not connected
+    let batchId = req.params.batchId;
+    let sql = `
+      UPDATE Batch
+      SET IsCompleted = 1, StageId = NULL
       WHERE BatchId = ${batchId};
     `;
     connection.query(sql, (err, result) => {

@@ -54,6 +54,7 @@ const BatchView = () => {
         width: 110,
       },
       {
+<<<<<<< HEAD
         accessor: row => {
           if (row.IsCompleted == 1) {
             return (
@@ -63,6 +64,19 @@ const BatchView = () => {
             )
           } else if (row.IsCompleted == 0) {
             return (
+=======
+        accessor: "ExtractionId",
+        Header: "Extraction ID",
+        width: 50,
+      },
+      {
+        accessor: "IsCompleted",
+        Header: "Completed",
+        width: 150,
+        renderCell: (cellValues) => {
+          return (
+            cellValues === 1 && (
+>>>>>>> 74687bd20b941a7015c72b672b6c0bb35250acdc
               <Button variant="contained" color="warning">
                 No
               </Button>

@@ -125,9 +125,20 @@ export default function BatchTable({ columns, data }) {
                         }
                     })}
                     <td>
+<<<<<<< HEAD
                         <Button onClick={() => {
                             window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
                         }}>Edit</Button>
+=======
+                    <Button onClick={() => handleModalOpen(row)}>
+                        View Samples
+                    </Button>
+                    </td>
+                    <td>
+                    <Button onClick={() => {
+                        window.location.href = `/batch-editor?batchId=${row.values['BatchId']}`
+                    }}>Edit</Button>
+>>>>>>> 74687bd20b941a7015c72b672b6c0bb35250acdc
                     </td>
                 </tr>
                 )
@@ -144,6 +155,7 @@ const sampleColumns = [
         field: "SampleId",
         headerName: "Sample ID",
         width: 100,
+<<<<<<< HEAD
     },
     {
         field: "SampleName",
@@ -156,6 +168,25 @@ const sampleColumns = [
         width: 150,
     },
     {
+=======
+    },
+    {
+        field: "SampleName",
+        headerName: "Sample Name",
+        width: 150,
+    },
+    {
+        field: "KorQ",
+        headerName: "K or Q",
+        width: 100,
+    },
+    {
+        field: "BatchId",
+        headerName: "Batch ID",
+        width: 150,
+    },
+    {
+>>>>>>> 74687bd20b941a7015c72b672b6c0bb35250acdc
         field: "ScreeningName",
         headerName: "Screening Name",
         width: 190,
@@ -176,7 +207,7 @@ const sampleColumns = [
         width: 150,
         renderCell: (cellValues) => {
           return (
-            cellValues === 1 && (
+            cellValues.value === 1 && (
               <Button variant="contained" color="warning">
                 On Hold
               </Button>

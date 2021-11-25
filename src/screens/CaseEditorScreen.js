@@ -35,6 +35,7 @@ for (let i = 0; i < 3; i++) {
   placeHolderData.push({
     key: new Date().getTime() + i + 1,
     SampleId: `${i + 1}`,
+    KorQ: "",
     ScreeningId: "",
     KitId: "",
     OnHold: false,
@@ -47,7 +48,7 @@ const CaseEditorScreen = ({ location }) => {
   const [retrievedCase, setRetrievedCase] = React.useState(null);
   const [editMode, setEditMode] = React.useState(query.caseId ? true : false);
   const [sampleList, setSampleList] = React.useState(
-    editMode ? [] : [...placeHolderData]
+      editMode ? [] : [...placeHolderData]
   );
   const [initialSampleList, setInitialSampleList] = React.useState([]);
   const [comment, setComment] = React.useState("");
@@ -115,14 +116,14 @@ const CaseEditorScreen = ({ location }) => {
     let temp = sampleList.map(function (sample, i) {
       // Change empty string to null
       if (
-        sample["ScreeningId"] !== null &&
-        sample["ScreeningId"].toString().trim().length === 0
+          sample["ScreeningId"] !== null &&
+          sample["ScreeningId"].toString().trim().length === 0
       ) {
         sample["ScreeningId"] = null;
       }
       if (
-        sample["KitId"] !== null &&
-        sample["KitId"].toString().trim().length === 0
+          sample["KitId"] !== null &&
+          sample["KitId"].toString().trim().length === 0
       ) {
         sample["KitId"] = null;
       }
@@ -195,7 +196,7 @@ const CaseEditorScreen = ({ location }) => {
 
   const checkNotEmptyObject = (obj, i) => {
     return !Object.values(obj).every(
-      (x) => x === null || x === "" || x === false
+        (x) => x === null || x === "" || x === false
     );
   };
 
@@ -205,6 +206,7 @@ const CaseEditorScreen = ({ location }) => {
       {
         key: new Date().getTime(),
         SampleId: obj.SampleId + "-",
+        KorQ: obj.KorQ,
         ScreeningId: obj.ScreeningId,
         KitId: obj.KitId,
         OnHold: obj.OnHold,
@@ -217,6 +219,7 @@ const CaseEditorScreen = ({ location }) => {
       {
         key: new Date().getTime(),
         SampleId: `${sampleList.length + 1}`,
+        KorQ: "",
         ScreeningId: "",
         KitId: "",
         OnHold: false,
@@ -231,182 +234,182 @@ const CaseEditorScreen = ({ location }) => {
 
   const DialogView = () => {
     return (
-      retrievedCase && (
-        <Dialog
-          open={openDialog}
-          onClose={handleDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {`Delete Case with ID: ${retrievedCase.CaseId}`}
-          </DialogTitle>
-          <DialogActions>
-            <Button onClick={handleDialogClose}>No</Button>
-            <Button onClick={onDeleteCase} autoFocus>
-              YES
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )
+        retrievedCase && (
+            <Dialog
+                open={openDialog}
+                onClose={handleDialogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {`Delete Case with ID: ${retrievedCase.CaseId}`}
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={handleDialogClose}>No</Button>
+                <Button onClick={onDeleteCase} autoFocus>
+                  YES
+                </Button>
+              </DialogActions>
+            </Dialog>
+        )
     );
   };
 
   return (
-    <div className="screen-holder">
-      <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
-        <Grid container spacing={2}>
-          <Grid item xs="auto">
-            <Button
-              loading
-              variant="outlined"
-              onClick={() => history.push("/")}
-              startIcon={<ClearIcon />}
-              sx={{
-                marginLeft: 112,
-                marginTop: 1,
-                color: "whitesmoke",
-                backgroundColor: "#003C71",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                "&:hover": {
-                  backgroundColor: "#D3D9DE",
-                  color: "#003C71",
-                  fontWeight: "bold",
-                },
-              }}
-            >
-              Cancel
-            </Button>
-          </Grid>
-
-          <Grid item xs={4}></Grid>
-          <Grid item xs="auto">
-            {editMode && (
+      <div className="screen-holder">
+        <Box sx={{ flexGrow: 1 }} style={{ paddingTop: "1em" }}>
+          <Grid container spacing={2}>
+            <Grid item xs="auto">
               <Button
-                variant="outlined"
-                startIcon={<DeleteIcon />}
-                sx={{
-                  position: "absolute",
-                  marginTop: 4.2,
-                  marginLeft: 40,
-                  backgroundColor: "red",
-                  color: "whitesmoke",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  "&:hover": {
-                    backgroundColor: "red",
-                    color: "#003C71",
+                  loading
+                  variant="outlined"
+                  onClick={() => history.push("/")}
+                  startIcon={<ClearIcon />}
+                  sx={{
+                    marginLeft: 112,
+                    marginTop: 1,
+                    color: "whitesmoke",
+                    backgroundColor: "#003C71",
                     fontWeight: "bold",
-                  },
-                }}
-                onClick={() => history.goBack()}
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#D3D9DE",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
               >
-                Delete
+                Cancel
               </Button>
-            )}
+            </Grid>
+
+            <Grid item xs={4}></Grid>
+            <Grid item xs="auto">
+              {editMode && (
+                  <Button
+                      variant="outlined"
+                      startIcon={<DeleteIcon />}
+                      sx={{
+                        position: "absolute",
+                        marginTop: 4.2,
+                        marginLeft: 40,
+                        backgroundColor: "#d11a2a",
+                        color: "whitesmoke",
+                        fontWeight: "bold",
+                        textTransform: "capitalize",
+                        "&:hover": {
+                          backgroundColor: "#b30000",
+                          color: "darkgrey",
+                          fontWeight: "bold",
+                        },
+                      }}
+                      onClick={() => history.goBack()}
+                  >
+                    Delete
+                  </Button>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-      <div className="content-wrapper">
-        <Box
-          component="form"
-          sx={{
-            "& > :not(style)": {
-              m: 1,
-              width: "25ch",
-              maxWidth: "100%",
-            },
-          }}
-          noValidate
-          border="1px solid #FFF200"
-          borderRadius="8px"
-          autoComplete="off"
-          backgroundColor="whitesmoke"
-          padding="25px"
-          color="#003C71"
-        >
-          <Grid item xs="auto">
-            <Button
-              variant="outlined"
-              onClick={addNewRow}
-              startIcon={<AddIcon />}
-              sx={{
-                position: "absolute",
-                marginLeft: 96,
-                color: "whitesmoke",
-                backgroundColor: "#4682B4",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                "&:hover": {
-                  backgroundColor: "#90CAF9",
-                  color: "#003C71",
-                  fontWeight: "bold",
-                },
-              }}
-            >
-              Add
-            </Button>
-            <Button
-              loading
-              variant="outlined"
-              onClick={onSubmitCase}
-              sx={{
-                position: "absolute",
-                marginLeft: 108,
-                color: "whitesmoke",
-                backgroundColor: "#4682B4",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                "&:hover": {
-                  backgroundColor: "#90CAF9",
-                  color: "#003C71",
-                  fontWeight: "bold",
-                },
-              }}
-            >
-              Submit
-            </Button>
-          </Grid>
-          <h2>Case Information</h2>
-          {retrievedCase && (
-            <div>
-              <h4>Case ID: {retrievedCase.CaseId} </h4>
-            </div>
-          )}
-          <TextField
-            id="outlined"
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
-            label="Comment"
-          />
         </Box>
-        <div className="box-divider" />
-        <Box
-          style={{ paddingBottom: "1em" }}
-          border="1px solid #FFF200"
-          borderRadius="8px"
-          backgroundColor="whitesmoke"
-          paddingTop="1em"
-        >
-          {sampleList &&
+        <div className="content-wrapper">
+          <Box
+              component="form"
+              sx={{
+                "& > :not(style)": {
+                  m: 1,
+                  width: "25ch",
+                  maxWidth: "100%",
+                },
+              }}
+              noValidate
+              border="1px solid #FFF200"
+              borderRadius="8px"
+              autoComplete="off"
+              backgroundColor="whitesmoke"
+              padding="25px"
+              color="#003C71"
+          >
+            <Grid item xs="auto">
+              <Button
+                  variant="outlined"
+                  onClick={addNewRow}
+                  startIcon={<AddIcon />}
+                  sx={{
+                    position: "absolute",
+                    marginLeft: 96,
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+              >
+                Add
+              </Button>
+              <Button
+                  loading
+                  variant="outlined"
+                  onClick={onSubmitCase}
+                  sx={{
+                    position: "absolute",
+                    marginLeft: 108,
+                    color: "whitesmoke",
+                    backgroundColor: "#4682B4",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    "&:hover": {
+                      backgroundColor: "#90CAF9",
+                      color: "#003C71",
+                      fontWeight: "bold",
+                    },
+                  }}
+              >
+                Submit
+              </Button>
+            </Grid>
+            <h2>Case Information</h2>
+            {retrievedCase && (
+                <div>
+                  <h4>Case ID: {retrievedCase.CaseId} </h4>
+                </div>
+            )}
+            <TextField
+                id="outlined"
+                onChange={(e) => setComment(e.target.value)}
+                value={comment}
+                label="Comment"
+            />
+          </Box>
+          <div className="box-divider" />
+          <Box
+              style={{ paddingBottom: "1em" }}
+              border="1px solid #FFF200"
+              borderRadius="8px"
+              backgroundColor="whitesmoke"
+              paddingTop="1em"
+          >
+            {sampleList &&
             sampleList.map((sample, i) => {
               return (
-                <SampleRow
-                  key={sample.key}
-                  index={i}
-                  obj={sample}
-                  onDelete={deleteRow}
-                  onAdd={addSubRow}
-                  screeningData={screeningData}
-                  kitTypeData={kitTypeData}
-                />
+                  <SampleRow
+                      key={sample.key}
+                      index={i}
+                      obj={sample}
+                      onDelete={deleteRow}
+                      onAdd={addSubRow}
+                      screeningData={screeningData}
+                      kitTypeData={kitTypeData}
+                  />
               );
             })}
-        </Box>
+          </Box>
+        </div>
+        <DialogView />
       </div>
-      <DialogView />
-    </div>
   );
 };
 
@@ -418,6 +421,18 @@ const SampleRow = (props) => {
   const [onHold, setOnHold] = React.useState(props.obj.OnHold == 1);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [KorQ, setKorQ] = React.useState("");
+
+  const sampleTypes = [
+      {
+          value: "K",
+          label: "K",
+      },
+      {
+          value: "Q",
+          label: "Q",
+      },
+  ];
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -431,107 +446,130 @@ const SampleRow = (props) => {
   };
 
   return (
-    <div className="sample-row">
-      <div className="row-item" style={{ margin: "32px" }}>
-        {props.index + 1}
-      </div>
-      <div className="row-item">
-        <TextField
-          id="outlined"
-          onChange={(e) => {
-            sampleObj["SampleId"] = e.target.value;
-            setSampleObj(sampleObj);
-            setSampleId(e.target.value);
-          }}
-          value={sampleId}
-          label="Sample ID"
-        />
-      </div>
-      <div className="row-item">
-        <TextField
-          select
-          onChange={(e) => {
-            sampleObj["ScreeningId"] = e.target.value;
-            setSampleObj(sampleObj);
-            setScreening(e.target.value);
-          }}
-          value={screening}
-          label="Screening Method"
-          sx={{ m: 2, width: "25ch" }}
-        >
-          {props.screeningData.map((screening) => (
-            <MenuItem key={screening.ScreeningId} value={screening.ScreeningId}>
-              {screening.ScreeningName}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
-      <div className="row-item">
-        <TextField
-          select
-          onChange={(e) => {
-            sampleObj["KitId"] = e.target.value;
-            setSampleObj(sampleObj);
-            setKitId(e.target.value);
-          }}
-          value={kitId}
-          label="Kit Type"
-          sx={{ m: 1, width: "25ch" }}
-        >
-          {props.kitTypeData.map((kitType) => (
-            <MenuItem key={kitType.KitId} value={kitType.KitId}>
-              {kitType.KitName}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
-      <div className="row-item">
-        <FormControlLabel
-          control={
-            <Switch
-              checked={onHold}
+      <div className="sample-row">
+        <div className="row-item" style={{ margin: "10px" }}>
+          {props.index + 1}
+        </div>
+        <div className="row-item">
+          <TextField
+              id="outlined"
+              required
               onChange={(e) => {
-                sampleObj["OnHold"] = e.target.checked;
+                sampleObj["SampleId"] = e.target.value;
                 setSampleObj(sampleObj);
-                setOnHold(e.target.checked);
+                setSampleId(e.target.value);
               }}
-              color="warning"
-            />
-          }
-          label={onHold ? "On Hold" : ""}
-        />
+              value={sampleId}
+              label="Sample ID"
+          />
+        </div>
+        <div className="row-item">
+          <TextField
+              select
+              required
+              onChange={(e) => {
+                sampleObj["KorQ"] = e.target.value;
+                setSampleObj(sampleObj);
+                setKorQ(e.target.value);
+              }}
+              value={KorQ}
+              label="K or Q"
+              sx={{ m: 2, width: "10ch" }}
+          >
+              {sampleTypes.map((sampleType) => (
+                  <MenuItem key={sampleType.value} value={sampleType.value}>
+                      {sampleType.label}
+                  </MenuItem>
+              ))}
+          </TextField>
+        </div>
+        <div className="row-item">
+          <TextField
+              select
+              required
+              onChange={(e) => {
+                sampleObj["ScreeningId"] = e.target.value;
+                setSampleObj(sampleObj);
+                setScreening(e.target.value);
+              }}
+              value={screening}
+              label="Screening Method"
+              sx={{ m: 2, width: "20ch" }}
+          >
+            {props.screeningData.map((screening) => (
+                <MenuItem key={screening.ScreeningId} value={screening.ScreeningId}>
+                  {screening.ScreeningName}
+                </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="row-item">
+          <TextField
+              select
+              required
+              onChange={(e) => {
+                sampleObj["KitId"] = e.target.value;
+                setSampleObj(sampleObj);
+                setKitId(e.target.value);
+              }}
+              value={kitId}
+              label="Kit Type"
+              sx={{ m: 1, width: "20ch" }}
+          >
+            {props.kitTypeData.map((kitType) => (
+                <MenuItem key={kitType.KitId} value={kitType.KitId}>
+                  {kitType.KitName}
+                </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="row-item">
+          <FormControlLabel
+              control={
+                <Switch
+                    checked={onHold}
+                    onChange={(e) => {
+                      sampleObj["OnHold"] = e.target.checked;
+                      setSampleObj(sampleObj);
+                      setOnHold(e.target.checked);
+                    }}
+                    color="warning"
+                />
+              }
+              label={onHold ? "On Hold" : "Off"}
+          />
+        </div>
+        <div className="row-item">
+          <IconButton
+              id="more-button"
+              aria-controls="more-menu"
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+          <Menu
+              id="more-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "more-button",
+              }}
+          >
+            <MenuItem onClick={handleCreateNew}>Create Sub-sample</MenuItem>
+          </Menu>
+        </div>
+        <div className="row-item-icon">
+          <IconButton
+              aria-label="delete"
+              onClick={() => props.onDelete(props.index)}
+          >
+            <DeleteRoundedIcon />
+          </IconButton>
+        </div>
       </div>
-      <div className="row-item">
-        <IconButton
-          id="more-button"
-          aria-controls="more-menu"
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <Menu
-          id="more-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "more-button",
-          }}
-        >
-          <MenuItem onClick={handleCreateNew}>Create Sub-sample</MenuItem>
-        </Menu>
-      </div>
-      <div className="row-item-icon">
-        <IconButton
-          aria-label="delete"
-          onClick={() => props.onDelete(props.index)}
-        >
-          <DeleteRoundedIcon />
-        </IconButton>
-      </div>
-    </div>
   );
 };
 

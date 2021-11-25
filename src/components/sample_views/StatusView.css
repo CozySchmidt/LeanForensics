@@ -33,15 +33,21 @@
 .selector {
     position: absolute;
     right: 130px;
-    top: 140px;
+    top: 117px;
 }
 
 .arrow-button {
     position: absolute;
     right: 60px;
-    top: 160px;
+    top: 137px;
 }
 
 .batch-buttons {
-    margin-top: 10px;
+    margin-top: 15px;
+}
+
+.label {
+    position: absolute;
+    right: 290px;
+    top: 150px;
 }

@@ -14,6 +14,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 
 import "./StatusView.css";
 import { getAllBatchesByStages, getAllStages } from "../../api/OthersApi";
@@ -220,6 +224,9 @@ function StatusView() {
         <Box sx={style}>
           {selectedBatch ? (
             <div>
+              <div style={{position: "absolute", marginLeft: 495, marginTop: 90}}>
+                Move to desired stage:
+              </div>
               <div className="selector">
                 <Select
                   labelId="demo-simple-select-label"
@@ -268,6 +275,7 @@ function StatusView() {
               <div className="modal-buttons">
                 <Button
                   sx={{
+                    marginRight: 5,
                     color: "whitesmoke",
                     backgroundColor: "#01b25c",
                     fontWeight: "bold",
@@ -281,7 +289,7 @@ function StatusView() {
                   variant="outlined"
                   onClick={updateReadyBatch}
                 >
-                  READY
+                  {selectedBatch.IsReady ? "UNREADY" : "READY"}
                 </Button>
                 <div className="divider" />
                 <Button
@@ -328,7 +336,7 @@ function StatusView() {
               <div>
                 <div>Batch ID: {selectedBatch.BatchId}</div>
                 <div>Batch Name: {selectedBatch.BatchName}</div>
-                <div>Extraction: {selectedBatch.ExtractionName ?? "N/A"}</div>
+                <div>Extraction Type: {selectedBatch.ExtractionName ?? "N/A"}</div>
                 <div>Created Date: {selectedBatch.CreatedDate}</div>
                 <div>Comments: {selectedBatch.Comment}</div>
                 <div>
@@ -361,8 +369,8 @@ function StatusView() {
                   fontWeight: "bold",
                   textTransform: "capitalize",
                   "&:hover": {
-                    backgroundColor: "darkgrey",
-                    color: "#003C71",
+                    backgroundColor: "#b30000",
+                    color: "darkgrey",
                     fontWeight: "bold",
                   },
                 }}
@@ -413,45 +421,50 @@ function StatusView() {
                   stage.Batches.length > 0 &&
                     stage.Batches.map((batch, i) => (
                       <div className="batch-buttons" key={i}>
-                        {batch.IsReady ? (
-                          <Button
-                            size="medium"
-                            variant="outlined"
-                            sx={{
-                              color: "#024b2c",
-                              backgroundColor: "#01b25c",
-                              fontWeight: "bold",
-                              textTransform: "capitalize",
-                              "&:hover": {
-                                backgroundColor: "grey",
-                                color: "#003C71",
-                                fontWeight: "bold",
-                              },
-                            }}
-                            onClick={() => handleModalOpen(batch)}
-                          >
-                            * {batch.BatchId}. {batch.BatchName} *
-                          </Button>
-                        ) : (
-                          <Button
-                            size="medium"
-                            variant="outlined"
-                            sx={{
-                              color: "#843115",
-                              backgroundColor: "darksalmon",
-                              fontWeight: "bold",
-                              textTransform: "capitalize",
-                              "&:hover": {
-                                backgroundColor: "grey",
-                                color: "#003C71",
-                                fontWeight: "bold",
-                              },
-                            }}
-                            onClick={() => handleModalOpen(batch)}
-                          >
-                            {batch.BatchId}. {batch.BatchName}
-                          </Button>
-                        )}
+                        <Card sx={{minWidth: 100}}>
+                          <CardContent>
+                            <Typography
+                                sx={{
+                                  fontSize: 15,
+                                  fontWeight: "bold",
+                                  textTransform: "capitalize",
+                                }}
+                            >
+                              <div>Batch ID: {batch.BatchId}</div>
+                              <div>{batch.BatchName}</div>
+                              <div>
+                                {batch.IsReady ? (
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        sx={{
+                                          mt: 1,
+                                          fontWeight: "bold",
+                                          backgroundColor: "#01b25c",
+                                          color: "whitesmoke",
+                                          "&:hover": {
+                                            backgroundColor: "#01b25c",
+                                            color: "whitesmoke",
+                                            fontWeight: "bold",
+                                          },
+                                        }}
+                                    >
+                                      READY
+                                    </Button>
+                                ) : ""}
+                              </div>
+                            </Typography>
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                                sx={{ml: 5}}
+                                size="small"
+                                onClick={() => handleModalOpen(batch)}
+                            >
+                              View
+                            </Button>
+                          </CardActions>
+                        </Card>
                       </div>
                     ))
                 }
@@ -477,6 +490,11 @@ const columns = [
     width: 200,
   },
   {
+    field: "KorQ",
+    headerName: "K or Q",
+    width: 90,
+  },
+  {
     field: "CaseId",
     headerName: "Case ID",
     width: 90,
@@ -497,7 +515,7 @@ const columns = [
     width: 150,
     renderCell: (cellValues) => {
       return (
-        cellValues === 1 && (
+        cellValues.value === 1 && (
           <Button variant="contained" color="warning">
             On Hold
           </Button>

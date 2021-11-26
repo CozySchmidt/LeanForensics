@@ -516,19 +516,14 @@ const columns = [
     width: 90,
   },
   {
-    field: "CaseId",
-    headerName: "Case ID",
-    width: 90,
-  },
-  {
     field: "KitName",
     headerName: "Kit Type",
-    width: 150,
+    width: 170,
   },
   {
     field: "ScreeningName",
     headerName: "Screening",
-    width: 110,
+    width: 170,
   },
   {
     field: "OnHold",

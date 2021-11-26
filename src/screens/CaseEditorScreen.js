@@ -475,19 +475,6 @@ const SampleRow = (props) => {
             </div>
             <div className="row-item">
                 <TextField
-                    id="outlined"
-                    onChange={(e) => {
-                        sampleObj["Comment"] = e.target.value;
-                        setSampleObj(sampleObj);
-                        setComment(e.target.value);
-                    }}
-                    value={comment}
-                    label="Comment"
-                    sx={{m: 2, width: "40ch"}}
-                />
-            </div>
-            <div className="row-item">
-                <TextField
                     select
                     onChange={(e) => {
                         sampleObj["KorQ"] = e.target.value;

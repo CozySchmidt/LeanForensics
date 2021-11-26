@@ -16,7 +16,7 @@ router.put("/:caseId/samples", (req, res) => {
       let newSampleList = req.body.newSampleList;
       // Create Batch part
       let caseObj = {
-        Comment: req.body.Comment,
+        CaseFile: req.body.CaseFile,
       };
       let udpateCaseSql = `
       UPDATE CaseTable 
@@ -156,7 +156,7 @@ router.get("/:caseId/samples", (req, res) => {
       } else if (caseResult.length > 0) {
         let sampleSql = `
         SELECT s.SampleId, s.SampleName, s.OnHold, s.KorQ, s.Comment,
-        c.CaseId, c.Comment, s.KitId, k.KitName, 
+        c.CaseId, c.CaseFile, s.KitId, k.KitName, 
         s.ScreeningId, m.ScreeningName
             FROM Sample s
             INNER JOIN CaseTable c

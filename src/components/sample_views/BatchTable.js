@@ -173,11 +173,6 @@ const sampleColumns = [
         width: 100,
     },
     {
-        field: "BatchId",
-        headerName: "Batch ID",
-        width: 100,
-    },
-    {
         field: "ScreeningName",
         headerName: "Screening Name",
         width: 150,
@@ -206,11 +201,6 @@ const sampleColumns = [
     {
         field: "CaseFile",
         headerName: "Case File",
-        width: 150,
-    },
-    {
-        field: "CaseId",
-        headerName: "Case ID",
         width: 150,
     },
 ];

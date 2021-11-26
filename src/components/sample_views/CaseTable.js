@@ -169,11 +169,6 @@ const sampleColumns = [
         width: 100,
     },
     {
-      field: "CaseId",
-      headerName: "Case ID",
-      width: 90,
-    },
-    {
       field: "Comment",
       headerName: "Comment",
       width: 200,

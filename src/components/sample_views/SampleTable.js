@@ -47,7 +47,9 @@ export default function Table({ columns, data }) {
             {rows.map(row => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()} onMouseOver={(e) => {
+                <tr {...row.getRowProps()} onClick={() => {
+                    window.location.href = `/case-editor?caseId=${row.original.CaseId}`
+                }} onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "#e4e5e7";
                     e.currentTarget.style.cursor = "pointer";
                 }} onMouseOut={(e) => {

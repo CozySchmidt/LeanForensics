@@ -30,8 +30,8 @@ const BatchView = () => {
         width: 200,
       },
       {
-        accessor: "Comment",
-        Header: "Comment",
+        accessor: "CaseFile",
+        Header: "Case File",
         width: 200,
       },
       {

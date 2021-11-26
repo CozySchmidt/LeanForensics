@@ -168,8 +168,8 @@ const sampleColumns = [
       width: 90,
     },
     {
-      field: "Comment",
-      headerName: "Comment",
+      field: "CaseFile",
+      headerName: "Case File",
       width: 200,
     },
     {

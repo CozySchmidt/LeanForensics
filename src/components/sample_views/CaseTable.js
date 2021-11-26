@@ -106,8 +106,10 @@ export default function CaseTable({ columns, data }) {
     };
 
     return (
-      <>
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+      <div className="table--holder">
+        <div className="table--filter">
+          <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+        </div>
         <table className="table--samples" {...getTableProps()}>
             <thead className="table--samples--header">
             {headerGroups.map(headerGroup => (
@@ -146,7 +148,7 @@ export default function CaseTable({ columns, data }) {
             </tbody>
         </table>
         <ModalView />
-      </>
+      </div>
     );
 }
 

@@ -27,7 +27,7 @@ const SampleView = () => {
     {
       accessor: "ScreeningName",
       Header: "Screening Name",
-      width: 90,
+      width: 120,
     },
     {
       accessor: "KitName",
@@ -42,7 +42,7 @@ const SampleView = () => {
     {
       accessor: "Comment",
       Header: "Comment",
-      width: 150,
+      width: 350,
     },
     {
       accessor: row => {
@@ -59,13 +59,17 @@ const SampleView = () => {
     },
     {
       accessor: row => {
-        let date = row.CreatedDate.split("T");
+        let utc = row.CreatedDate;
+        let time = new Date(Date.parse(utc));
+        let pst = time.toLocaleString();
+        console.log(pst);
+  
         return(
-          date[0]
+          pst
         )
       },
       Header: "Created Date",
-      width: 110,
+      width: 250,
     },
   ], []);
 

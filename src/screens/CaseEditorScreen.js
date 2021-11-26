@@ -388,7 +388,7 @@ const CaseEditorScreen = ({location}) => {
                         id="outlined"
                         onChange={(e) => setComment(e.target.value)}
                         value={casefile}
-                        label="Comment"
+                        label="Case File"
                     />
                 </Box>
                 <div className="box-divider"/>

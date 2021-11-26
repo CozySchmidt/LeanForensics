@@ -208,7 +208,7 @@ function StatusView() {
       height: "70%",
       fontFamily: `"Roboto", sans-serif`,
       fontWeight: "bold",
-      backgroundColor: "whitesmoke",
+      backgroundColor: "white",
       color: "#003C71",
       border: "2px solid darkgrey",
       boxShadow: 24,
@@ -447,11 +447,12 @@ function StatusView() {
                                   onClick={() => handleModalOpen(batch)}
                                   sx={{minWidth: 100}}
                             >
-                              <CardContent>
+                              <CardContent style={{backgroundColor:"#ffede6"}}>
                                 <Typography
                                     sx={{
                                       fontSize: 15,
                                       fontWeight: "bold",
+                                      color: "#474952",
                                       textTransform: "capitalize",
                                     }}
                                 >
@@ -536,7 +537,9 @@ const columns = [
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
-          <Button variant="contained" color="warning">
+          <Button loading variant="contained" color="warning"
+                  style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+          >
             On Hold
           </Button>
         )

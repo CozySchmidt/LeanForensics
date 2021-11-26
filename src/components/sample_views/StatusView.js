@@ -208,7 +208,7 @@ function StatusView() {
       height: "70%",
       fontFamily: `"Roboto", sans-serif`,
       fontWeight: "bold",
-      backgroundColor: "whitesmoke",
+      backgroundColor: "white",
       color: "#003C71",
       border: "2px solid darkgrey",
       boxShadow: 24,
@@ -223,10 +223,10 @@ function StatusView() {
       >
         <Box sx={style}>
           {selectedBatch ? (
-            <div>
-              <div style={{position: "absolute", marginLeft: 495, marginTop: 90}}>
-                Move to desired stage:
-              </div>
+              <div style={{height:"100%"}}>
+                <div style={{position: "absolute", marginLeft: 495, marginTop: 90}}>
+                  Move to desired stage:
+                </div>
               <div className="selector">
                 <Select
                   labelId="demo-simple-select-label"
@@ -273,15 +273,16 @@ function StatusView() {
                 </Button>
               </div>
               <div className="modal-buttons">
-                <Button
+                  {selectedBatch.IsReady ? (
+                  <Button
                   sx={{
                     marginRight: 5,
                     color: "whitesmoke",
-                    backgroundColor: "#01b25c",
+                    backgroundColor: "#8c8c8c",
                     fontWeight: "bold",
                     "&:hover": {
-                      backgroundColor: "#c1f0c1",
-                      color: "#003C71",
+                      backgroundColor: "#4d4d4d",
+                      color: "lightgrey",
                       fontWeight: "bold",
                     },
                   }}
@@ -289,8 +290,28 @@ function StatusView() {
                   variant="outlined"
                   onClick={updateReadyBatch}
                 >
-                  {selectedBatch.IsReady ? "UNREADY" : "READY"}
+                 UNREADY
                 </Button>
+                  ) : (
+                      <Button
+                          sx={{
+                              marginRight: 5,
+                              color: "whitesmoke",
+                              backgroundColor: "#01b25c",
+                              fontWeight: "bold",
+                              "&:hover": {
+                                  backgroundColor: "#c1f0c1",
+                                  color: "#003C71",
+                                  fontWeight: "bold",
+                              },
+                          }}
+                          size="medium"
+                          variant="outlined"
+                          onClick={updateReadyBatch}
+                      >
+                          READY
+                      </Button>
+                  )}
                 <div className="divider" />
                 <Button
                   sx={{
@@ -338,7 +359,7 @@ function StatusView() {
                 <div>Batch Name: {selectedBatch.BatchName}</div>
                 <div>Extraction Type: {selectedBatch.ExtractionName ?? "N/A"}</div>
                 <div>Created Date: {selectedBatch.CreatedDate}</div>
-                <div>Comments: {selectedBatch.Comment}</div>
+                <div>Comments: {selectedBatch.CaseFile}</div>
                 <div>
                   Is {selectedBatch.StageName} Completed:{" "}
                   {selectedBatch.IsReady ? "Yes" : "No"}
@@ -353,7 +374,7 @@ function StatusView() {
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pagination
                 rowsPerPageOptions={[15, 20, 50]}
-                style={{ height: "70%", marginTop: "10px", color: "#003C71" }}
+                style={{ height: "70%", marginTop: "15px", color: "#003C71" }}
               />
             </div>
           ) : (
@@ -421,50 +442,50 @@ function StatusView() {
                   stage.Batches.length > 0 &&
                     stage.Batches.map((batch, i) => (
                       <div className="batch-buttons" key={i}>
-                        <Card sx={{minWidth: 100}}>
-                          <CardContent>
-                            <Typography
-                                sx={{
-                                  fontSize: 15,
-                                  fontWeight: "bold",
-                                  textTransform: "capitalize",
-                                }}
+                          <span style={{ cursor: 'pointer'}}>
+                            <Card
+                                  onClick={() => handleModalOpen(batch)}
+                                  sx={{minWidth: 100}}
                             >
-                              <div>Batch ID: {batch.BatchId}</div>
-                              <div>{batch.BatchName}</div>
-                              <div>
-                                {batch.IsReady ? (
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        sx={{
-                                          mt: 1,
-                                          fontWeight: "bold",
-                                          backgroundColor: "#01b25c",
-                                          color: "whitesmoke",
-                                          "&:hover": {
-                                            backgroundColor: "#01b25c",
-                                            color: "whitesmoke",
-                                            fontWeight: "bold",
-                                          },
-                                        }}
-                                    >
-                                      READY
-                                    </Button>
-                                ) : ""}
-                              </div>
-                            </Typography>
-                          </CardContent>
-                          <CardActions>
-                            <Button
-                                sx={{ml: 5}}
-                                size="small"
-                                onClick={() => handleModalOpen(batch)}
-                            >
-                              View
-                            </Button>
-                          </CardActions>
-                        </Card>
+                              <CardContent style={{backgroundColor:"#ffede6"}}>
+                                <Typography
+                                    sx={{
+                                      fontSize: 15,
+                                      fontWeight: "bold",
+                                      color: "#474952",
+                                      textTransform: "capitalize",
+                                    }}
+                                >
+                                  <div>Batch #{batch.BatchId}</div>
+                                  <div>{batch.BatchName}</div>
+                                  <div>
+                                    {batch.IsReady ? (
+                                        <span style={{ cursor: 'not-allowed',
+                                            pointerEvents: "none" }}>
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                sx={{
+                                                  mt: 1,
+                                                  fontWeight: "bold",
+                                                  backgroundColor: "#01b25c",
+                                                  color: "whitesmoke",
+                                                  "&:hover": {
+                                                    backgroundColor: "#01b25c",
+                                                    color: "whitesmoke",
+                                                    fontWeight: "bold",
+                                                  },
+                                                }}
+                                            >
+                                              READY
+                                            </Button>
+                                        </span>
+                                    ) : ""}
+                                  </div>
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </span>
                       </div>
                     ))
                 }
@@ -516,7 +537,9 @@ const columns = [
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
-          <Button variant="contained" color="warning">
+          <Button loading variant="contained" color="warning"
+                  style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+          >
             On Hold
           </Button>
         )

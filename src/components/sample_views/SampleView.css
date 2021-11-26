@@ -11,14 +11,14 @@
     margin-top: 2%;
     border-collapse: collapse;
     border: 2px solid;
-    background-color: white;
+    background-color: whitesmoke;
     width: 100%;
 }
 
 .table--samples--header {
     text-align: center;
     background-color: #003C71;
-    color: white;
+    color: whitesmoke;
 }
 
 .table--samples--header th {

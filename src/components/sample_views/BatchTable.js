@@ -61,7 +61,7 @@ export default function BatchTable({ columns, data }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2" color="#003C71">
+                <Typography id="modal-modal-title" variant="h6" component="h2" color="#60636c" fontWeight="bold">
                     Batch ID: {selectedBatch && selectedBatch.BatchId}
                 </Typography>
 
@@ -83,7 +83,7 @@ export default function BatchTable({ columns, data }) {
                     (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
                   }
                 >
-                  Edit batch
+                  Edit
                 </Button>
 
                 {selectedBatch && (
@@ -96,7 +96,7 @@ export default function BatchTable({ columns, data }) {
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     pagination
                     rowsPerPageOptions={[15, 20, 50]}
-                    style={{ height: "70%", marginTop: "10px" }}
+                    style={{ height: "70%", marginTop: "10px", color: "#003C71"}}
                     />
                 )}
                 </Box>
@@ -129,7 +129,7 @@ export default function BatchTable({ columns, data }) {
                 prepareRow(row);
                 return (
                 <tr {...row.getRowProps({})} onClick={() => handleModalOpen(row)} onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = "yellow";
+                    e.currentTarget.style.backgroundColor = "#e4e5e7";
                     e.currentTarget.style.cursor = "pointer";
                 }} onMouseOut={(e) => {
                     e.currentTarget.style.backgroundColor = "";
@@ -167,11 +167,6 @@ const sampleColumns = [
         width: 150,
     },
     {
-        field: "Comment",
-        headerName: "Comment",
-        width: 150,
-    },
-    {
         field: "KorQ",
         headerName: "K or Q",
         width: 100,
@@ -179,12 +174,12 @@ const sampleColumns = [
     {
         field: "BatchId",
         headerName: "Batch ID",
-        width: 150,
+        width: 100,
     },
     {
         field: "ScreeningName",
         headerName: "Screening Name",
-        width: 190,
+        width: 150,
     },
     {
         field: "KitName",
@@ -192,22 +187,29 @@ const sampleColumns = [
       width: 150,
     },
     {
-        field: "CaseId",
-        headerName: "Case ID",
-        width: 150,
-    },
-    {
         field: "OnHold",
         headerName: "On Hold",
         width: 150,
         renderCell: (cellValues) => {
-          return (
-            cellValues.value === 1 && (
-              <Button variant="contained" color="warning">
-                On Hold
-              </Button>
-            )
-          );
+            return (
+                cellValues.value === 1 && (
+                    <Button loading variant="contained" color="warning"
+                            style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+                    >
+                        On Hold
+                    </Button>
+                )
+            );
         },
+    },
+    {
+        field: "CaseFile",
+        headerName: "Case File",
+        width: 150,
+    },
+    {
+        field: "CaseId",
+        headerName: "Case ID",
+        width: 150,
     },
 ];

@@ -30,8 +30,8 @@ const BatchView = () => {
         width: 200,
       },
       {
-        accessor: "Comment",
-        Header: "Comment",
+        accessor: "CaseFile",
+        Header: "Case File",
         width: 200,
       },
       {
@@ -50,13 +50,13 @@ const BatchView = () => {
       },
       {
         accessor: row => {
-          if (row.IsCompleted == 1) {
+          if (row.IsCompleted === 1) {
             return (
               <Button variant="contained">
                 Yes
               </Button>
             )
-          } else if (row.IsCompleted == 0) {
+          } else if (row.IsCompleted === 0) {
             return (
               <Button variant="contained" color="warning">
                 No

@@ -38,7 +38,7 @@ export default function Table({ columns, data }) {
                     </span>
                   </th>
                 ))}
-                <th>Edit?</th>
+                <th>Edit</th>
               </tr>
             ))}
           </thead>

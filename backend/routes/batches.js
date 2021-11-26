@@ -542,5 +542,4 @@ router.patch("/:batchId/completed", (req, res) => {
     });
   });
 });
-
 module.exports = router;

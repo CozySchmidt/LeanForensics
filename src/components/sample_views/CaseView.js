@@ -28,8 +28,8 @@ function CaseView() {
       width: 50,
     },
     {
-      accessor: "Comment",
-      Header: "Comment",
+      accessor: "CaseFile",
+      Header: "Case File",
       width: 200,
     },
     {

@@ -3,6 +3,7 @@ import { useTable, useSortBy, useGlobalFilter } from "react-table";
 import {BsFillArrowDownCircleFill, BsFillArrowUpCircleFill} from "react-icons/bs";
 import { GlobalFilter } from "./GlobalFilter";
 import Button from "@mui/material/Button";
+import { height } from "@mui/system";
 
 export default function Table({ columns, data }) {
 
@@ -38,7 +39,7 @@ export default function Table({ columns, data }) {
                     </span>
                   </th>
                 ))}
-                <th>Edit</th>
+                {/* <th>Edit</th> */}
               </tr>
             ))}
           </thead>
@@ -46,19 +47,25 @@ export default function Table({ columns, data }) {
             {rows.map(row => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = "#e4e5e7";
+                    e.currentTarget.style.cursor = "pointer";
+                }} onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "";
+                }}>
                   {row.cells.map(cell => {
                     return <td {...cell.getCellProps({
                       style: {
-                        width: cell.column.width
+                        width: cell.column.width,
+                        height: 40
                       }
                     })}>{cell.render('Cell')}</td>
                   })}
-                  <td align="center">
+                  {/* <td align="center">
                     <Button onClick={() => {
                       window.location.href = `/case-editor?caseId=${row.values['CaseId']}`
                     }}>Edit</Button>
-                  </td>
+                  </td> */}
                 </tr>
               )
             })}

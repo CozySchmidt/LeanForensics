@@ -35,6 +35,7 @@ for (let i = 0; i < 3; i++) {
     placeHolderData.push({
         key: new Date().getTime() + i + 1,
         SampleId: `${i + 1}`,
+        Comment: "",
         KorQ: "",
         ScreeningId: "",
         KitId: "",
@@ -123,6 +124,12 @@ const CaseEditorScreen = ({location}) => {
                 sample["ScreeningId"] = null;
             }
             if (
+                sample["Comment"] !== null &&
+                sample["Comment"].toString().trim().length === 0
+            ) {
+                sample["Comment"] = null;
+            }
+            if (
                 sample["KitId"] !== null &&
                 sample["KitId"].toString().trim().length === 0
             ) {
@@ -139,8 +146,8 @@ const CaseEditorScreen = ({location}) => {
             return sample;
         });
         let filteredList = filterEmptyList(temp);
-        // console.log(caseObj);
-        console.log(filteredList);
+        console.log("caseObj", caseObj);
+        console.log("filteredList", filteredList);
 
         if (filteredList.length > 0) {
             if (editMode) {
@@ -174,13 +181,24 @@ const CaseEditorScreen = ({location}) => {
                     alert("No changes detected.");
                 }
             } else {
-                //Create api call
-                let result = await createCase(caseObj, filteredList);
-                if (result) {
-                    alert("Successfully added!");
-                    window.location.href = "/status-view";
+                let empty = false;
+                let i;
+                for (i = 0; i < filteredList.length; i++) {
+                    if (filteredList[i].ScreeningId == null || filteredList[i].KorQ == null || filteredList[i].KitId == null) {
+                        empty = true;
+                    }
+                }
+                if (empty) {
+                    alert("Please fill in all of the necessary fields: Screening Method, K or Q, and Kit Name.");
                 } else {
-                    alert("Something went wrong. Please try again later");
+                    //Create api call
+                    let result = await createCase(caseObj, filteredList);
+                    if (result) {
+                        alert("Successfully added!");
+                        window.location.href = "/status-view";
+                    } else {
+                        alert("Something went wrong. Please try again later");
+                    }
                 }
             }
         } else {

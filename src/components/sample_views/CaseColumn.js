@@ -19,6 +19,6 @@ export const COLUMNS = [
         Header: 'Reported On',
         accessor: 'reported',
     }
-]
+];
 
 export default COLUMNS;

@@ -48,9 +48,11 @@ const SampleView = () => {
       accessor: row => {
         if (row.OnHold === 1) {
           return (
+          <span style={{ cursor: 'not-allowed', pointerEvents: "none" }}>
             <Button variant="contained" color="warning">
               On Hold
-            </Button>            
+            </Button>
+          </span>
           )
         }
       },

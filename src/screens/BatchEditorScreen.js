@@ -529,7 +529,9 @@ const columns = [
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
-          <Button loading variant="contained" color="warning">
+          <Button loading variant="contained" color="warning"
+                  style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+          >
             On Hold
           </Button>
         )

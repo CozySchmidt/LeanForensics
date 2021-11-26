@@ -40,8 +40,8 @@ const SampleView = () => {
       width: 110,
     },
     {
-      accessor: "Comment",
-      Header: "Comment",
+      accessor: "CaseFile",
+      Header: "CaseFile",
       width: 150,
     },
     {

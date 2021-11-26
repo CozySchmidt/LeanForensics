@@ -174,18 +174,18 @@ const sampleColumns = [
     },
     {
         field: "ScreeningName",
-        headerName: "Screening Name",
+        headerName: "Screening Method",
         width: 150,
     },
     {
         field: "KitName",
-      headerName: "Kit Name",
+      headerName: "Kit Type",
       width: 150,
     },
     {
         field: "OnHold",
         headerName: "On Hold",
-        width: 150,
+        width: 120,
         renderCell: (cellValues) => {
             return (
                 cellValues.value === 1 && (

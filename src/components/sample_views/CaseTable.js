@@ -156,7 +156,7 @@ const sampleColumns = [
     {
       field: "SampleId",
       headerName: "Sample ID",
-      width: 100,
+      width: 150,
     },
     {
       field: "SampleName",
@@ -166,12 +166,22 @@ const sampleColumns = [
     {
         field: "KorQ",
         headerName: "K or Q",
-        width: 100,
+        width: 110,
+    },
+    {
+        accessor: "ScreeningName",
+        Header: "Screening Method",
+        width: 130,
+    },
+    {
+        accessor: "KitName",
+        Header: "Kit Type",
+        width: 110,
     },
     {
       field: "Comment",
       headerName: "Comment",
-      width: 200,
+      width: 250,
     },
     {
       field: "OnHold",

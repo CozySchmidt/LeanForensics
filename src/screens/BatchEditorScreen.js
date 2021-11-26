@@ -95,7 +95,7 @@ function BatchEditorScreen({ location }) {
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId ?? "");
     setExtractionType(batch.ExtractionId ?? "");
-    setComment(batch.CaseFile);
+    setComment(batch.Comment);
     setBatchName(batch.BatchName);
 
     let selected = await batch.Samples.map((sample) => {
@@ -161,7 +161,7 @@ function BatchEditorScreen({ location }) {
             BatchName: batchName,
             StageId: initialStage,
             ExtractionTypeId: extractionType,
-            CaseFile: comment,
+            Comment: comment,
           },
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
@@ -201,12 +201,12 @@ function BatchEditorScreen({ location }) {
             BatchName: batchName,
             StageId: initialStage,
             ExtractionId: extractionType,
-            CaseFile: comment,
+            Comment: comment,
           },
         };
         let batchResult = await createBatch(batchObj);
         if (batchResult) {
-          alert("Successfully Created.");
+          alert("Successfully created batch.");
           history.push("/");
         } else {
           alert("Failed. Something went wrong.");
@@ -229,7 +229,7 @@ function BatchEditorScreen({ location }) {
           BatchName: retrievedBatch.BatchName + "-copy",
           StageId: initialStage,
           ExtractionTypeId: extractionType,
-          CaseFile: comment,
+          Comment: comment,
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
             return {
@@ -271,7 +271,7 @@ function BatchEditorScreen({ location }) {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {`Delete Batch ${retrievedBatch.BatchId} . ${retrievedBatch.BatchName}`}
+            {`Delete Batch ${retrievedBatch.BatchId}? ${retrievedBatch.BatchName}`}
           </DialogTitle>
           <DialogActions>
             <Button onClick={handleDialogClose}>No</Button>

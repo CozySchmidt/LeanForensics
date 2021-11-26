@@ -34,7 +34,6 @@ function CaseView() {
     },
     {
       accessor: row => {
-<<<<<<< HEAD
         let utc = row.CreatedDate;
         let time = new Date(Date.parse(utc));
         let pst = time.toLocaleString();
@@ -42,11 +41,6 @@ function CaseView() {
 
         return(
           pst
-=======
-        let date = row.CreatedDate.split("T");
-        return(
-          date[0]
->>>>>>> a9ed7e472dbf08d471d0f664f330943d8cd2a5b2
         )
       },
       Header: "Created Date",

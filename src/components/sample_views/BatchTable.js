@@ -126,15 +126,12 @@ export default function BatchTable({ columns, data }) {
             {rows.map(row => {
                 prepareRow(row);
                 return (
-<<<<<<< HEAD
                 <tr {...row.getRowProps({})} onClick={() => handleModalOpen(row)} onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "yellow";
+                    e.currentTarget.style.cursor = "pointer";
                 }} onMouseOut={(e) => {
                     e.currentTarget.style.backgroundColor = "";
                 }}>
-=======
-                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
->>>>>>> a9ed7e472dbf08d471d0f664f330943d8cd2a5b2
                     {row.cells.map(cell => {
                             return (
                                 <td {...cell.getCellProps({

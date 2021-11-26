@@ -68,7 +68,7 @@ export default function CaseTable({ columns, data }) {
 
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -84,7 +84,7 @@ export default function CaseTable({ columns, data }) {
                     (window.location.href = `/case-editor?caseId=${selectedCase.CaseId}`)
                   }
                 >
-                  Edit
+                  Edit Case
                 </Button>
 
             {selectedCase && (

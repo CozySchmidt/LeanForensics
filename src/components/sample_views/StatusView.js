@@ -224,9 +224,9 @@ function StatusView() {
         <Box sx={style}>
           {selectedBatch ? (
               <div style={{height:"100%"}}>
-              <div style={{position: "absolute", marginLeft: 495, marginTop: 90}}>
-                Move to desired stage:
-              </div>
+                <div style={{position: "absolute", marginLeft: 495, marginTop: 90}}>
+                  Move to desired stage:
+                </div>
               <div className="selector">
                 <Select
                   labelId="demo-simple-select-label"

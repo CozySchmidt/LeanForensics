@@ -67,7 +67,7 @@ export default function BatchTable({ columns, data }) {
 
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -83,7 +83,7 @@ export default function BatchTable({ columns, data }) {
                     (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
                   }
                 >
-                  Edit
+                  Edit Batch
                 </Button>
 
                 {selectedBatch && (

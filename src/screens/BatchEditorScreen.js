@@ -299,7 +299,7 @@ function BatchEditorScreen({ location }) {
                 position: "absolute",
                 marginLeft: 110,
                 marginTop: 3,
-                color: "whitesmoke",
+                color: "white",
                 backgroundColor: "#003C71",
                 fontWeight: "bold",
                 textTransform: "capitalize",
@@ -331,7 +331,7 @@ function BatchEditorScreen({ location }) {
             borderRadius="8px"
             padding="20px"
             autoComplete="off"
-            backgroundColor="whitesmoke"
+            backgroundColor="white"
             color="#003C71"
           >
             <Grid item xs="auto">
@@ -343,7 +343,7 @@ function BatchEditorScreen({ location }) {
                   sx={{
                     position: "absolute",
                     marginLeft: "33rem",
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -366,7 +366,7 @@ function BatchEditorScreen({ location }) {
                     position: "absolute",
                     marginLeft: 94,
                     backgroundColor: "#d11a2a",
-                    color: "whitesmoke",
+                    color: "white",
                     fontWeight: "bold",
                     textTransform: "capitalize",
                     "&:hover": {
@@ -386,7 +386,7 @@ function BatchEditorScreen({ location }) {
                 sx={{
                   position: "absolute",
                   marginLeft: 108,
-                  color: "whitesmoke",
+                  color: "white",
                   backgroundColor: "#4682B4",
                   fontWeight: "bold",
                   textTransform: "capitalize",
@@ -485,7 +485,7 @@ function BatchEditorScreen({ location }) {
             height: "85%",
             marginTop: "10px",
             marginBottom: "20px",
-            backgroundColor: "whitesmoke",
+            backgroundColor: "white",
             color: "#003C71",
             border: "1px solid #FFF200",
           }}

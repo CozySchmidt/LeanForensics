@@ -249,7 +249,7 @@ function StatusView() {
               <div className="arrow-button">
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -277,7 +277,7 @@ function StatusView() {
                   <Button
                   sx={{
                     marginRight: 5,
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#8c8c8c",
                     fontWeight: "bold",
                     "&:hover": {
@@ -296,7 +296,7 @@ function StatusView() {
                       <Button
                           sx={{
                               marginRight: 5,
-                              color: "whitesmoke",
+                              color: "white",
                               backgroundColor: "#01b25c",
                               fontWeight: "bold",
                               "&:hover": {
@@ -315,7 +315,7 @@ function StatusView() {
                 <div className="divider" />
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -336,7 +336,7 @@ function StatusView() {
                 <div className="divider" />
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -386,7 +386,7 @@ function StatusView() {
                 sx={{
                   marginLeft: 2,
                   backgroundColor: "#d11a2a",
-                  color: "whitesmoke",
+                  color: "white",
                   fontWeight: "bold",
                   textTransform: "capitalize",
                   "&:hover": {
@@ -452,7 +452,7 @@ function StatusView() {
                                     sx={{
                                       fontSize: 15,
                                       fontWeight: "bold",
-                                      color: "#474952",
+                                      color: "#3c3e44",
                                       textTransform: "capitalize",
                                     }}
                                 >
@@ -469,10 +469,10 @@ function StatusView() {
                                                   mt: 1,
                                                   fontWeight: "bold",
                                                   backgroundColor: "#01b25c",
-                                                  color: "whitesmoke",
+                                                  color: "white",
                                                   "&:hover": {
                                                     backgroundColor: "#01b25c",
-                                                    color: "whitesmoke",
+                                                    color: "white",
                                                     fontWeight: "bold",
                                                   },
                                                 }}

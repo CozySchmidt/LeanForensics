@@ -275,7 +275,7 @@ const CaseEditorScreen = ({location}) => {
                             sx={{
                                 marginLeft: 112,
                                 marginTop: 1,
-                                color: "whitesmoke",
+                                color: "white",
                                 backgroundColor: "#003C71",
                                 fontWeight: "bold",
                                 textTransform: "capitalize",
@@ -298,10 +298,11 @@ const CaseEditorScreen = ({location}) => {
                                 startIcon={<DeleteIcon/>}
                                 sx={{
                                     position: "absolute",
+                                    float: "left",
                                     marginTop: 4.2,
-                                    marginLeft: 40,
+                                    marginLeft: 20,
                                     backgroundColor: "#d11a2a",
-                                    color: "whitesmoke",
+                                    color: "white",
                                     fontWeight: "bold",
                                     textTransform: "capitalize",
                                     "&:hover": {
@@ -332,7 +333,7 @@ const CaseEditorScreen = ({location}) => {
                     border="1px solid #FFF200"
                     borderRadius="8px"
                     autoComplete="off"
-                    backgroundColor="whitesmoke"
+                    backgroundColor="white"
                     padding="25px"
                     color="#003C71"
                 >
@@ -344,7 +345,7 @@ const CaseEditorScreen = ({location}) => {
                             sx={{
                                 position: "absolute",
                                 marginLeft: 96,
-                                color: "whitesmoke",
+                                color: "white",
                                 backgroundColor: "#4682B4",
                                 fontWeight: "bold",
                                 textTransform: "capitalize",
@@ -364,7 +365,7 @@ const CaseEditorScreen = ({location}) => {
                             sx={{
                                 position: "absolute",
                                 marginLeft: 108,
-                                color: "whitesmoke",
+                                color: "white",
                                 backgroundColor: "#4682B4",
                                 fontWeight: "bold",
                                 textTransform: "capitalize",
@@ -396,7 +397,7 @@ const CaseEditorScreen = ({location}) => {
                     style={{paddingBottom: "1em"}}
                     border="1px solid #FFF200"
                     borderRadius="8px"
-                    backgroundColor="whitesmoke"
+                    backgroundColor="white"
                     paddingTop="1em"
                 >
                     {sampleList &&
@@ -469,19 +470,7 @@ const SampleRow = (props) => {
                     }}
                     value={sampleId}
                     label="Sample ID"
-                />
-            </div>
-            <div className="row-item">
-                <TextField
-                    id="outlined"
-                    onChange={(e) => {
-                        sampleObj["Comment"] = e.target.value;
-                        setSampleObj(sampleObj);
-                        setComment(e.target.value);
-                    }}
-                    value={comment}
-                    label="Comment"
-                    sx={{m: 2, width: "40ch"}}
+                    sx={{m: 2, width: "10ch"}}
                 />
             </div>
             <div className="row-item">
@@ -494,7 +483,7 @@ const SampleRow = (props) => {
                     }}
                     value={sampleType}
                     label="K or Q"
-                    sx={{m: 2, width: "10ch"}}
+                    sx={{m: 2, width: "9ch"}}
                 >
                     {sampleTypes.map((sampleType) => (
                         <MenuItem key={sampleType.value} value={sampleType.value}>
@@ -513,7 +502,7 @@ const SampleRow = (props) => {
                     }}
                     value={screening}
                     label="Screening Method"
-                    sx={{m: 2, width: "20ch"}}
+                    sx={{m: 2, width: "17ch"}}
                 >
                     {props.screeningData.map((screening) => (
                         <MenuItem key={screening.ScreeningId} value={screening.ScreeningId}>
@@ -532,7 +521,7 @@ const SampleRow = (props) => {
                     }}
                     value={kitId}
                     label="Kit Type"
-                    sx={{m: 1, width: "20ch"}}
+                    sx={{m: 1, width: "21ch"}}
                 >
                     {props.kitTypeData.map((kitType) => (
                         <MenuItem key={kitType.KitId} value={kitType.KitId}>
@@ -540,6 +529,19 @@ const SampleRow = (props) => {
                         </MenuItem>
                     ))}
                 </TextField>
+            </div>
+            <div className="row-item">
+                <TextField
+                    id="outlined"
+                    onChange={(e) => {
+                        sampleObj["Comment"] = e.target.value;
+                        setSampleObj(sampleObj);
+                        setComment(e.target.value);
+                    }}
+                    value={comment}
+                    label="Comment"
+                    sx={{m: 2, width: "12ch"}}
+                />
             </div>
             <div className="row-item">
                 <FormControlLabel

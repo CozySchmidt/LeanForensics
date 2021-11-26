@@ -41,12 +41,12 @@ const SampleView = () => {
     },
     {
       accessor: "CaseFile",
-      Header: "CaseFile",
+      Header: "Case File",
       width: 150,
     },
     {
       accessor: row => {
-        if (row.OnHold == 1) {
+        if (row.OnHold === 1) {
           return (
             <Button variant="contained" color="warning">
               On Hold

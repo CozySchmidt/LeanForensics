@@ -223,7 +223,7 @@ function StatusView() {
       >
         <Box sx={style}>
           {selectedBatch ? (
-            <div>
+              <div style={{height:"100%"}}>
               <div style={{position: "absolute", marginLeft: 495, marginTop: 90}}>
                 Move to desired stage:
               </div>

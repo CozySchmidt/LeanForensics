@@ -22,7 +22,7 @@ const BatchView = () => {
       {
         accessor: "BatchId",
         Header: "Batch ID",
-        width: 50,
+        width: 70,
       },
       {
         accessor: "BatchName",
@@ -52,13 +52,19 @@ const BatchView = () => {
         accessor: row => {
           if (row.IsCompleted === 1) {
             return (
-              <Button variant="contained">
+              <Button
+                  variant="contained"
+                  style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+              >
                 Yes
               </Button>
             )
           } else if (row.IsCompleted === 0) {
             return (
-              <Button variant="contained" color="warning">
+              <Button
+                  variant="contained" color="warning"
+                  style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+              >
                 No
               </Button>
             )

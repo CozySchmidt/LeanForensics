@@ -25,9 +25,14 @@ const SampleView = () => {
       width: 50,
     },
     {
+      accessor: "KorQ",
+      Header: "K or Q",
+      width: 110,
+    },
+    {
       accessor: "ScreeningName",
       Header: "Screening Name",
-      width: 120,
+      width: 130,
     },
     {
       accessor: "KitName",
@@ -35,14 +40,9 @@ const SampleView = () => {
       width: 110,
     },
     {
-      accessor: "KorQ",
-      Header: "K or Q",
-      width: 110,
-    },
-    {
       accessor: "Comment",
       Header: "Comment",
-      width: 350,
+      width: 300,
     },
     {
       accessor: row => {

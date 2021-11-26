@@ -508,11 +508,6 @@ const columns = [
     width: 100,
   },
   {
-    field: "CaseId",
-    headerName: "Case ID",
-    width: 100,
-  },
-  {
     field: "ScreeningName",
     headerName: "Screening Method",
     width: 150,

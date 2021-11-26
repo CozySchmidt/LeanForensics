@@ -138,7 +138,8 @@ export default function BatchTable({ columns, data }) {
                             return (
                                 <td {...cell.getCellProps({
                                     style: {
-                                      width: cell.column.width
+                                      width: cell.column.width,
+                                      height: 40
                                     }
                                   })}>
                                     {cell.render('Cell')}

@@ -129,7 +129,7 @@ export default function CaseTable({ columns, data }) {
             {rows.map(row => {
                 prepareRow(row);
                 return (
-                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}  onMouseOver={(e) => {
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)} onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "#e4e5e7";
                     e.currentTarget.style.cursor = "pointer";
                 }} onMouseOut={(e) => {
@@ -138,7 +138,7 @@ export default function CaseTable({ columns, data }) {
                     {row.cells.map(cell => {
                     return <td {...cell.getCellProps({
                       style: {
-                        height: 30,
+                        height: 40,
                       }
                     })}>{cell.render('Cell')}</td>
                     })}
@@ -174,8 +174,8 @@ const sampleColumns = [
       width: 90,
     },
     {
-      field: "CaseFile",
-      headerName: "Case File",
+      field: "Comment",
+      headerName: "Comment",
       width: 200,
     },
     {

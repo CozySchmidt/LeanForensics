@@ -423,6 +423,7 @@ const CaseEditorScreen = ({location}) => {
 
 const SampleRow = (props) => {
     const [sampleObj, setSampleObj] = React.useState(props.obj);
+    const [comment, setComment] = React.useState(props.obj.Comment);
     const [sampleId, setSampleId] = React.useState(props.obj.SampleId);
     const [screening, setScreening] = React.useState(props.obj.ScreeningId);
     const [kitId, setKitId] = React.useState(props.obj.KitId);
@@ -468,6 +469,19 @@ const SampleRow = (props) => {
                     }}
                     value={sampleId}
                     label="Sample ID"
+                />
+            </div>
+            <div className="row-item">
+                <TextField
+                    id="outlined"
+                    onChange={(e) => {
+                        sampleObj["Comment"] = e.target.value;
+                        setSampleObj(sampleObj);
+                        setComment(e.target.value);
+                    }}
+                    value={comment}
+                    label="Comment"
+                    sx={{m: 2, width: "40ch"}}
                 />
             </div>
             <div className="row-item">

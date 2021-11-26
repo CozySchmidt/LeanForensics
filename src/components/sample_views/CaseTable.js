@@ -126,9 +126,13 @@ export default function CaseTable({ columns, data }) {
             <tbody className="table--samples--body" {...getTableBodyProps()}>
             {rows.map(row => {
                 prepareRow(row);
-                console.log(row);
                 return (
-                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = "yellow";
+                    e.currentTarget.style.cursor = "pointer";
+                }} onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "";
+                }}>
                     {row.cells.map(cell => {
                     return <td {...cell.getCellProps({
                       style: {

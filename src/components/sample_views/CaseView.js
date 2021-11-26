@@ -28,15 +28,19 @@ function CaseView() {
       width: 50,
     },
     {
-      accessor: "Comment",
-      Header: "Comment",
+      accessor: "CaseFile",
+      Header: "Case File",
       width: 200,
     },
     {
       accessor: row => {
-        let date = row.CreatedDate.split("T");
+        let utc = row.CreatedDate;
+        let time = new Date(Date.parse(utc));
+        let pst = time.toLocaleString();
+        console.log(pst);
+
         return(
-          date[0]
+          pst
         )
       },
       Header: "Created Date",

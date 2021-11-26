@@ -126,7 +126,6 @@ export default function CaseTable({ columns, data }) {
             <tbody className="table--samples--body" {...getTableBodyProps()}>
             {rows.map(row => {
                 prepareRow(row);
-                console.log(row);
                 return (
                 <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
                     {row.cells.map(cell => {

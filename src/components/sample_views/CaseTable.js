@@ -62,7 +62,7 @@ export default function CaseTable({ columns, data }) {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" color="#003C71">
+            <Typography id="modal-modal-title" variant="h6" component="h2" color="#60636c" fontWeight="bold">
                 Case Number: {selectedCase && selectedCase.CaseId}
             </Typography>
 
@@ -84,7 +84,7 @@ export default function CaseTable({ columns, data }) {
                     (window.location.href = `/case-editor?caseId=${selectedCase.CaseId}`)
                   }
                 >
-                  Edit case
+                  Edit
                 </Button>
 
             {selectedCase && (
@@ -106,8 +106,10 @@ export default function CaseTable({ columns, data }) {
     };
 
     return (
-      <>
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+      <div className="table--holder">
+        <div className="table--filter">
+          <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+        </div>
         <table className="table--samples" {...getTableProps()}>
             <thead className="table--samples--header">
             {headerGroups.map(headerGroup => (
@@ -126,9 +128,13 @@ export default function CaseTable({ columns, data }) {
             <tbody className="table--samples--body" {...getTableBodyProps()}>
             {rows.map(row => {
                 prepareRow(row);
-                console.log(row);
                 return (
-                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}>
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = "#e4e5e7";
+                    e.currentTarget.style.cursor = "pointer";
+                }} onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "";
+                }}>
                     {row.cells.map(cell => {
                     return <td {...cell.getCellProps({
                       style: {
@@ -142,7 +148,7 @@ export default function CaseTable({ columns, data }) {
             </tbody>
         </table>
         <ModalView />
-      </>
+      </div>
     );
 }
 
@@ -168,8 +174,8 @@ const sampleColumns = [
       width: 90,
     },
     {
-      field: "Comment",
-      headerName: "Comment",
+      field: "CaseFile",
+      headerName: "Case File",
       width: 200,
     },
     {
@@ -179,9 +185,11 @@ const sampleColumns = [
       renderCell: (cellValues) => {
         return (
           cellValues.value === 1 && (
-            <Button variant="contained" color="warning">
-              On Hold
-            </Button>
+              <Button loading variant="contained" color="warning"
+                      style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+              >
+                  On Hold
+              </Button>
           )
         );
       },

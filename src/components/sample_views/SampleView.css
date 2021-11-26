@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding: 5%;
     align-items: center;
     overflow: auto;
 }
@@ -10,19 +11,24 @@
     margin-top: 2%;
     border-collapse: collapse;
     border: 2px solid;
-    background-color: white;
-    width: 90%;
+    background-color: whitesmoke;
+    width: 100%;
 }
 
 .table--samples--header {
     text-align: center;
     background-color: #003C71;
-    color: white;
+    color: whitesmoke;
 }
 
 .table--samples--header th {
     border: 1px solid;
     padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.table--filter {
+    float: right;
     padding-bottom: 2%;
 }
 

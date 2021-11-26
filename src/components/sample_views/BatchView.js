@@ -30,29 +30,33 @@ const BatchView = () => {
         width: 200,
       },
       {
-        accessor: "Comment",
-        Header: "Comment",
+        accessor: "CaseFile",
+        Header: "Case File",
         width: 200,
       },
       {
         accessor: row => {
-          let date = row.CreatedDate.split("T");
+          let utc = row.CreatedDate;
+          let time = new Date(Date.parse(utc));
+          let pst = time.toLocaleString();
+          console.log(pst);
+  
           return(
-            date[0]
+            pst
           )
         },
         Header: "Created Date",
-        width: 110,
+        width: 140,
       },
       {
         accessor: row => {
-          if (row.IsCompleted == 1) {
+          if (row.IsCompleted === 1) {
             return (
               <Button variant="contained">
                 Yes
               </Button>
             )
-          } else if (row.IsCompleted == 0) {
+          } else if (row.IsCompleted === 0) {
             return (
               <Button variant="contained" color="warning">
                 No

@@ -36,11 +36,6 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: "rgba(69, 245, 66, 0.08)",
       },
     },
-
-    spreadBox: {
-      justifyContent: "flex-end",
-      alignItems: "flex-end",
-    },
   })
 );
 
@@ -61,6 +56,8 @@ function BatchEditorScreen({ location }) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [extractionTypeData, setExtractionTypeData] = React.useState([]);
   const [stageData, setStageData] = React.useState([]);
+  const [initialStageError, setInitialStageError] = React.useState(false);
+  const [extractionTypeError, setExtractionTypeError] = React.useState(false);
 
   const editBatchText = "Edit Batch";
   const createBatchText = "New Batch";
@@ -98,7 +95,7 @@ function BatchEditorScreen({ location }) {
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId ?? "");
     setExtractionType(batch.ExtractionId ?? "");
-    setComment(batch.Comment);
+    setComment(batch.CaseFile);
     setBatchName(batch.BatchName);
 
     let selected = await batch.Samples.map((sample) => {
@@ -126,8 +123,30 @@ function BatchEditorScreen({ location }) {
     }
   };
 
+  /* Input validation */
+  const handleValidate = () => {
+    let isValidated = true;
+
+    setInitialStageError(false);
+    setExtractionTypeError(false);
+
+    if (initialStage < 1 || initialStage.length === 0) {
+      setInitialStageError(true);
+      isValidated = false;
+    }
+    if (extractionType < 1 || extractionType.length === 0) {
+      setExtractionTypeError(true);
+      isValidated = false;
+    }
+    if (selectionModel.length <= 0) {
+      isValidated = false;
+      alert("Please select at least one sample!");
+    }
+    return isValidated;
+  };
+
   const onSubmitBatch = async () => {
-    if (selectionModel.length > 0) {
+    if (handleValidate()) {
       if (editMode) {
         //Edit api call
         let newSampleList = selectionModel.filter((id) => {
@@ -142,7 +161,7 @@ function BatchEditorScreen({ location }) {
             BatchName: batchName,
             StageId: initialStage,
             ExtractionTypeId: extractionType,
-            Comment: comment,
+            CaseFile: comment,
           },
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
@@ -159,6 +178,7 @@ function BatchEditorScreen({ location }) {
             };
           }),
         };
+
         // alert(JSON.stringify(batchObj, null, 4));
         let batchResult = await updateBatchInfo(batchObj);
         if (batchResult) {
@@ -181,7 +201,7 @@ function BatchEditorScreen({ location }) {
             BatchName: batchName,
             StageId: initialStage,
             ExtractionId: extractionType,
-            Comment: comment,
+            CaseFile: comment,
           },
         };
         let batchResult = await createBatch(batchObj);
@@ -192,8 +212,6 @@ function BatchEditorScreen({ location }) {
           alert("Failed. Something went wrong.");
         }
       }
-    } else {
-      alert("Batch cannot be empty.");
     }
   };
 
@@ -211,7 +229,7 @@ function BatchEditorScreen({ location }) {
           BatchName: retrievedBatch.BatchName + "-copy",
           StageId: initialStage,
           ExtractionTypeId: extractionType,
-          Comment: comment,
+          CaseFile: comment,
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
             return {
@@ -272,7 +290,6 @@ function BatchEditorScreen({ location }) {
         sx={{ flexGrow: 1 }}
         style={{ paddingTop: "1em" }}
         m={1}
-        className={`${classes.spreadBox}`}
       >
         <Grid container spacing={2}>
           <Grid item xs="auto">
@@ -309,7 +326,6 @@ function BatchEditorScreen({ location }) {
             sx={{
               "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
             }}
-            className={`${classes.spreadBox}`}
             noValidate
             border="1px solid #FFF200"
             borderRadius="8px"
@@ -326,7 +342,7 @@ function BatchEditorScreen({ location }) {
                   startIcon={<SouthWestIcon />}
                   sx={{
                     position: "absolute",
-                    marginLeft: 33,
+                    marginLeft: "33rem",
                     color: "whitesmoke",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
@@ -394,9 +410,6 @@ function BatchEditorScreen({ location }) {
             )}
             <TextField
               variant="outlined"
-              //  error
-              //  id="outlined-error-helper-text"
-              //  helperText="Required"
               value={batchName}
               label="Batch Name"
               fullWidth
@@ -409,6 +422,7 @@ function BatchEditorScreen({ location }) {
                 select
                 required
                 label="Initial Stage"
+                error={initialStageError}
             >
               {stageData.map((stage) => (
                   <MenuItem key={stage.StageId} value={stage.StageId}>
@@ -423,6 +437,8 @@ function BatchEditorScreen({ location }) {
                 select
                 required
                 label="Extraction Type"
+                error={extractionTypeError}
+                helperText={extractionTypeError && "Please select extraction type."}
             >
               {extractionTypeData.map((extractionType) => (
                   <MenuItem
@@ -475,7 +491,6 @@ function BatchEditorScreen({ location }) {
           }}
         />
       </div>
-
       <DialogView />
     </div>
   );
@@ -514,7 +529,9 @@ const columns = [
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
-          <Button loading variant="contained" color="warning">
+          <Button loading variant="contained" color="warning"
+                  style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+          >
             On Hold
           </Button>
         )

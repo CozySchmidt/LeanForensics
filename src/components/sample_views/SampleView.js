@@ -27,7 +27,7 @@ const SampleView = () => {
     {
       accessor: "ScreeningName",
       Header: "Screening Name",
-      width: 90,
+      width: 120,
     },
     {
       accessor: "KitName",
@@ -42,15 +42,17 @@ const SampleView = () => {
     {
       accessor: "Comment",
       Header: "Comment",
-      width: 150,
+      width: 350,
     },
     {
       accessor: row => {
-        if (row.OnHold == 1) {
+        if (row.OnHold === 1) {
           return (
+          <span style={{ cursor: 'not-allowed', pointerEvents: "none" }}>
             <Button variant="contained" color="warning">
               On Hold
-            </Button>            
+            </Button>
+          </span>
           )
         }
       },
@@ -59,13 +61,17 @@ const SampleView = () => {
     },
     {
       accessor: row => {
-        let date = row.CreatedDate.split("T");
+        let utc = row.CreatedDate;
+        let time = new Date(Date.parse(utc));
+        let pst = time.toLocaleString();
+        console.log(pst);
+  
         return(
-          date[0]
+          pst
         )
       },
       Header: "Created Date",
-      width: 110,
+      width: 250,
     },
   ], []);
 

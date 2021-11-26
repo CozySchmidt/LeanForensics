@@ -66,7 +66,7 @@ router.put("/:caseId/samples", (req, res) => {
                   OnHold: sample.OnHold,
                   KitId: sample.KitId,
                   KorQ : sample.KorQ,
-                  Comment : sample.Comment,
+                  CaseFile : sample.CaseFile,
                   ScreeningId: sample.ScreeningId
                 };
                 let promise = new Promise(function (resolve, reject) {

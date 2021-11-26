@@ -51,7 +51,7 @@ const CaseEditorScreen = ({ location }) => {
       editMode ? [] : [...placeHolderData]
   );
   const [initialSampleList, setInitialSampleList] = React.useState([]);
-  const [comment, setComment] = React.useState("");
+  const [caseFile, setCaseFile] = React.useState("");
   const [openDialog, setOpenDialog] = React.useState(false);
   const [kitTypeData, setKitTypeData] = React.useState([]);
   const [screeningData, setScreeningData] = React.useState([]);
@@ -86,7 +86,7 @@ const CaseEditorScreen = ({ location }) => {
     let caseResult = await getSamplesByCaseId(query.caseId);
     console.log(caseResult);
     setRetrievedCase(caseResult);
-    setComment(caseResult.Comment);
+    setCaseFile(caseResult.CaseFile);
     let keyList = caseResult.Samples.map((sample, i) => {
       sample["key"] = new Date().getTime() + i + 1;
       return sample;
@@ -110,7 +110,7 @@ const CaseEditorScreen = ({ location }) => {
   const onSubmitCase = async () => {
     //TODO: validation required
     let caseObj = {
-      comment: comment,
+      caseFile: caseFile,
     };
 
     let temp = sampleList.map(function (sample, i) {
@@ -153,7 +153,7 @@ const CaseEditorScreen = ({ location }) => {
         console.log("new ", newSampleList);
         let caseObj = {
           CaseId: retrievedCase.CaseId,
-          Comment: comment,
+          CaseFile: caseFile,
           deleteSampleList: deleteSampleList,
           newSampleList: newSampleList,
         };
@@ -379,9 +379,9 @@ const CaseEditorScreen = ({ location }) => {
             )}
             <TextField
                 id="outlined"
-                onChange={(e) => setComment(e.target.value)}
-                value={comment}
-                label="Comment"
+                onChange={(e) => setCaseFile(e.target.value)}
+                value={caseFile}
+                label="Case File"
             />
           </Box>
           <div className="box-divider" />

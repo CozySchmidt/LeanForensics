@@ -36,6 +36,7 @@ const BatchView = () => {
       },
       {
         accessor: row => {
+<<<<<<< HEAD
           let utc = row.CreatedDate;
           let time = new Date(Date.parse(utc));
           let pst = time.toLocaleString();
@@ -47,6 +48,15 @@ const BatchView = () => {
         },
         Header: "Created Date",
         width: 140,
+=======
+          let date = row.CreatedDate.split("T");
+          return(
+            date[0]
+          )
+        },
+        Header: "Created Date",
+        width: 110,
+>>>>>>> a9ed7e472dbf08d471d0f664f330943d8cd2a5b2
       },
       {
         accessor: row => {

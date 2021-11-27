@@ -503,7 +503,7 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
-    width: 150,
+    width: 120,
   },
   {
     field: "SampleName",
@@ -528,7 +528,7 @@ const columns = [
   {
     field: "OnHold",
     headerName: "On Hold",
-    width: 150,
+    width: 120,
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
@@ -540,6 +540,11 @@ const columns = [
         )
       );
     },
+  },
+  {
+    field: "Comment",
+    headerName: "Comment",
+    width: 250,
   },
 ];
 

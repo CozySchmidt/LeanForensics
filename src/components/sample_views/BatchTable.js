@@ -47,8 +47,8 @@ export default function BatchTable({ columns, data }) {
             transform: "translate(-50%, -50%)",
             width: "70%",
             height: "70%",
-            bgcolor: "background.paper",
-            border: "2px solid #000",
+            backgroundColor: "white",
+            border: "2px solid darkgrey",
             boxShadow: 24,
             p: 4,
         };
@@ -202,5 +202,10 @@ const sampleColumns = [
         field: "CaseFile",
         headerName: "Case File",
         width: 150,
+    },
+    {
+        field: "Comment",
+        headerName: "Comment",
+        width: 250,
     },
 ];

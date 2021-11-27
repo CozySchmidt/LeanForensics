@@ -48,8 +48,8 @@ export default function CaseTable({ columns, data }) {
             transform: "translate(-50%, -50%)",
             width: "70%",
             height: "70%",
-            bgcolor: "background.paper",
-            border: "2px solid #000",
+            backgroundColor: "white",
+            border: "2px solid darkgrey",
             boxShadow: 24,
             p: 4,
         };
@@ -156,7 +156,7 @@ const sampleColumns = [
     {
       field: "SampleId",
       headerName: "Sample ID",
-      width: 150,
+      width: 110,
     },
     {
       field: "SampleName",
@@ -164,39 +164,39 @@ const sampleColumns = [
       width: 200,
     },
     {
-        field: "KorQ",
-        headerName: "K or Q",
-        width: 110,
+      field: "KorQ",
+      headerName: "K or Q",
+      width: 100,
     },
     {
-        accessor: "ScreeningName",
-        Header: "Screening Method",
-        width: 130,
+      field: "ScreeningName",
+      headerName: "Screening Method",
+      width: 150,
     },
     {
-        accessor: "KitName",
-        Header: "Kit Type",
-        width: 110,
+      field: "KitName",
+      headerName: "Kit Type",
+      width: 150,
+    },
+    {
+        field: "OnHold",
+        headerName: "On Hold",
+        width: 120,
+        renderCell: (cellValues) => {
+            return (
+                cellValues.value === 1 && (
+                    <Button loading variant="contained" color="warning"
+                            style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+                    >
+                        On Hold
+                    </Button>
+                )
+            );
+        },
     },
     {
       field: "Comment",
       headerName: "Comment",
       width: 250,
-    },
-    {
-      field: "OnHold",
-      headerName: "On Hold",
-      width: 150,
-      renderCell: (cellValues) => {
-        return (
-          cellValues.value === 1 && (
-              <Button loading variant="contained" color="warning"
-                      style={{ cursor: 'not-allowed', pointerEvents: "none" }}
-              >
-                  On Hold
-              </Button>
-          )
-        );
-      },
     },
 ];

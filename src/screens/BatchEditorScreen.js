@@ -184,8 +184,8 @@ function BatchEditorScreen({ location }) {
           alert("Failed. Something went wrong.");
         }
       } else if (!handleValidate()) {
-          alert("Please fill in all the required fields!");
-        } else {
+          alert("Please fill in all the required fields.");
+      } else {
         //Create api call
         let batchObj = {
           samples: selectionModel.map((id) => {

@@ -138,15 +138,11 @@ function BatchEditorScreen({ location }) {
       setExtractionTypeError(true);
       isValidated = false;
     }
-    if (selectionModel.length <= 0) {
-      isValidated = false;
-      alert("Please select at least one sample!");
-    }
     return isValidated;
   };
 
   const onSubmitBatch = async () => {
-    if (handleValidate()) {
+    if (selectionModel.length > 0) {
       if (editMode) {
         //Edit api call
         let newSampleList = selectionModel.filter((id) => {
@@ -187,7 +183,9 @@ function BatchEditorScreen({ location }) {
         } else {
           alert("Failed. Something went wrong.");
         }
-      } else {
+      } else if (!handleValidate()) {
+          alert("Please fill in all the required fields!");
+        } else {
         //Create api call
         let batchObj = {
           samples: selectionModel.map((id) => {
@@ -212,6 +210,8 @@ function BatchEditorScreen({ location }) {
           alert("Failed. Something went wrong.");
         }
       }
+    } else {
+      alert("Batch must contain at least one sample.")
     }
   };
 

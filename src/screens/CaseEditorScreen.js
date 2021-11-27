@@ -189,12 +189,12 @@ const CaseEditorScreen = ({location}) => {
                     }
                 }
                 if (empty) {
-                    alert("Please fill in all of the necessary fields: Screening Method, K or Q, and Kit Name.");
+                    alert("Please fill in all the required fields: Screening Method, K or Q, and Kit Type!");
                 } else {
                     //Create api call
                     let result = await createCase(caseObj, filteredList);
                     if (result) {
-                        alert("Successfully added!");
+                        alert("Successfully created case.");
                         window.location.href = "/status-view";
                     } else {
                         alert("Something went wrong. Please try again later");
@@ -481,6 +481,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     id="outlined"
+                    required
                     onChange={(e) => {
                         sampleObj["SampleId"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -494,6 +495,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     select
+                    required
                     onChange={(e) => {
                         sampleObj["KorQ"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -513,6 +515,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     select
+                    required
                     onChange={(e) => {
                         sampleObj["ScreeningId"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -532,6 +535,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     select
+                    required
                     onChange={(e) => {
                         sampleObj["KitId"] = e.target.value;
                         setSampleObj(sampleObj);

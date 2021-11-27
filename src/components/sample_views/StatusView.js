@@ -359,7 +359,7 @@ function StatusView() {
                 <div>Batch Name: {selectedBatch.BatchName}</div>
                 <div>Extraction Type: {selectedBatch.ExtractionName ?? "N/A"}</div>
                 <div>Created Date: {selectedBatch.CreatedDate}</div>
-                <div>Comments: {selectedBatch.CaseFile}</div>
+                <div>Comments: {selectedBatch.Comment}</div>
                 <div>
                   Is {selectedBatch.StageName} Completed:{" "}
                   {selectedBatch.IsReady ? "Yes" : "No"}
@@ -503,37 +503,32 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
-    width: 100,
+    width: 120,
   },
   {
     field: "SampleName",
     headerName: "Sample Name",
-    width: 200,
+    width: 170,
   },
   {
     field: "KorQ",
     headerName: "K or Q",
-    width: 90,
-  },
-  {
-    field: "CaseId",
-    headerName: "Case ID",
-    width: 90,
+    width: 100,
   },
   {
     field: "KitName",
     headerName: "Kit Type",
-    width: 150,
+    width: 170,
   },
   {
     field: "ScreeningName",
-    headerName: "Screening",
-    width: 110,
+    headerName: "Screening Method",
+    width: 160,
   },
   {
     field: "OnHold",
     headerName: "On Hold",
-    width: 150,
+    width: 120,
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
@@ -545,6 +540,11 @@ const columns = [
         )
       );
     },
+  },
+  {
+    field: "Comment",
+    headerName: "Comment",
+    width: 250,
   },
 ];
 

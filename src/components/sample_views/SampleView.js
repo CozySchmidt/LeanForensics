@@ -31,12 +31,12 @@ const SampleView = () => {
     },
     {
       accessor: "ScreeningName",
-      Header: "Screening Name",
+      Header: "Screening Method",
       width: 130,
     },
     {
       accessor: "KitName",
-      Header: "Kit Name",
+      Header: "Kit Type",
       width: 110,
     },
     {

@@ -47,8 +47,8 @@ export default function BatchTable({ columns, data }) {
             transform: "translate(-50%, -50%)",
             width: "70%",
             height: "70%",
-            bgcolor: "background.paper",
-            border: "2px solid #000",
+            backgroundColor: "white",
+            border: "2px solid darkgrey",
             boxShadow: 24,
             p: 4,
         };
@@ -174,18 +174,18 @@ const sampleColumns = [
     },
     {
         field: "ScreeningName",
-        headerName: "Screening Name",
+        headerName: "Screening Method",
         width: 150,
     },
     {
         field: "KitName",
-      headerName: "Kit Name",
+      headerName: "Kit Type",
       width: 150,
     },
     {
         field: "OnHold",
         headerName: "On Hold",
-        width: 150,
+        width: 120,
         renderCell: (cellValues) => {
             return (
                 cellValues.value === 1 && (
@@ -202,5 +202,10 @@ const sampleColumns = [
         field: "CaseFile",
         headerName: "Case File",
         width: 150,
+    },
+    {
+        field: "Comment",
+        headerName: "Comment",
+        width: 250,
     },
 ];

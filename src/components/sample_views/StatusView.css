@@ -16,7 +16,7 @@
 
 .status-column {
     text-transform: uppercase;
-    border: 2px solid  #7c8e9c;
+    border: 1px solid #7c8e9c;
     margin: 1em;
     padding: 2em;
     width: 170px;
@@ -24,16 +24,46 @@
     background-color: white;
 }
 
-.modal-buttons {
-    position: absolute;
-    right: 20px;
-    top: 25px;
+#card {
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+    text-transform: capitalize;
+
+}
+
+#ready-btn {
+    color: white;
+    background-color:#01b25c;
+    font-weight: bold;
+}
+
+#ready-btn:hover {
+    background-color: #03de69;
+    color:white;
+}
+
+#unready-btn {
+    color: white;
+    background-color:#8c8c8c;
+    font-weight: bold;
+}
+
+#unready-btn:hover {
+    background-color: #4d4d4d;
+    color:lightgrey;
 }
 
 .selector {
     position: absolute;
     right: 130px;
     top: 117px;
+}
+
+.modal-buttons {
+    position: absolute;
+    right: 20px;
+    top: 25px;
 }
 
 .arrow-button {

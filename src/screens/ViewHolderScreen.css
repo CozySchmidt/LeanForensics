@@ -3,6 +3,7 @@
     height: 90%;
     padding-left: 30px;
     padding-right: 30px;
+    padding-top:30px;
     margin: 0 auto;
 }
 
@@ -11,17 +12,11 @@
 }
 
 .view-wrapper {
-    border: 1px solid #FFF200;
+    border: 1px solid #003C71;
     height: 90%;
     display: flex;
     margin-top: 10px;
-}
-
-.add-buttons {
-    margin-left: 720px;
-    padding: 7px;
-    position: relative;
-
+    box-shadow: black 0 2px 4px;
 }
 
 .divider {

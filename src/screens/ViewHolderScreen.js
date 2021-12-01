@@ -16,40 +16,18 @@ function ViewHolderScreen() {
   return (
     <div className="screen-holder">
       <Grid item xs="auto">
-        <div className="add-buttons">
-          <Button
-            loading variant="outlined"
+        <div className="button-container">
+          <Button id="button"
+            variant="contained"
             startIcon={<AddIcon />}
-            sx={{
-              color: "white",
-              backgroundColor: "#4682B4",
-              fontWeight: "bold",
-              textTransform: "capitalize",
-              '&:hover': {
-                backgroundColor: "#90CAF9",
-                color: "#003C71",
-                fontWeight: "bold"
-              }
-            }}
             onClick={() => history.push("/batch-editor")}
           >
             Add batch
           </Button>
           <div className="divider"/>
-          <Button
-            loading variant="outlined"
+          <Button id="button"
+            variant="contained"
             startIcon={<AddIcon />}
-            sx={{
-              color: "white",
-              backgroundColor: "#4682B4",
-              fontWeight: "bold",
-              textTransform: "capitalize",
-              '&:hover': {
-                backgroundColor: "#90CAF9",
-                color: "#003C71",
-                fontWeight: "bold"
-              }
-            }}
             onClick={() => history.push("/case-editor")}
           >
             Add case
@@ -98,9 +76,8 @@ const ViewTabs = () => {
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
-                 backgroundColor: "#D3D9DE",
-                 color: "#003C71",
-                 fontWeight: "bold"
+                 backgroundColor: "#003C71",
+                 color: "#1976D2",
                }
              }}
         />
@@ -110,9 +87,8 @@ const ViewTabs = () => {
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
-                 backgroundColor: "#D3D9DE",
-                 color: "#003C71",
-                 fontWeight: "bold"
+                   backgroundColor: "#003C71",
+                   color: "#1976D2",
                }
              }}
         />
@@ -122,9 +98,8 @@ const ViewTabs = () => {
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
-                 backgroundColor: "#D3D9DE",
-                 color: "#003C71",
-                 fontWeight: "bold"
+                   backgroundColor: "#003C71",
+                   color: "#1976D2",
                }
              }}
         />
@@ -134,9 +109,8 @@ const ViewTabs = () => {
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
-                 backgroundColor: "#D3D9DE",
-                 color: "#003C71",
-                 fontWeight: "bold"
+                   backgroundColor: "#003C71",
+                   color: "#1976D2",
                }
              }}
         />

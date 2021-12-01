@@ -18,6 +18,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from '@mui/material/Divider';
 
 import "./CaseEditorScreen.css";
 import {
@@ -102,7 +103,7 @@ const CaseEditorScreen = ({location}) => {
         setOpenDialog(false);
         let result = await deleteCase(retrievedCase.CaseId);
         if (result) {
-            alert("Successfully Deleted.");
+            alert("Successfully deleted.");
             history.push("/");
         } else {
             alert("Failed. Something went wrong.");
@@ -284,56 +285,30 @@ const CaseEditorScreen = ({location}) => {
         <div className="screen-holder">
             <Box sx={{flexGrow: 1}} style={{paddingTop: "1em"}}>
                 <Grid container spacing={2}>
-                    <Grid item xs="auto">
-                        <Button
-                            loading
+                    <Grid item xs={12}>
+                        <div className="button-container">
+                        <Button id="cancel-btn"
                             variant="outlined"
                             onClick={() => history.push("/")}
                             startIcon={<ClearIcon/>}
-                            sx={{
-                                marginLeft: 112,
-                                marginTop: 1,
-                                color: "white",
-                                backgroundColor: "#003C71",
-                                fontWeight: "bold",
-                                textTransform: "capitalize",
-                                "&:hover": {
-                                    backgroundColor: "#D3D9DE",
-                                    color: "#003C71",
-                                    fontWeight: "bold",
-                                },
-                            }}
                         >
                             Cancel
                         </Button>
+                        </div>
                     </Grid>
-
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs="auto">
+                    <Grid item xs={20}>
+                        <div className="button-container">
                         {editMode && (
-                            <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon/>}
-                                sx={{
-                                    position: "absolute",
-                                    float: "left",
-                                    marginTop: 4.2,
-                                    marginLeft: 20,
-                                    backgroundColor: "#d11a2a",
-                                    color: "white",
-                                    fontWeight: "bold",
-                                    textTransform: "capitalize",
-                                    "&:hover": {
-                                        backgroundColor: "#b30000",
-                                        color: "darkgrey",
-                                        fontWeight: "bold",
-                                    },
-                                }}
-                                onClick={() => history.goBack()}
+                            <Button id="delete-btn"
+                                    variant="contained"
+                                    startIcon={<DeleteIcon/>}
+                                    onClick={handleClickDialogOpen}
+                                    sx={{m:1}}
                             >
                                 Delete
                             </Button>
-                        )}
+                            )}
+                        </div>
                     </Grid>
                 </Grid>
             </Box>
@@ -348,55 +323,35 @@ const CaseEditorScreen = ({location}) => {
                         },
                     }}
                     noValidate
-                    border="1px solid #FFF200"
+                    border="1px solid #003C71"
                     borderRadius="8px"
                     autoComplete="off"
                     backgroundColor="white"
                     padding="25px"
                     color="#003C71"
                 >
-                    <Grid item xs="auto">
-                        <Button
-                            variant="outlined"
-                            onClick={addNewRow}
-                            startIcon={<AddIcon/>}
-                            sx={{
-                                position: "absolute",
-                                marginLeft: 96,
-                                color: "white",
-                                backgroundColor: "#4682B4",
-                                fontWeight: "bold",
-                                textTransform: "capitalize",
-                                "&:hover": {
-                                    backgroundColor: "#90CAF9",
-                                    color: "#003C71",
-                                    fontWeight: "bold",
-                                },
-                            }}
-                        >
-                            Add
-                        </Button>
-                        <Button
-                            loading
-                            variant="outlined"
-                            onClick={onSubmitCase}
-                            sx={{
-                                position: "absolute",
-                                marginLeft: 108,
-                                color: "white",
-                                backgroundColor: "#4682B4",
-                                fontWeight: "bold",
-                                textTransform: "capitalize",
-                                "&:hover": {
-                                    backgroundColor: "#90CAF9",
-                                    color: "#003C71",
-                                    fontWeight: "bold",
-                                },
-                            }}
-                        >
-                            Submit
-                        </Button>
-                    </Grid>
+                    <div className="buttons-case-editor">
+                        <Grid item xs="auto">
+                            <Button id="button"
+                                variant="contained"
+                                onClick={addNewRow}
+                                startIcon={<AddIcon/>}
+                            >
+                                Add
+                            </Button>
+                        </Grid>
+                        <Grid item xs="auto">
+                            <div className="btn-divider">
+                            <Button id="button"
+                                loading
+                                variant="contained"
+                                onClick={onSubmitCase}
+                            >
+                                Submit
+                            </Button>
+                            </div>
+                        </Grid>
+                    </div>
                     <h2>Case Information</h2>
                     {retrievedCase && (
                         <div>
@@ -410,10 +365,10 @@ const CaseEditorScreen = ({location}) => {
                         label="Case File"
                     />
                 </Box>
-                <div className="box-divider"/>
+                <br/>
                 <Box
                     style={{paddingBottom: "1em"}}
-                    border="1px solid #FFF200"
+                    border="1px solid #003C71"
                     borderRadius="8px"
                     backgroundColor="white"
                     paddingTop="1em"
@@ -421,19 +376,22 @@ const CaseEditorScreen = ({location}) => {
                     {sampleList &&
                     sampleList.map((sample, i) => {
                         return (
-                            <SampleRow
-                                key={sample.key}
-                                index={i}
-                                obj={sample}
-                                onDelete={deleteRow}
-                                onAdd={addSubRow}
-                                screeningData={screeningData}
-                                kitTypeData={kitTypeData}
-                                sampleType={sampleType}
-                            />
+                            <div className="sample-row">
+                                <SampleRow
+                                    key={sample.key}
+                                    index={i}
+                                    obj={sample}
+                                    onDelete={deleteRow}
+                                    onAdd={addSubRow}
+                                    screeningData={screeningData}
+                                    kitTypeData={kitTypeData}
+                                    sampleType={sampleType}
+                                />
+                            </div>
                         );
                     })}
                 </Box>
+                <div className="box-divider"/>
             </div>
             <DialogView/>
         </div>
@@ -474,8 +432,8 @@ const SampleRow = (props) => {
     };
 
     return (
-        <div className="sample-row">
-            <div className="row-item" style={{margin: "10px"}}>
+        <div className="sample-row" style={{marginTop: "50px"}}>
+            <div className="row-item">
                 {props.index + 1}
             </div>
             <div className="row-item">
@@ -489,7 +447,7 @@ const SampleRow = (props) => {
                     }}
                     value={sampleId}
                     label="Sample ID"
-                    sx={{m: 2, width: "10ch"}}
+                    sx={{m:2, width: "30ch"}}
                 />
             </div>
             <div className="row-item">
@@ -503,7 +461,7 @@ const SampleRow = (props) => {
                     }}
                     value={sampleType}
                     label="K or Q"
-                    sx={{m: 2, width: "9ch"}}
+                    sx={{m:2, width: "30ch"}}
                 >
                     {sampleTypes.map((sampleType) => (
                         <MenuItem key={sampleType.value} value={sampleType.value}>
@@ -523,7 +481,7 @@ const SampleRow = (props) => {
                     }}
                     value={screening}
                     label="Screening Method"
-                    sx={{m: 2, width: "17ch"}}
+                    sx={{m:2, width: "30ch"}}
                 >
                     {props.screeningData.map((screening) => (
                         <MenuItem key={screening.ScreeningId} value={screening.ScreeningId}>
@@ -543,7 +501,7 @@ const SampleRow = (props) => {
                     }}
                     value={kitId}
                     label="Kit Type"
-                    sx={{m: 1, width: "21ch"}}
+                    sx={{m:1,ml:2, width: "30ch"}}
                 >
                     {props.kitTypeData.map((kitType) => (
                         <MenuItem key={kitType.KitId} value={kitType.KitId}>
@@ -562,7 +520,7 @@ const SampleRow = (props) => {
                     }}
                     value={comment}
                     label="Comment"
-                    sx={{m: 2, width: "12ch"}}
+                    sx={{m:1, width: "30ch"}}
                 />
             </div>
             <div className="row-item">

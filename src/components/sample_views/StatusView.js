@@ -249,7 +249,7 @@ function StatusView() {
               <div className="arrow-button">
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -277,7 +277,7 @@ function StatusView() {
                   <Button
                   sx={{
                     marginRight: 5,
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#8c8c8c",
                     fontWeight: "bold",
                     "&:hover": {
@@ -296,7 +296,7 @@ function StatusView() {
                       <Button
                           sx={{
                               marginRight: 5,
-                              color: "whitesmoke",
+                              color: "white",
                               backgroundColor: "#01b25c",
                               fontWeight: "bold",
                               "&:hover": {
@@ -315,7 +315,7 @@ function StatusView() {
                 <div className="divider" />
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -336,7 +336,7 @@ function StatusView() {
                 <div className="divider" />
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -359,7 +359,7 @@ function StatusView() {
                 <div>Batch Name: {selectedBatch.BatchName}</div>
                 <div>Extraction Type: {selectedBatch.ExtractionName ?? "N/A"}</div>
                 <div>Created Date: {selectedBatch.CreatedDate}</div>
-                <div>Comments: {selectedBatch.CaseFile}</div>
+                <div>Comments: {selectedBatch.Comment}</div>
                 <div>
                   Is {selectedBatch.StageName} Completed:{" "}
                   {selectedBatch.IsReady ? "Yes" : "No"}
@@ -386,7 +386,7 @@ function StatusView() {
                 sx={{
                   marginLeft: 2,
                   backgroundColor: "#d11a2a",
-                  color: "whitesmoke",
+                  color: "white",
                   fontWeight: "bold",
                   textTransform: "capitalize",
                   "&:hover": {
@@ -452,7 +452,7 @@ function StatusView() {
                                     sx={{
                                       fontSize: 15,
                                       fontWeight: "bold",
-                                      color: "#474952",
+                                      color: "#3c3e44",
                                       textTransform: "capitalize",
                                     }}
                                 >
@@ -469,10 +469,10 @@ function StatusView() {
                                                   mt: 1,
                                                   fontWeight: "bold",
                                                   backgroundColor: "#01b25c",
-                                                  color: "whitesmoke",
+                                                  color: "white",
                                                   "&:hover": {
                                                     backgroundColor: "#01b25c",
-                                                    color: "whitesmoke",
+                                                    color: "white",
                                                     fontWeight: "bold",
                                                   },
                                                 }}
@@ -503,37 +503,32 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
-    width: 100,
+    width: 120,
   },
   {
     field: "SampleName",
     headerName: "Sample Name",
-    width: 200,
+    width: 170,
   },
   {
     field: "KorQ",
     headerName: "K or Q",
-    width: 90,
-  },
-  {
-    field: "CaseId",
-    headerName: "Case ID",
-    width: 90,
+    width: 100,
   },
   {
     field: "KitName",
     headerName: "Kit Type",
-    width: 150,
+    width: 170,
   },
   {
     field: "ScreeningName",
-    headerName: "Screening",
-    width: 110,
+    headerName: "Screening Method",
+    width: 160,
   },
   {
     field: "OnHold",
     headerName: "On Hold",
-    width: 150,
+    width: 120,
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
@@ -545,6 +540,11 @@ const columns = [
         )
       );
     },
+  },
+  {
+    field: "Comment",
+    headerName: "Comment",
+    width: 250,
   },
 ];
 

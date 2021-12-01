@@ -35,6 +35,7 @@ for (let i = 0; i < 3; i++) {
     placeHolderData.push({
         key: new Date().getTime() + i + 1,
         SampleId: `${i + 1}`,
+        Comment: "",
         KorQ: "",
         ScreeningId: "",
         KitId: "",
@@ -123,6 +124,12 @@ const CaseEditorScreen = ({location}) => {
                 sample["ScreeningId"] = null;
             }
             if (
+                sample["Comment"] !== null &&
+                sample["Comment"].toString().trim().length === 0
+            ) {
+                sample["Comment"] = null;
+            }
+            if (
                 sample["KitId"] !== null &&
                 sample["KitId"].toString().trim().length === 0
             ) {
@@ -139,8 +146,8 @@ const CaseEditorScreen = ({location}) => {
             return sample;
         });
         let filteredList = filterEmptyList(temp);
-        // console.log(caseObj);
-        console.log(filteredList);
+        console.log("caseObj", caseObj);
+        console.log("filteredList", filteredList);
 
         if (filteredList.length > 0) {
             if (editMode) {
@@ -174,13 +181,24 @@ const CaseEditorScreen = ({location}) => {
                     alert("No changes detected.");
                 }
             } else {
-                //Create api call
-                let result = await createCase(caseObj, filteredList);
-                if (result) {
-                    alert("Successfully added!");
-                    window.location.href = "/status-view";
+                let empty = false;
+                let i;
+                for (i = 0; i < filteredList.length; i++) {
+                    if (filteredList[i].ScreeningId == null || filteredList[i].KorQ == null || filteredList[i].KitId == null) {
+                        empty = true;
+                    }
+                }
+                if (empty) {
+                    alert("Please fill in all the required fields: Screening Method, K or Q, and Kit Type!");
                 } else {
-                    alert("Something went wrong. Please try again later");
+                    //Create api call
+                    let result = await createCase(caseObj, filteredList);
+                    if (result) {
+                        alert("Successfully created case.");
+                        window.location.href = "/status-view";
+                    } else {
+                        alert("Something went wrong. Please try again later");
+                    }
                 }
             }
         } else {
@@ -275,7 +293,7 @@ const CaseEditorScreen = ({location}) => {
                             sx={{
                                 marginLeft: 112,
                                 marginTop: 1,
-                                color: "whitesmoke",
+                                color: "white",
                                 backgroundColor: "#003C71",
                                 fontWeight: "bold",
                                 textTransform: "capitalize",
@@ -298,10 +316,11 @@ const CaseEditorScreen = ({location}) => {
                                 startIcon={<DeleteIcon/>}
                                 sx={{
                                     position: "absolute",
+                                    float: "left",
                                     marginTop: 4.2,
-                                    marginLeft: 40,
+                                    marginLeft: 20,
                                     backgroundColor: "#d11a2a",
-                                    color: "whitesmoke",
+                                    color: "white",
                                     fontWeight: "bold",
                                     textTransform: "capitalize",
                                     "&:hover": {
@@ -332,7 +351,7 @@ const CaseEditorScreen = ({location}) => {
                     border="1px solid #FFF200"
                     borderRadius="8px"
                     autoComplete="off"
-                    backgroundColor="whitesmoke"
+                    backgroundColor="white"
                     padding="25px"
                     color="#003C71"
                 >
@@ -344,7 +363,7 @@ const CaseEditorScreen = ({location}) => {
                             sx={{
                                 position: "absolute",
                                 marginLeft: 96,
-                                color: "whitesmoke",
+                                color: "white",
                                 backgroundColor: "#4682B4",
                                 fontWeight: "bold",
                                 textTransform: "capitalize",
@@ -364,7 +383,7 @@ const CaseEditorScreen = ({location}) => {
                             sx={{
                                 position: "absolute",
                                 marginLeft: 108,
-                                color: "whitesmoke",
+                                color: "white",
                                 backgroundColor: "#4682B4",
                                 fontWeight: "bold",
                                 textTransform: "capitalize",
@@ -396,7 +415,7 @@ const CaseEditorScreen = ({location}) => {
                     style={{paddingBottom: "1em"}}
                     border="1px solid #FFF200"
                     borderRadius="8px"
-                    backgroundColor="whitesmoke"
+                    backgroundColor="white"
                     paddingTop="1em"
                 >
                     {sampleList &&
@@ -462,6 +481,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     id="outlined"
+                    required
                     onChange={(e) => {
                         sampleObj["SampleId"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -469,24 +489,13 @@ const SampleRow = (props) => {
                     }}
                     value={sampleId}
                     label="Sample ID"
-                />
-            </div>
-            <div className="row-item">
-                <TextField
-                    id="outlined"
-                    onChange={(e) => {
-                        sampleObj["Comment"] = e.target.value;
-                        setSampleObj(sampleObj);
-                        setComment(e.target.value);
-                    }}
-                    value={comment}
-                    label="Comment"
-                    sx={{m: 2, width: "40ch"}}
+                    sx={{m: 2, width: "10ch"}}
                 />
             </div>
             <div className="row-item">
                 <TextField
                     select
+                    required
                     onChange={(e) => {
                         sampleObj["KorQ"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -494,7 +503,7 @@ const SampleRow = (props) => {
                     }}
                     value={sampleType}
                     label="K or Q"
-                    sx={{m: 2, width: "10ch"}}
+                    sx={{m: 2, width: "9ch"}}
                 >
                     {sampleTypes.map((sampleType) => (
                         <MenuItem key={sampleType.value} value={sampleType.value}>
@@ -506,6 +515,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     select
+                    required
                     onChange={(e) => {
                         sampleObj["ScreeningId"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -513,7 +523,7 @@ const SampleRow = (props) => {
                     }}
                     value={screening}
                     label="Screening Method"
-                    sx={{m: 2, width: "20ch"}}
+                    sx={{m: 2, width: "17ch"}}
                 >
                     {props.screeningData.map((screening) => (
                         <MenuItem key={screening.ScreeningId} value={screening.ScreeningId}>
@@ -525,6 +535,7 @@ const SampleRow = (props) => {
             <div className="row-item">
                 <TextField
                     select
+                    required
                     onChange={(e) => {
                         sampleObj["KitId"] = e.target.value;
                         setSampleObj(sampleObj);
@@ -532,7 +543,7 @@ const SampleRow = (props) => {
                     }}
                     value={kitId}
                     label="Kit Type"
-                    sx={{m: 1, width: "20ch"}}
+                    sx={{m: 1, width: "21ch"}}
                 >
                     {props.kitTypeData.map((kitType) => (
                         <MenuItem key={kitType.KitId} value={kitType.KitId}>
@@ -540,6 +551,19 @@ const SampleRow = (props) => {
                         </MenuItem>
                     ))}
                 </TextField>
+            </div>
+            <div className="row-item">
+                <TextField
+                    id="outlined"
+                    onChange={(e) => {
+                        sampleObj["Comment"] = e.target.value;
+                        setSampleObj(sampleObj);
+                        setComment(e.target.value);
+                    }}
+                    value={comment}
+                    label="Comment"
+                    sx={{m: 2, width: "12ch"}}
+                />
             </div>
             <div className="row-item">
                 <FormControlLabel

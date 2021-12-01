@@ -21,7 +21,7 @@ function ViewHolderScreen() {
             loading variant="outlined"
             startIcon={<AddIcon />}
             sx={{
-              color: "whitesmoke",
+              color: "white",
               backgroundColor: "#4682B4",
               fontWeight: "bold",
               textTransform: "capitalize",
@@ -40,7 +40,7 @@ function ViewHolderScreen() {
             loading variant="outlined"
             startIcon={<AddIcon />}
             sx={{
-              color: "whitesmoke",
+              color: "white",
               backgroundColor: "#4682B4",
               fontWeight: "bold",
               textTransform: "capitalize",
@@ -94,7 +94,7 @@ const ViewTabs = () => {
           value={handleChange()}>
         <Tab href="/status-view" label="Status View"
              sx={{
-               color: "whitesmoke",
+               color: "white",
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
@@ -106,7 +106,7 @@ const ViewTabs = () => {
         />
         <Tab href="/sample-view" label="Sample View"
              sx={{
-               color: "whitesmoke",
+               color: "white",
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
@@ -118,7 +118,7 @@ const ViewTabs = () => {
         />
         <Tab href="/batch-view" label="Batch View"
              sx={{
-               color: "whitesmoke",
+               color: "white",
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {
@@ -130,7 +130,7 @@ const ViewTabs = () => {
         />
         <Tab href="/case-view" label="Case View"
              sx={{
-               color: "whitesmoke",
+               color: "white",
                fontWeight: "bold",
                fontFamily: `"Roboto", sans-serif`,
                '&:hover': {

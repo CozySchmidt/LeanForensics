@@ -47,8 +47,8 @@ export default function BatchTable({ columns, data }) {
             transform: "translate(-50%, -50%)",
             width: "70%",
             height: "70%",
-            bgcolor: "background.paper",
-            border: "2px solid #000",
+            backgroundColor: "white",
+            border: "2px solid darkgrey",
             boxShadow: 24,
             p: 4,
         };
@@ -67,7 +67,7 @@ export default function BatchTable({ columns, data }) {
 
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -83,7 +83,7 @@ export default function BatchTable({ columns, data }) {
                     (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
                   }
                 >
-                  Edit
+                  Edit Batch
                 </Button>
 
                 {selectedBatch && (
@@ -138,7 +138,8 @@ export default function BatchTable({ columns, data }) {
                             return (
                                 <td {...cell.getCellProps({
                                     style: {
-                                      width: cell.column.width
+                                      width: cell.column.width,
+                                      height: 40
                                     }
                                   })}>
                                     {cell.render('Cell')}
@@ -172,24 +173,19 @@ const sampleColumns = [
         width: 100,
     },
     {
-        field: "BatchId",
-        headerName: "Batch ID",
-        width: 100,
-    },
-    {
         field: "ScreeningName",
-        headerName: "Screening Name",
+        headerName: "Screening Method",
         width: 150,
     },
     {
         field: "KitName",
-      headerName: "Kit Name",
+      headerName: "Kit Type",
       width: 150,
     },
     {
         field: "OnHold",
         headerName: "On Hold",
-        width: 150,
+        width: 120,
         renderCell: (cellValues) => {
             return (
                 cellValues.value === 1 && (
@@ -208,8 +204,8 @@ const sampleColumns = [
         width: 150,
     },
     {
-        field: "CaseId",
-        headerName: "Case ID",
-        width: 150,
+        field: "Comment",
+        headerName: "Comment",
+        width: 250,
     },
 ];

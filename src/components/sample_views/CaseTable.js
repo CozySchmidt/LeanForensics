@@ -48,8 +48,8 @@ export default function CaseTable({ columns, data }) {
             transform: "translate(-50%, -50%)",
             width: "70%",
             height: "70%",
-            bgcolor: "background.paper",
-            border: "2px solid #000",
+            backgroundColor: "white",
+            border: "2px solid darkgrey",
             boxShadow: 24,
             p: 4,
         };
@@ -68,7 +68,7 @@ export default function CaseTable({ columns, data }) {
 
                 <Button
                   sx={{
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -84,7 +84,7 @@ export default function CaseTable({ columns, data }) {
                     (window.location.href = `/case-editor?caseId=${selectedCase.CaseId}`)
                   }
                 >
-                  Edit
+                  Edit Case
                 </Button>
 
             {selectedCase && (
@@ -129,7 +129,7 @@ export default function CaseTable({ columns, data }) {
             {rows.map(row => {
                 prepareRow(row);
                 return (
-                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)}  onMouseOver={(e) => {
+                <tr {...row.getRowProps()} onClick={() => handleModalOpen(row)} onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "#e4e5e7";
                     e.currentTarget.style.cursor = "pointer";
                 }} onMouseOut={(e) => {
@@ -138,7 +138,7 @@ export default function CaseTable({ columns, data }) {
                     {row.cells.map(cell => {
                     return <td {...cell.getCellProps({
                       style: {
-                        height: 30,
+                        height: 40,
                       }
                     })}>{cell.render('Cell')}</td>
                     })}
@@ -156,7 +156,7 @@ const sampleColumns = [
     {
       field: "SampleId",
       headerName: "Sample ID",
-      width: 100,
+      width: 110,
     },
     {
       field: "SampleName",
@@ -164,34 +164,39 @@ const sampleColumns = [
       width: 200,
     },
     {
-        field: "KorQ",
-        headerName: "K or Q",
-        width: 100,
+      field: "KorQ",
+      headerName: "K or Q",
+      width: 100,
     },
     {
-      field: "CaseId",
-      headerName: "Case ID",
-      width: 90,
-    },
-    {
-      field: "CaseFile",
-      headerName: "Case File",
-      width: 200,
-    },
-    {
-      field: "OnHold",
-      headerName: "On Hold",
+      field: "ScreeningName",
+      headerName: "Screening Method",
       width: 150,
-      renderCell: (cellValues) => {
-        return (
-          cellValues.value === 1 && (
-              <Button loading variant="contained" color="warning"
-                      style={{ cursor: 'not-allowed', pointerEvents: "none" }}
-              >
-                  On Hold
-              </Button>
-          )
-        );
-      },
+    },
+    {
+      field: "KitName",
+      headerName: "Kit Type",
+      width: 150,
+    },
+    {
+        field: "OnHold",
+        headerName: "On Hold",
+        width: 120,
+        renderCell: (cellValues) => {
+            return (
+                cellValues.value === 1 && (
+                    <Button loading variant="contained" color="warning"
+                            style={{ cursor: 'not-allowed', pointerEvents: "none" }}
+                    >
+                        On Hold
+                    </Button>
+                )
+            );
+        },
+    },
+    {
+      field: "Comment",
+      headerName: "Comment",
+      width: 250,
     },
 ];

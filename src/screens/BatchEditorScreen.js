@@ -95,7 +95,7 @@ function BatchEditorScreen({ location }) {
     setRetrievedBatch(batch);
     setInitialStage(batch.StageId ?? "");
     setExtractionType(batch.ExtractionId ?? "");
-    setComment(batch.CaseFile);
+    setComment(batch.Comment);
     setBatchName(batch.BatchName);
 
     let selected = await batch.Samples.map((sample) => {
@@ -138,15 +138,11 @@ function BatchEditorScreen({ location }) {
       setExtractionTypeError(true);
       isValidated = false;
     }
-    if (selectionModel.length <= 0) {
-      isValidated = false;
-      alert("Please select at least one sample!");
-    }
     return isValidated;
   };
 
   const onSubmitBatch = async () => {
-    if (handleValidate()) {
+    if (selectionModel.length > 0) {
       if (editMode) {
         //Edit api call
         let newSampleList = selectionModel.filter((id) => {
@@ -161,7 +157,7 @@ function BatchEditorScreen({ location }) {
             BatchName: batchName,
             StageId: initialStage,
             ExtractionTypeId: extractionType,
-            CaseFile: comment,
+            Comment: comment,
           },
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
@@ -187,6 +183,8 @@ function BatchEditorScreen({ location }) {
         } else {
           alert("Failed. Something went wrong.");
         }
+      } else if (!handleValidate()) {
+          alert("Please fill in all the required fields.");
       } else {
         //Create api call
         let batchObj = {
@@ -201,17 +199,19 @@ function BatchEditorScreen({ location }) {
             BatchName: batchName,
             StageId: initialStage,
             ExtractionId: extractionType,
-            CaseFile: comment,
+            Comment: comment,
           },
         };
         let batchResult = await createBatch(batchObj);
         if (batchResult) {
-          alert("Successfully Created.");
+          alert("Successfully created batch.");
           history.push("/");
         } else {
           alert("Failed. Something went wrong.");
         }
       }
+    } else {
+      alert("Batch must contain at least one sample.")
     }
   };
 
@@ -229,7 +229,7 @@ function BatchEditorScreen({ location }) {
           BatchName: retrievedBatch.BatchName + "-copy",
           StageId: initialStage,
           ExtractionTypeId: extractionType,
-          CaseFile: comment,
+          Comment: comment,
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
             return {
@@ -271,7 +271,7 @@ function BatchEditorScreen({ location }) {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {`Delete Batch ${retrievedBatch.BatchId} . ${retrievedBatch.BatchName}`}
+            {`Delete Batch ${retrievedBatch.BatchId}? ${retrievedBatch.BatchName}`}
           </DialogTitle>
           <DialogActions>
             <Button onClick={handleDialogClose}>No</Button>
@@ -299,7 +299,7 @@ function BatchEditorScreen({ location }) {
                 position: "absolute",
                 marginLeft: 110,
                 marginTop: 3,
-                color: "whitesmoke",
+                color: "white",
                 backgroundColor: "#003C71",
                 fontWeight: "bold",
                 textTransform: "capitalize",
@@ -331,7 +331,7 @@ function BatchEditorScreen({ location }) {
             borderRadius="8px"
             padding="20px"
             autoComplete="off"
-            backgroundColor="whitesmoke"
+            backgroundColor="white"
             color="#003C71"
           >
             <Grid item xs="auto">
@@ -343,7 +343,7 @@ function BatchEditorScreen({ location }) {
                   sx={{
                     position: "absolute",
                     marginLeft: "33rem",
-                    color: "whitesmoke",
+                    color: "white",
                     backgroundColor: "#4682B4",
                     fontWeight: "bold",
                     textTransform: "capitalize",
@@ -366,7 +366,7 @@ function BatchEditorScreen({ location }) {
                     position: "absolute",
                     marginLeft: 94,
                     backgroundColor: "#d11a2a",
-                    color: "whitesmoke",
+                    color: "white",
                     fontWeight: "bold",
                     textTransform: "capitalize",
                     "&:hover": {
@@ -386,7 +386,7 @@ function BatchEditorScreen({ location }) {
                 sx={{
                   position: "absolute",
                   marginLeft: 108,
-                  color: "whitesmoke",
+                  color: "white",
                   backgroundColor: "#4682B4",
                   fontWeight: "bold",
                   textTransform: "capitalize",
@@ -485,7 +485,7 @@ function BatchEditorScreen({ location }) {
             height: "85%",
             marginTop: "10px",
             marginBottom: "20px",
-            backgroundColor: "whitesmoke",
+            backgroundColor: "white",
             color: "#003C71",
             border: "1px solid #FFF200",
           }}
@@ -505,11 +505,6 @@ const columns = [
   {
     field: "KorQ",
     headerName: "K or Q",
-    width: 100,
-  },
-  {
-    field: "CaseId",
-    headerName: "Case ID",
     width: 100,
   },
   {

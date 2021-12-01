@@ -444,7 +444,7 @@ router.patch("/:batchId/stages/:stageId", (req, res) => {
     let stageId = req.params.stageId;
     let sql = `
       UPDATE Batch
-      SET StageId = ${stageId}
+      SET StageId = ${stageId}, isReady = 0
       WHERE BatchId = ${batchId};
     `;
     connection.query(sql, (err, result) => {

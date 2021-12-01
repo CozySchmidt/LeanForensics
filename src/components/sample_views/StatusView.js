@@ -95,11 +95,7 @@ function StatusView() {
 
   const handleStageSubmit = async () => {
     let stageId = selectedStage;
-    if (nextStage && selectedBatch.IsReady) {
-      stageId = selectedBatch.StageId + 1;
-      updateReadyBatch();
-    }
-    if (nextStage && !selectedBatch.IsReady) {
+    if (nextStage) {
       stageId = selectedBatch.StageId + 1;
     }
     if (!isLastStage()) {
@@ -210,7 +206,7 @@ function StatusView() {
       fontWeight: "bold",
       backgroundColor: "white",
       color: "#003C71",
-      border: "2px solid darkgrey",
+      border: "1px solid darkgrey",
       boxShadow: 24,
       p: 7,
     };
@@ -247,20 +243,8 @@ function StatusView() {
               </div>
               <div className="divider" />
               <div className="arrow-button">
-                <Button
-                  sx={{
-                    color: "white",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold",
-                    },
-                  }}
-                  loading
-                  variant="outlined"
+                <Button id="button"
+                  variant="contained"
                   onClick={() => {
                     if (selectedStage.length !== 0) {
                       handleStageSubmit();
@@ -274,59 +258,28 @@ function StatusView() {
               </div>
               <div className="modal-buttons">
                   {selectedBatch.IsReady ? (
-                  <Button
-                  sx={{
-                    marginRight: 5,
-                    color: "white",
-                    backgroundColor: "#8c8c8c",
-                    fontWeight: "bold",
-                    "&:hover": {
-                      backgroundColor: "#4d4d4d",
-                      color: "lightgrey",
-                      fontWeight: "bold",
-                    },
-                  }}
+                  <Button id="unready-btn"
                   size="medium"
-                  variant="outlined"
+                  variant="contained"
                   onClick={updateReadyBatch}
+                  sx={{mr:5}}
                 >
                  UNREADY
                 </Button>
                   ) : (
-                      <Button
-                          sx={{
-                              marginRight: 5,
-                              color: "white",
-                              backgroundColor: "#01b25c",
-                              fontWeight: "bold",
-                              "&:hover": {
-                                  backgroundColor: "#c1f0c1",
-                                  color: "#003C71",
-                                  fontWeight: "bold",
-                              },
-                          }}
+                      <Button id="ready-btn"
                           size="medium"
-                          variant="outlined"
+                          variant="contained"
                           onClick={updateReadyBatch}
+                          sx={{mr:5}}
                       >
                           READY
                       </Button>
                   )}
                 <div className="divider" />
-                <Button
-                  sx={{
-                    color: "white",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold",
-                    },
-                  }}
+                <Button id="button"
                   size="medium"
-                  variant="outlined"
+                  variant="contained"
                   onClick={() =>
                     (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
                   }
@@ -334,26 +287,15 @@ function StatusView() {
                   Edit batch
                 </Button>
                 <div className="divider" />
-                <Button
-                  sx={{
-                    color: "white",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold",
-                    },
-                  }}
-                  size="medium"
-                  variant="outlined"
-                  onClick={handleClickDialogOpen}
-                >
-                  {isLastStage() ? "Mark Completed" : "Next Stage"}
-                </Button>
-                <div className="divider" />
-              </div>
+                  <Button id="button"
+                    size="medium"
+                    variant="contained"
+                    onClick={handleClickDialogOpen}
+                  >
+                    {isLastStage() ? "Mark Completed" : "Next Stage"}
+                  </Button>
+                  <div className="divider" />
+                </div>
               <div>
                 <div>Batch ID: {selectedBatch.BatchId}</div>
                 <div>Batch Name: {selectedBatch.BatchName}</div>
@@ -380,22 +322,11 @@ function StatusView() {
           ) : (
             <div>
               No Samples found in this batch. Remove this batch?
-              <Button
-                variant="outlined"
+              <Button id="delete-btn"
+                variant="contained"
                 startIcon={<DeleteIcon />}
-                sx={{
-                  marginLeft: 2,
-                  backgroundColor: "#d11a2a",
-                  color: "white",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  "&:hover": {
-                    backgroundColor: "#b30000",
-                    color: "darkgrey",
-                    fontWeight: "bold",
-                  },
-                }}
                 onClick={handleClickDeleteDialogOpen}
+                sx={{m:2}}
               >
                 Delete
               </Button>
@@ -447,35 +378,18 @@ function StatusView() {
                                   onClick={() => handleModalOpen(batch)}
                                   sx={{minWidth: 100}}
                             >
-                              <CardContent style={{backgroundColor:"#ffede6"}}>
-                                <Typography
-                                    sx={{
-                                      fontSize: 15,
-                                      fontWeight: "bold",
-                                      color: "#3c3e44",
-                                      textTransform: "capitalize",
-                                    }}
-                                >
+                              <CardContent style={{backgroundColor:"#fcf4e8"}}>
+                                <Typography id="card">
                                   <div>Batch #{batch.BatchId}</div>
                                   <div>{batch.BatchName}</div>
                                   <div>
                                     {batch.IsReady ? (
                                         <span style={{ cursor: 'not-allowed',
                                             pointerEvents: "none" }}>
-                                            <Button
+                                            <Button id="ready-btn"
                                                 variant="contained"
                                                 size="small"
-                                                sx={{
-                                                  mt: 1,
-                                                  fontWeight: "bold",
-                                                  backgroundColor: "#01b25c",
-                                                  color: "white",
-                                                  "&:hover": {
-                                                    backgroundColor: "#01b25c",
-                                                    color: "white",
-                                                    fontWeight: "bold",
-                                                  },
-                                                }}
+                                                sx={{mt: "5%"}}
                                             >
                                               READY
                                             </Button>
@@ -503,12 +417,17 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
-    width: 120,
+    width: 150,
+  },
+  {
+    field: "CaseId",
+    headerName: "Case ID",
+    width: 100,
   },
   {
     field: "SampleName",
     headerName: "Sample Name",
-    width: 170,
+    width: 200,
   },
   {
     field: "KorQ",
@@ -516,19 +435,19 @@ const columns = [
     width: 100,
   },
   {
-    field: "KitName",
-    headerName: "Kit Type",
-    width: 170,
-  },
-  {
     field: "ScreeningName",
     headerName: "Screening Method",
-    width: 160,
+    width: 200,
+  },
+  {
+    field: "KitName",
+    headerName: "Kit Type",
+    width: 200,
   },
   {
     field: "OnHold",
     headerName: "On Hold",
-    width: 120,
+    width: 200,
     renderCell: (cellValues) => {
       return (
         cellValues.value === 1 && (
@@ -544,7 +463,7 @@ const columns = [
   {
     field: "Comment",
     headerName: "Comment",
-    width: 250,
+    width: 300,
   },
 ];
 

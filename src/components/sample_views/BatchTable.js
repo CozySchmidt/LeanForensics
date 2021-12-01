@@ -65,20 +65,9 @@ export default function BatchTable({ columns, data }) {
                     Batch ID: {selectedBatch && selectedBatch.BatchId}
                 </Typography>
 
-                <Button
-                  sx={{
-                    color: "white",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold",
-                    },
-                  }}
+                <Button id="button"
                   size="medium"
-                  variant="outlined"
+                  variant="contained"
                   onClick={() =>
                     (window.location.href = `/batch-editor?batchId=${selectedBatch.BatchId}`)
                   }
@@ -160,12 +149,17 @@ const sampleColumns = [
     {
         field: "SampleId",
         headerName: "Sample ID",
+        width: 150,
+    },
+    {
+        field: "CaseId",
+        headerName: "Case ID",
         width: 100,
     },
     {
         field: "SampleName",
         headerName: "Sample Name",
-        width: 150,
+        width: 200,
     },
     {
         field: "KorQ",
@@ -175,17 +169,17 @@ const sampleColumns = [
     {
         field: "ScreeningName",
         headerName: "Screening Method",
-        width: 150,
+        width: 200,
     },
     {
         field: "KitName",
-      headerName: "Kit Type",
-      width: 150,
+        headerName: "Kit Type",
+        width: 200,
     },
     {
         field: "OnHold",
         headerName: "On Hold",
-        width: 120,
+        width: 200,
         renderCell: (cellValues) => {
             return (
                 cellValues.value === 1 && (
@@ -201,11 +195,11 @@ const sampleColumns = [
     {
         field: "CaseFile",
         headerName: "Case File",
-        width: 150,
+        width: 200,
     },
     {
         field: "Comment",
         headerName: "Comment",
-        width: 250,
+        width: 300,
     },
 ];

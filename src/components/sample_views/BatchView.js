@@ -46,7 +46,7 @@ const BatchView = () => {
           )
         },
         Header: "Created Date",
-        width: 140,
+        width: 200,
       },
       {
         accessor: row => {

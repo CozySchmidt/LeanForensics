@@ -156,7 +156,7 @@ function BatchEditorScreen({ location }) {
           batch: {
             BatchName: batchName,
             StageId: initialStage,
-            ExtractionTypeId: extractionType,
+            ExtractionId: extractionType,
             Comment: comment,
           },
           newSampleList: newSampleList.map((id) => {
@@ -184,7 +184,7 @@ function BatchEditorScreen({ location }) {
           alert("Failed. Something went wrong.");
         }
       } else if (!handleValidate()) {
-          alert("Please fill in all the required fields.");
+          console.log("ERROR: Please fill in all the required fields.");
       } else {
         //Create api call
         let batchObj = {
@@ -228,7 +228,7 @@ function BatchEditorScreen({ location }) {
           BatchId: retrievedBatch.BatchId,
           BatchName: retrievedBatch.BatchName + "-copy",
           StageId: initialStage,
-          ExtractionTypeId: extractionType,
+          ExtractionId: extractionType,
           Comment: comment,
           newSampleList: newSampleList.map((id) => {
             let index = id.indexOf("-");
@@ -288,35 +288,20 @@ function BatchEditorScreen({ location }) {
     <div className="screen-holder">
       <Box
         sx={{ flexGrow: 1 }}
-        style={{ paddingTop: "1em" }}
-        m={1}
       >
         <Grid container spacing={2}>
-          <Grid item xs="auto">
-            <Button
-              startIcon={<ClearIcon />}
-              sx={{
-                position: "absolute",
-                marginLeft: 110,
-                marginTop: 3,
-                color: "white",
-                backgroundColor: "#003C71",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                "&:hover": {
-                  backgroundColor: "#D3D9DE",
-                  color: "#003C71",
-                  fontWeight: "bold",
-                },
-              }}
-              variant="outlined"
-              onClick={() => history.push("/")}
-            >
-              Cancel
-            </Button>
+          <Grid item xs={12}>
+            <div className="button-container">
+              <Button id="cancel-btn"
+                startIcon={<ClearIcon />}
+                variant="outlined"
+                onClick={() => history.push("/")}
+              >
+                Cancel
+              </Button>
+            </div>
           </Grid>
         </Grid>
-        <Grid item xs={4}></Grid>
         <h1>{editMode ? editBatchText : createBatchText}</h1>
       </Box>
       <div className="content-wrapper">
@@ -324,83 +309,52 @@ function BatchEditorScreen({ location }) {
           <Box
             component="form"
             sx={{
-              "& > :not(style)": { m: 1, width: "25ch", maxWidth: "100%" },
+              "& > :not(style)": { m:1, width: "24ch", maxWidth: "100%"},
             }}
             noValidate
-            border="1px solid #FFF200"
+            border="1px solid #003C71"
             borderRadius="8px"
-            padding="20px"
+            padding="40px"
             autoComplete="off"
             backgroundColor="white"
             color="#003C71"
           >
-            <Grid item xs="auto">
-              {editMode && (
-                <Button
-                  variant="outlined"
-                  onClick={onPullOutSamples}
-                  startIcon={<SouthWestIcon />}
-                  sx={{
-                    position: "absolute",
-                    marginLeft: "33rem",
-                    color: "white",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold",
-                    },
-                  }}
-                >
-                  Pull Samples
-                </Button>
-              )}
-              {editMode && (
-                <Button
-                  loading
-                  variant="outlined"
-                  startIcon={<DeleteIcon />}
-                  sx={{
-                    position: "absolute",
-                    marginLeft: 94,
-                    backgroundColor: "#d11a2a",
-                    color: "white",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#b30000",
-                      color: "darkgrey",
-                      fontWeight: "bold",
-                    },
-                  }}
-                  onClick={handleClickDialogOpen}
-                >
-                  Delete
-                </Button>
-              )}
-              <Button
-                variant="outlined"
-                // startIcon={<EditIcon />}
-                sx={{
-                  position: "absolute",
-                  marginLeft: 108,
-                  color: "white",
-                  backgroundColor: "#4682B4",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  "&:hover": {
-                    backgroundColor: "#90CAF9",
-                    color: "#003C71",
-                    fontWeight: "bold",
-                  },
-                }}
-                onClick={onSubmitBatch}
-              >
-                {editMode ? "Edit Batch" : "Submit"}
-              </Button>
-            </Grid>
+            <div className="buttons-batch-editor">
+              <Grid item xs="auto">
+                  {editMode && (
+                   <div className="btn-divider">
+                      <Button id="button"
+                        variant="contained"
+                        onClick={onPullOutSamples}
+                        startIcon={<SouthWestIcon />}
+                      >
+                        Pull Samples
+                      </Button>
+                   </div>
+                  )}
+              </Grid>
+              <Grid item xs="auto">
+                  {editMode && (
+                   <div className="btn-divider">
+                      <Button id="delete-btn"
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        onClick={handleClickDialogOpen}
+                      >
+                        Delete
+                      </Button>
+                   </div>
+                  )}
+              </Grid>
+              <Grid item xs="auto">
+                  <Button id="button"
+                    variant="contained"
+                    onClick={onSubmitBatch}
+                  >
+                    {editMode ? "Edit Batch" : "Submit"}
+                  </Button>
+              </Grid>
+            </div>
             <h2>Batch Information</h2>
 
             {retrievedBatch && (
@@ -438,7 +392,7 @@ function BatchEditorScreen({ location }) {
                 required
                 label="Extraction Type"
                 error={extractionTypeError}
-                helperText={extractionTypeError && "Please select extraction type."}
+                helperText={extractionTypeError && "Please select"}
             >
               {extractionTypeData.map((extractionType) => (
                   <MenuItem
@@ -482,12 +436,13 @@ function BatchEditorScreen({ location }) {
           className={classes.root}
           selectionModel={selectionModel}
           style={{
-            height: "85%",
-            marginTop: "10px",
-            marginBottom: "20px",
+            height: "100%",
+            padding: "1em",
+            marginTop: "20px",
+            marginBottom: "50px",
             backgroundColor: "white",
             color: "#003C71",
-            border: "1px solid #FFF200",
+            border: "1px solid #003C71",
           }}
         />
       </div>
@@ -500,22 +455,32 @@ const columns = [
   {
     field: "SampleId",
     headerName: "Sample ID",
+    width: 150,
+  },
+  {
+    field: "CaseId",
+    headerName: "Case ID",
     width: 100,
+  },
+  {
+    field: "SampleName",
+    headerName: "Sample Name",
+    width: 200,
   },
   {
     field: "KorQ",
     headerName: "K or Q",
-    width: 100,
+    width: 150,
   },
   {
     field: "ScreeningName",
     headerName: "Screening Method",
-    width: 150,
+    width: 200,
   },
   {
     field: "KitName",
     headerName: "Kit Type",
-    width: 130,
+    width: 200,
   },
   {
     field: "OnHold",

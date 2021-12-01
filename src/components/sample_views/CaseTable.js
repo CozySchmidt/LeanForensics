@@ -66,20 +66,9 @@ export default function CaseTable({ columns, data }) {
                 Case Number: {selectedCase && selectedCase.CaseId}
             </Typography>
 
-                <Button
-                  sx={{
-                    color: "white",
-                    backgroundColor: "#4682B4",
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    "&:hover": {
-                      backgroundColor: "#90CAF9",
-                      color: "#003C71",
-                      fontWeight: "bold",
-                    },
-                  }}
+                <Button id="button"
                   size="medium"
-                  variant="outlined"
+                  variant="contained"
                   onClick={() =>
                     (window.location.href = `/case-editor?caseId=${selectedCase.CaseId}`)
                   }
@@ -154,34 +143,39 @@ export default function CaseTable({ columns, data }) {
 
 const sampleColumns = [
     {
-      field: "SampleId",
-      headerName: "Sample ID",
-      width: 110,
+        field: "SampleId",
+        headerName: "Sample ID",
+        width: 150,
     },
     {
-      field: "SampleName",
-      headerName: "Sample Name",
-      width: 200,
+        field: "CaseId",
+        headerName: "Case ID",
+        width: 100,
     },
     {
-      field: "KorQ",
-      headerName: "K or Q",
-      width: 100,
+        field: "SampleName",
+        headerName: "Sample Name",
+        width: 200,
     },
     {
-      field: "ScreeningName",
-      headerName: "Screening Method",
-      width: 150,
+        field: "KorQ",
+        headerName: "K or Q",
+        width: 100,
     },
     {
-      field: "KitName",
-      headerName: "Kit Type",
-      width: 150,
+        field: "ScreeningName",
+        headerName: "Screening Method",
+        width: 200,
+    },
+    {
+        field: "KitName",
+        headerName: "Kit Type",
+        width: 200,
     },
     {
         field: "OnHold",
         headerName: "On Hold",
-        width: 120,
+        width: 200,
         renderCell: (cellValues) => {
             return (
                 cellValues.value === 1 && (

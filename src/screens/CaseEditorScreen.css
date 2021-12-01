@@ -6,27 +6,61 @@
 .sample-row {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
   vertical-align: middle;
   align-items: center;
 }
 
-.cancel-button {
-  margin-top: 3px;
-  margin-left: 900px;
-}
-
-.form-buttons {
-  top: 90px;
-  left: 930px;
-  position: absolute;
+.buttons-case-editor {
+  display:flex;
+  justify-content: space-evenly;
+  float:right;
 }
 
 .divider {
-  width:10px;
+  width:15px;
   height:auto;
   display:inline-block;
 }
 
 .box-divider {
-  height:10px;
+  height:30px;
+}
+
+#button {
+  color: white;
+  background-color:#4682B4;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+#button:hover {
+  background-color: #90CAF9;
+  color:#003C71;
+}
+
+#cancel-btn {
+  color: white;
+  background-color:#003C71;
+  font-weight: bold;
+  text-transform: capitalize;
+
+}
+
+#cancel-btn:hover {
+  background-color: #D3D9DE;
+  color:#003C71;
+}
+
+
+#delete-btn {
+  color: white;
+  background-color:#d11a2a;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+#delete-btn:hover {
+  background-color: #b30000;
+  color:darkgrey;
 }

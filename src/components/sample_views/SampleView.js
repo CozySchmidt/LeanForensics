@@ -25,6 +25,11 @@ const SampleView = () => {
       width: 50,
     },
     {
+      accessor: "CaseId",
+      Header: "Case ID",
+      width: 50,
+    },
+    {
       accessor: "KorQ",
       Header: "K or Q",
       width: 110,

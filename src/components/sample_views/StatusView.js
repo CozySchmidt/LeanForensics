@@ -101,7 +101,6 @@ function StatusView() {
     if (!isLastStage()) {
       let updateResult;
       if (selectedBatch.IsReady) {
-        updateReadyBatch();
         updateResult = await updateBatchStage(selectedBatch.BatchId, stageId);
         if (updateResult) {
           console.log(updateResult);

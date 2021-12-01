@@ -50,7 +50,7 @@ function BatchEditorScreen({ location }) {
   const [sampleList, setSampleList] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(15);
   const [initialStage, setInitialStage] = React.useState(1);
-  const [extractionType, setExtractionType] = React.useState("");
+  const [extractionType, setExtractionType] = React.useState(null);
   const [comment, setComment] = React.useState("");
   const [batchName, setBatchName] = React.useState("");
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -151,12 +151,13 @@ function BatchEditorScreen({ location }) {
         let deleteSampleList = initialSelectionModel.filter((id) => {
           return !selectionModel.includes(id);
         });
+        let extractionId = extractionType.length === 0 ? 0 : extractionType;
         let batchObj = {
           BatchId: retrievedBatch.BatchId,
           batch: {
             BatchName: batchName,
             StageId: initialStage,
-            ExtractionId: extractionType,
+            ExtractionId: extractionId,
             Comment: comment,
           },
           newSampleList: newSampleList.map((id) => {
